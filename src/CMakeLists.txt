@@ -1,0 +1,23 @@
+set( SRC
+        main.cpp
+        global.h
+        gamestate.h
+        gamestatemanager.h
+        gamestatemanager.cpp
+        paddle.h
+        paddle.cpp
+        ball.h
+        ball.cpp
+        playstate.h
+        playstate.cpp
+        object.h
+        pong2dstate.h
+        pong2dstate.cpp
+        pong3dstate.h
+        pong3dstate.cpp
+    )
+
+set(CFLAGS "-std=c++11" )
+
+add_executable( ${PROJECT_NAME} ${SRC} )
+target_link_libraries( ${PROJECT_NAME} ${OGRE_LIBRARIES} ${OGRE_Overlay_LIBRARIES} ${OIS_LIBRARIES} ${Boost_LIBRARIES} ${OPENNI2_LIBRARIES} NiTE2 )

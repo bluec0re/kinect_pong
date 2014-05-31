@@ -1,0 +1,68 @@
+material Red
+{
+	receive_shadows on
+	technique
+	{
+		pass
+		{
+			lighting on
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 1 0 0
+			}
+		} 
+	}
+}
+
+
+material Green
+{
+	receive_shadows on
+	technique
+	{
+		pass
+		{
+			lighting off
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0 1 0
+			}
+		} 
+	}
+}
+
+material Blue
+{
+	receive_shadows on
+	technique
+	{
+		pass
+		{
+			lighting off
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0 0 1
+			}
+		} 
+	}
+}
+
+
+material Floor
+ {
+    technique
+    {
+       pass
+        {
+          texture_unit
+          {
+            texture floor2685314.png
+            tex_border_colour 0.0 0.0 1.0
+            tex_address_mode mirror
+            scale 0.5 0.5
+          }
+       }   
+    }
+ }
+ 
+
