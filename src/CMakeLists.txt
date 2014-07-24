@@ -17,7 +17,7 @@ set( SRC
         pong3dstate.cpp
     )
 
-set(CFLAGS "-std=c++11" )
+set(CMAKE_CXX_FLAGS "-std=c++11" )
 
 add_executable( ${PROJECT_NAME} ${SRC} )
 target_link_libraries( ${PROJECT_NAME} ${OGRE_LIBRARIES} ${OGRE_Overlay_LIBRARIES} ${OIS_LIBRARIES} ${Boost_LIBRARIES} ${OPENNI2_LIBRARIES} NiTE2 )
