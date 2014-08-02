@@ -5,6 +5,8 @@
 #include "paddle.h"
 #include "ball.h"
 
+class Player;
+
 class PlayState : public GameState
 {
 public:
@@ -48,6 +50,7 @@ public:
 protected:
     std::vector<boost::shared_ptr<Paddle> > _paddles; //
     boost::shared_ptr<Ball> _ball;
+    std::vector<boost::shared_ptr<Player> > _players; 
 };
 
 #endif // PLAYSTATE_H
