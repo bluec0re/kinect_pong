@@ -28,10 +28,11 @@ int main(int argc, char** argv)
 		return 3;
 	}
 
-        /*
+        
 	handTracker.startGestureDetection(nite::GESTURE_WAVE);
 	handTracker.startGestureDetection(nite::GESTURE_CLICK);
-	printf("\nWave or click to start tracking your hand...\n");*/
+	handTracker.startGestureDetection(nite::GESTURE_HAND_RAISE);
+	printf("\nWave or click to start tracking your hand...\n");
 
 	nite::HandTrackerFrameRef handTrackerFrame;
 	while (!wasKeyboardHit())
@@ -44,10 +45,18 @@ int main(int argc, char** argv)
 		}
 
 		const nite::Array<nite::GestureData>& gestures = handTrackerFrame.getGestures();
+//                printf("%d gestures\n", gestures.getSize());
 		for (int i = 0; i < gestures.getSize(); ++i)
 		{
 			if (gestures[i].isComplete())
 			{
+                            printf("Found Gesture: ");
+                            if(gestures[i].getType() == nite::GESTURE_WAVE)
+                                printf("Wave\n");
+                            else if(gestures[i].getType() == nite::GESTURE_CLICK)
+                                printf("Click\n");
+                            else if(gestures[i].getType() == nite::GESTURE_HAND_RAISE)
+                                printf("Hand raise\n");
 				nite::HandId newId;
 				handTracker.startHandTracking(gestures[i].getCurrentPosition(), &newId);
 			}
