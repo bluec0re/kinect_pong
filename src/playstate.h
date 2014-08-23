@@ -4,8 +4,8 @@
 #include "gamestate.h"
 #include "paddle.h"
 #include "ball.h"
+#include "player.h"
 
-class Player;
 
 class PlayState : public GameState
 {

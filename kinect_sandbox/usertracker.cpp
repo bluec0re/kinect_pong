@@ -9,7 +9,12 @@
 
 #include "NiteSampleUtilities.h"
 
-#define MAX_USERS 10
+#define MAX_USERS 8
+#define CHOOSING_BOX_POSITION_X 0
+#define CHOOSING_BOX_POSITION_Y 100
+#define CHOOSING_BOX_POSITION_RANGE 15
+
+
 bool g_visibleUsers[MAX_USERS] = {false};
 nite::SkeletonState g_skeletonStates[MAX_USERS] = {nite::SKELETON_NONE};
 
@@ -70,16 +75,22 @@ int main(int argc, char** argv)
 	printf("\nStart moving around to get detected...\n(PSI pose may be required for skeleton calibration, depending on the configuration)\n");
 
 	nite::UserTrackerFrameRef userTrackerFrame;
+    printf("Box-Range X: %d ... %d\n", CHOOSING_BOX_POSITION_X - CHOOSING_BOX_POSITION_RANGE, CHOOSING_BOX_POSITION_X + CHOOSING_BOX_POSITION_RANGE);
+    printf("Box-Range Y: %d ... %d\n", CHOOSING_BOX_POSITION_Y - CHOOSING_BOX_POSITION_RANGE, CHOOSING_BOX_POSITION_Y + CHOOSING_BOX_POSITION_RANGE);
 	while (!wasKeyboardHit())
 	{
 		niteRc = userTracker.readFrame(&userTrackerFrame);
 		if (niteRc != nite::STATUS_OK)
 		{
 			printf("Get next frame failed\n");
+
 			continue;
 		}
 
 		const nite::Array<nite::UserData>& users = userTrackerFrame.getUsers();
+		nite::SkeletonJoint *chosen_hand = nullptr;
+
+
 		for (int i = 0; i < users.getSize(); ++i)
 		{
 			const nite::UserData& user = users[i];
@@ -90,14 +101,45 @@ int main(int argc, char** argv)
 			}
 			else if (user.getSkeleton().getState() == nite::SKELETON_TRACKED)
 			{
-				const nite::SkeletonJoint& head = user.getSkeleton().getJoint(nite::JOINT_HEAD);
-				if (head.getPositionConfidence() > .5)
-				printf("%d. (%5.2f, %5.2f, %5.2f)\n", user.getId(), head.getPosition().x, head.getPosition().y, head.getPosition().z);
+				const nite::SkeletonJoint& left_hand = user.getSkeleton().getJoint(nite::JOINT_LEFT_HAND);
+				const nite::SkeletonJoint& right_hand = user.getSkeleton().getJoint(nite::JOINT_RIGHT_HAND);
+
+				if (right_hand.getPositionConfidence() > .5 || left_hand.getPositionConfidence() > .5)
+                {
+                    int left_x = left_hand.getPosition().x;
+                    int left_y = left_hand.getPosition().y;
+                    int right_x = right_hand.getPosition().x;
+                    int right_y = right_hand.getPosition().y;
+
+	    			printf("Left Hand: %d. (%5.2f, %5.2f)\n", user.getId(), left_hand.getPosition().x, left_hand.getPosition().y);
+			    	printf("Right Hand: %d. (%5.2f, %5.2f)\n", user.getId(), right_hand.getPosition().x, right_hand.getPosition().y);
+
+                    if (chosen_hand == nullptr)
+                    {
+                        if (left_x > (CHOOSING_BOX_POSITION_X - CHOOSING_BOX_POSITION_RANGE) &&
+                            left_x < (CHOOSING_BOX_POSITION_X + CHOOSING_BOX_POSITION_RANGE) &&
+                            left_y > (CHOOSING_BOX_POSITION_Y - CHOOSING_BOX_POSITION_RANGE) &&
+                            left_y < (CHOOSING_BOX_POSITION_Y + CHOOSING_BOX_POSITION_RANGE))
+                        {
+                            *chosen_hand = left_hand;
+                            printf("Left hand chosen");
+                        }
+                        else if (right_x > (CHOOSING_BOX_POSITION_X - CHOOSING_BOX_POSITION_RANGE) &&
+                            right_x < (CHOOSING_BOX_POSITION_X + CHOOSING_BOX_POSITION_RANGE) &&
+                            right_y > (CHOOSING_BOX_POSITION_Y - CHOOSING_BOX_POSITION_RANGE) &&
+                            right_y < (CHOOSING_BOX_POSITION_Y + CHOOSING_BOX_POSITION_RANGE))
+                        {
+                            *chosen_hand = right_hand;
+                            printf("Right hand chosen");
+                        }
+                    }
+                    else
+                    {
+                        printf("Choose your playing hand by holding it within the box!");
+                    }
+                }
 			}
 		}
-
 	}
-
 	nite::NiTE::shutdown();
-
 }
