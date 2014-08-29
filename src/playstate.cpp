@@ -8,7 +8,7 @@
 // TODO: create map from following vars
 #define MAP_X 400
 #define MAP_Y 200
-#define MAP_X 200
+#define MAP_Z 200
 #define MAP_BBOX 190
 // TODO: create map from following vars
 #define MAP_BBOX_X 390
