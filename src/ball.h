@@ -20,8 +20,6 @@ public:
     virtual void create(Ogre::SceneManager* sceneMgr);
     virtual void setPosition(const Ogre::Vector3& pos);
     virtual void reverse(const Direction& dir);
-
-private:
 };
 
 typedef boost::shared_ptr<Ball> BallPtr;

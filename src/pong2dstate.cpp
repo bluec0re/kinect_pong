@@ -24,6 +24,7 @@ void Pong2DState::resetBall(BallPtr b) {
         speed.x = getRandomSpeed();
         speed.y = getRandomSpeed();
         b->setSpeed(speed);
+        b->setAccel(getRandomAccel());
     }
 }
 
