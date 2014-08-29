@@ -1,4 +1,7 @@
 #include "kinect.h"
+#include "player.h"
+
+Kinect* Kinect::_kinect = nullptr;
 
 Kinect::Kinect() {
     niteRc = userTracker.create();

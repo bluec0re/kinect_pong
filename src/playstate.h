@@ -46,11 +46,20 @@ public:
     virtual bool mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id ) { return true; }
 
     virtual bool frameRenderingQueued(const Ogre::FrameEvent& evt);
+    virtual void checkHit();
+
+    virtual void resetBall(BallPtr b);
+    virtual BallPtr addBall();
+    virtual const std::vector<BallPtr>& getBalls() const { return _balls; }
 
 protected:
-    std::vector<boost::shared_ptr<Paddle> > _paddles; //
-    boost::shared_ptr<Ball> _ball;
-    std::vector<boost::shared_ptr<Player> > _players; 
+    virtual Ogre::Real getRandomSpeed() const;
+    virtual Ogre::Vector3 getRandomAccel() const;
+
+protected:
+    std::vector<PaddlePtr> _paddles; //
+    std::vector<BallPtr> _balls;
+    std::vector<PlayerPtr> _players;
 };
 
 #endif // PLAYSTATE_H

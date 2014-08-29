@@ -3,6 +3,8 @@
 
 #include "object.h"
 
+#include <boost/smart_ptr.hpp>
+
 class Paddle : public Object
 {
 public:
@@ -15,6 +17,8 @@ public:
 private:
     Ogre::String _player;
 };
+
+typedef boost::shared_ptr<Paddle> PaddlePtr;
 
 #endif /* end of include guard: PADDLE_H_G4QGINP0 */
 

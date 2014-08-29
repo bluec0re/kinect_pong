@@ -37,12 +37,29 @@ void Ball::create(Ogre::SceneManager* sceneMgr) {
 }
 
 void Ball::setPosition(const Ogre::Vector3& pos) {
-    if(abs(pos.x) > 190) {
-        _speed.x *= -1;
+    /*if(abs(pos.x) > 190) {
+        reverse(DIR_X);
     } else if(abs(pos.y) > 190) {
-        _speed.y *= -1;
+        reverse(DIR_Y);
     } else if(abs(pos.z) > 190) {
-        _speed.z *= -1;
-    } else
+        reverse(DIR_Z);
+    } else*/
         Object::setPosition(pos);
+}
+
+
+void Ball::reverse(const Direction& dir) {
+    switch(dir) {
+    case Ball::DIR_X:
+        _speed.x *= -1;
+        break;
+
+    case Ball::DIR_Y:
+        _speed.y *= -1;
+        break;
+
+    case Ball::DIR_Z:
+        _speed.z *= -1;
+        break;
+    }
 }

@@ -3,7 +3,10 @@
 
 
 #include <vector>
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-register"
 #include <Ogre.h>
+#pragma clang diagnostic pop
 #include <OIS.h>
 //#include <CEGUI.h>
 

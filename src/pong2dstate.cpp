@@ -5,19 +5,6 @@ Pong2DState::Pong2DState()
 }
 
 
-bool Pong2DState::frameRenderingQueued(const Ogre::FrameEvent& evt) {
-    if(mDevice->keyboard->isKeyDown(OIS::KC_UP)) {
-        _paddles[0]->setSpeed(Ogre::Vector3(0, 100, 0));
-    } else if(mDevice->keyboard->isKeyDown(OIS::KC_DOWN)) {
-        _paddles[0]->setSpeed(Ogre::Vector3(0, -100, 0));
-    } else {
-        _paddles[0]->setSpeed(Ogre::Vector3::ZERO);
-    }
-
-    return PlayState::frameRenderingQueued(evt);
-}
-
-
 void Pong2DState::enter() {
     PlayState::enter();
     createBox(0.5,0.5,0.1, Ogre::Plane(Ogre::Vector3(0, 0, -1), -190));
@@ -26,4 +13,23 @@ void Pong2DState::enter() {
     cam->setPosition(Ogre::Vector3(0,0,500));
     // Look back along -Z
     cam->lookAt(Ogre::Vector3(0,0,-300));
+}
+
+void Pong2DState::resetBall(BallPtr b) {
+    if(_balls.size() != 1) {
+        _balls.erase(std::find(_balls.begin(), _balls.end(), b));
+    } else {
+        b->setPosition(Ogre::Vector3(0, 0, 0));
+        Ogre::Vector3 speed;
+        speed.x = getRandomSpeed();
+        speed.y = getRandomSpeed();
+        b->setSpeed(speed);
+    }
+}
+
+
+Ogre::Vector3 Pong2DState::getRandomAccel() const {
+    Ogre::Vector3 accel = PlayState::getRandomAccel();
+    accel.z = 0;
+    return accel;
 }

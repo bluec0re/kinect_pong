@@ -1,0 +1,9 @@
+kinect_sandbox
+libs/Nite2.2/Include
+libs/Nite2.2/Samples/HandViewer
+libs/Nite2.2/Samples/SimpleHandTracker
+libs/Nite2.2/Samples/SimpleUserTracker
+libs/Nite2.2/Samples/UserViewer
+src
+/usr/include/OGRE
+/usr/include/OIS

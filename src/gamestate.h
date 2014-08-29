@@ -69,6 +69,8 @@ public:
     { return false; }
     /** Inherit to supply resume code. Inherit only if this game state can be paused. */
     virtual void resume(void) {};
+
+    virtual const device_info* getDevices() const { return mDevice; }
  
 protected:
     /** Constructor: This should be a private member of an inherited class. */

@@ -1,12 +1,11 @@
 #include <NiTE.h>
-#include <Ogre.h>
+#include "global.h"
 #include <ExampleApplication.h>
 
 #include <vector>
 
 #define OIS_DYNAMIC_LIB
 
-#include "global.h"
 #include "gamestatemanager.h"
 #include "pong2dstate.h"
 #include "pong3dstate.h"

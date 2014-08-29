@@ -15,6 +15,16 @@ set( SRC
         pong2dstate.cpp
         pong3dstate.h
         pong3dstate.cpp
+        player.h
+        player.cpp
+        keyboardplayer.h
+        keyboardplayer.cpp
+        kinect.h
+        kinect.cpp
+        kinectplayer.h
+        kinectplayer.cpp
+        aiplayer.h
+        aiplayer.cpp
     )
 
 set(CMAKE_CXX_FLAGS "-std=c++11" )

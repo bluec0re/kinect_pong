@@ -1,6 +1,20 @@
 #include "playstate.h"
 #include "gamestatemanager.h"
 
+#include "keyboardplayer.h"
+#include "aiplayer.h"
+
+#define MAP_SIZE 200
+// TODO: create map from following vars
+#define MAP_X 400
+#define MAP_Y 200
+#define MAP_X 200
+#define MAP_BBOX 190
+// TODO: create map from following vars
+#define MAP_BBOX_X 390
+#define MAP_BBOX_Y 190
+#define MAP_BBOX_Z 190
+
 PlayState::PlayState()
 {
 }
@@ -30,14 +44,14 @@ void PlayState::createBox(Ogre::Real red, Ogre::Real green, Ogre::Real blue, con
 
 
     myManualObject->begin("boxMaterial", Ogre::RenderOperation::OT_LINE_LIST);
-    myManualObject->position(-200, -200, -200); // 0
-    myManualObject->position(-200, -200,  200);
-    myManualObject->position(-200,  200,  200);
-    myManualObject->position(-200,  200, -200); // 3
-    myManualObject->position( 200, -200, -200);
-    myManualObject->position( 200, -200,  200); // 5
-    myManualObject->position( 200,  200,  200);
-    myManualObject->position( 200,  200, -200); // 7
+    myManualObject->position(-MAP_SIZE, -MAP_SIZE, -MAP_SIZE); // 0
+    myManualObject->position(-MAP_SIZE, -MAP_SIZE,  MAP_SIZE);
+    myManualObject->position(-MAP_SIZE,  MAP_SIZE,  MAP_SIZE);
+    myManualObject->position(-MAP_SIZE,  MAP_SIZE, -MAP_SIZE); // 3
+    myManualObject->position( MAP_SIZE, -MAP_SIZE, -MAP_SIZE);
+    myManualObject->position( MAP_SIZE, -MAP_SIZE,  MAP_SIZE); // 5
+    myManualObject->position( MAP_SIZE,  MAP_SIZE,  MAP_SIZE);
+    myManualObject->position( MAP_SIZE,  MAP_SIZE, -MAP_SIZE); // 7
 
     myManualObject->index(0);
     myManualObject->index(1);
@@ -112,13 +126,13 @@ void PlayState::createSubBox(Ogre::Real red, Ogre::Real green, Ogre::Real blue, 
 
     // create vertices
     int loops = 4;
-    int step = 400/(loops+1);
+    int step = MAP_SIZE*2/(loops+1);
 
     // xy
     for(int l = 1; l <= loops; l++) {
         for(int a = -1; a < 2; a+=2) {
             for(int b = -1; b < 2; b+=2) {
-                Ogre::Vector3 pos(200*a, 200*b*a, -200 + l*step);
+                Ogre::Vector3 pos(MAP_SIZE*a, MAP_SIZE*b*a, -MAP_SIZE + l*step);
                 myManualObject->position(pos);
                 positions.push_back(pos);
             }
@@ -129,7 +143,7 @@ void PlayState::createSubBox(Ogre::Real red, Ogre::Real green, Ogre::Real blue, 
     for(int l = 1; l <= loops; l++) {
         for(int a = -1; a < 2; a+=2) {
             for(int b = -1; b < 2; b+=2) {
-                Ogre::Vector3 pos(200*b*a, -200 + l*step, 200*a);
+                Ogre::Vector3 pos(MAP_SIZE*b*a, -MAP_SIZE + l*step, MAP_SIZE*a);
                 myManualObject->position(pos);
                 positions.push_back(pos);
             }
@@ -140,7 +154,7 @@ void PlayState::createSubBox(Ogre::Real red, Ogre::Real green, Ogre::Real blue, 
     for(int l = 1; l <= loops; l++) {
         for(int a = -1; a < 2; a+=2) {
             for(int b = -1; b < 2; b+=2) {
-                Ogre::Vector3 pos(-200 + l*step, 200*b*a, 200*a);
+                Ogre::Vector3 pos(-MAP_SIZE + l*step, MAP_SIZE*b*a, MAP_SIZE*a);
                 myManualObject->position(pos);
                 positions.push_back(pos);
             }
@@ -174,27 +188,36 @@ void PlayState::createSubBox(Ogre::Real red, Ogre::Real green, Ogre::Real blue, 
 
 void PlayState::enter() {
     {
-        boost::shared_ptr<Paddle> p(new Paddle(0xFF0000, "Player 1"));
+        PaddlePtr p(new Paddle(0xFF0000, "Player 1"));
         p->create(mDevice->sceneMgr);
-        p->setPosition(Ogre::Vector3(-190, 0, 0));
+        p->setPosition(Ogre::Vector3(-MAP_BBOX, 0, 0));
         _paddles.push_back(p);
+
+        PlayerPtr player(new KeyboardPlayer(p.get(), this));
+        _players.push_back(player);
     }
 
     {
-        boost::shared_ptr<Paddle> p(new Paddle(0x0000FF, "Player 2"));
+        PaddlePtr p(new Paddle(0x0000FF, "Player 2"));
         p->create(mDevice->sceneMgr);
-        p->setPosition(Ogre::Vector3(190, 0, 0));
+        p->setPosition(Ogre::Vector3(MAP_BBOX, 0, 0));
         _paddles.push_back(p);
+
+        PlayerPtr player(new AiPlayer(p.get(), this));
+        _players.push_back(player);
     }
 
-    _ball.reset(new Ball(0x00FF00));
-    _ball->create(mDevice->sceneMgr);
-    _ball->setSpeed(Ogre::Vector3(50,75,0));
+
+
+    BallPtr ball = addBall();
+
+    resetBall(ball);
 }
 
 void PlayState::exit() {
     _paddles.clear();
-    _ball.reset();
+    _balls.clear();
+    _players.clear();
 
     mDevice->sceneMgr->destroyAllManualObjects();
     mDevice->sceneMgr->getRootSceneNode()->removeAndDestroyAllChildren();
@@ -218,12 +241,82 @@ bool PlayState::keyReleased(const OIS::KeyEvent &arg) {
     return true;
 }
 
-bool PlayState::frameRenderingQueued(const Ogre::FrameEvent& evt) {
-    _ball->update(evt.timeSinceLastFrame);
+BallPtr PlayState::addBall() {
+    BallPtr ball(new Ball(0x00FF00));
+    ball->create(mDevice->sceneMgr);
+    ball->setAccel(getRandomAccel());
+    Ogre::Vector3 speed;
+    speed.x = getRandomSpeed();
+    speed.y = getRandomSpeed();
+    speed.z = getRandomSpeed();
+    ball->setSpeed(speed);
+    _balls.push_back(ball);
 
-    for(boost::shared_ptr<Paddle> paddle : _paddles) {
+    return ball;
+}
+
+void PlayState::resetBall(BallPtr b) {
+    if(_balls.size() != 1) {
+        _balls.erase(std::find(_balls.begin(), _balls.end(), b));
+    } else {
+        b->setPosition(Ogre::Vector3(0, 0, 0));
+        Ogre::Vector3 speed;
+        speed.x = getRandomSpeed();
+        speed.y = getRandomSpeed();
+        speed.z = getRandomSpeed();
+        b->setSpeed(speed);
+        b->setAccel(getRandomAccel());
+    }
+}
+
+Ogre::Real PlayState::getRandomSpeed() const {
+    return Ogre::Math::RangeRandom(25, 75) * (Ogre::Math::UnitRandom() > 0.5 ? -1 : 1);
+}
+
+Ogre::Vector3 PlayState::getRandomAccel() const {
+    return Ogre::Vector3(Ogre::Math::RangeRandom(10,20));
+}
+
+bool PlayState::frameRenderingQueued(const Ogre::FrameEvent& evt) {
+    checkHit();
+
+    for(BallPtr b : _balls) {
+        b->update(evt.timeSinceLastFrame);
+    }
+
+    for(PaddlePtr paddle : _paddles) {
         paddle->update(evt.timeSinceLastFrame);
     }
 
+    for(PlayerPtr p : _players) {
+        p->update(evt.timeSinceLastFrame);
+    }
+
     return true;
+}
+
+
+void PlayState::checkHit() {
+    for(PaddlePtr p : _paddles) {
+        const Ogre::AxisAlignedBox& bbox = p->getBoundingBox();
+
+        for(BallPtr b : _balls) {
+            if(bbox.intersects(b->getBoundingBox())) {
+                b->reverse(Ball::DIR_X);
+            }
+        }
+    }
+
+    for(BallPtr b : _balls) {
+        if(b->getPosition().x > MAP_BBOX) {
+            resetBall(b);
+        } else if(b->getPosition().x < -MAP_BBOX) {
+            // WIN OR LOOSE
+            resetBall(b);
+        } else if(b->getPosition().y > MAP_BBOX || b->getPosition().y < -MAP_BBOX) {
+            b->reverse(Ball::DIR_Y);
+        } else if(b->getPosition().z > MAP_BBOX || b->getPosition().z < -MAP_BBOX) {
+            b->reverse(Ball::DIR_Z);
+        }
+    }
 }

@@ -10,7 +10,6 @@ public:
     DECLARE_GAMESTATE_CLASS(Pong3DState)
 
     virtual void enter();
-    virtual bool frameRenderingQueued(const Ogre::FrameEvent& evt);
 };
 
 #endif // PON32DSTATE_H

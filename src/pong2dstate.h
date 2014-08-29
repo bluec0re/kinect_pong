@@ -10,7 +10,10 @@ public:
     DECLARE_GAMESTATE_CLASS(Pong2DState)
 
     virtual void enter();
-    virtual bool frameRenderingQueued(const Ogre::FrameEvent& evt);
+    void resetBall(BallPtr b);
+
+protected:
+    virtual Ogre::Vector3 getRandomAccel() const;
 };
 
 #endif // PONG2DSTATE_H
