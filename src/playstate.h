@@ -50,10 +50,11 @@ public:
 
     virtual void resetBall(BallPtr b);
     virtual BallPtr addBall();
+    virtual PaddlePtr addPaddle(int color, const Ogre::String& name, const Ogre::Real& pos);
     virtual const std::vector<BallPtr>& getBalls() const { return _balls; }
 
 protected:
-    virtual Ogre::Real getRandomSpeed() const;
+    virtual Ogre::Vector3 getRandomSpeed() const;
     virtual Ogre::Vector3 getRandomAccel() const;
 
 protected:

@@ -10,9 +10,8 @@ public:
     DECLARE_GAMESTATE_CLASS(Pong2DState)
 
     virtual void enter();
-    void resetBall(BallPtr b);
-
 protected:
+    virtual Ogre::Vector3 getRandomSpeed() const;
     virtual Ogre::Vector3 getRandomAccel() const;
 };
 

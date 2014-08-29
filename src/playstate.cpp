@@ -44,14 +44,14 @@ void PlayState::createBox(Ogre::Real red, Ogre::Real green, Ogre::Real blue, con
 
 
     myManualObject->begin("boxMaterial", Ogre::RenderOperation::OT_LINE_LIST);
-    myManualObject->position(-MAP_SIZE, -MAP_SIZE, -MAP_SIZE); // 0
-    myManualObject->position(-MAP_SIZE, -MAP_SIZE,  MAP_SIZE);
-    myManualObject->position(-MAP_SIZE,  MAP_SIZE,  MAP_SIZE);
-    myManualObject->position(-MAP_SIZE,  MAP_SIZE, -MAP_SIZE); // 3
-    myManualObject->position( MAP_SIZE, -MAP_SIZE, -MAP_SIZE);
-    myManualObject->position( MAP_SIZE, -MAP_SIZE,  MAP_SIZE); // 5
-    myManualObject->position( MAP_SIZE,  MAP_SIZE,  MAP_SIZE);
-    myManualObject->position( MAP_SIZE,  MAP_SIZE, -MAP_SIZE); // 7
+    myManualObject->position(-MAP_X, -MAP_Y, -MAP_Z); // 0
+    myManualObject->position(-MAP_X, -MAP_Y,  MAP_Z);
+    myManualObject->position(-MAP_X,  MAP_Y,  MAP_Z);
+    myManualObject->position(-MAP_X,  MAP_Y, -MAP_Z); // 3
+    myManualObject->position( MAP_X, -MAP_Y, -MAP_Z);
+    myManualObject->position( MAP_X, -MAP_Y,  MAP_Z); // 5
+    myManualObject->position( MAP_X,  MAP_Y,  MAP_Z);
+    myManualObject->position( MAP_X,  MAP_Y, -MAP_Z); // 7
 
     myManualObject->index(0);
     myManualObject->index(1);
@@ -116,7 +116,7 @@ void PlayState::createSubBox(Ogre::Real red, Ogre::Real green, Ogre::Real blue, 
     myManualObjectMaterial->setReceiveShadows(false);
     myManualObjectMaterial->getTechnique(0)->setLightingEnabled(true);
     myManualObjectMaterial->getTechnique(0)->getPass(0)->setDiffuse(red, green, blue, 0);
-    myManualObjectMaterial->getTechnique(0)->getPass(0)->setAmbient(0,0,1);
+    myManualObjectMaterial->getTechnique(0)->getPass(0)->setAmbient(red, green, blue);
     myManualObjectMaterial->getTechnique(0)->getPass(0)->setSelfIllumination(red,green,blue);
     //myManualObjectMaterial->;  // dispose pointer, not the material
 
@@ -132,7 +132,7 @@ void PlayState::createSubBox(Ogre::Real red, Ogre::Real green, Ogre::Real blue, 
     for(int l = 1; l <= loops; l++) {
         for(int a = -1; a < 2; a+=2) {
             for(int b = -1; b < 2; b+=2) {
-                Ogre::Vector3 pos(MAP_SIZE*a, MAP_SIZE*b*a, -MAP_SIZE + l*step);
+                Ogre::Vector3 pos(MAP_X*a, MAP_Y*b*a, -MAP_Z + l*step);
                 myManualObject->position(pos);
                 positions.push_back(pos);
             }
@@ -143,7 +143,7 @@ void PlayState::createSubBox(Ogre::Real red, Ogre::Real green, Ogre::Real blue, 
     for(int l = 1; l <= loops; l++) {
         for(int a = -1; a < 2; a+=2) {
             for(int b = -1; b < 2; b+=2) {
-                Ogre::Vector3 pos(MAP_SIZE*b*a, -MAP_SIZE + l*step, MAP_SIZE*a);
+                Ogre::Vector3 pos(MAP_X*b*a, -MAP_Y + l*step, MAP_Z*a);
                 myManualObject->position(pos);
                 positions.push_back(pos);
             }
@@ -151,10 +151,10 @@ void PlayState::createSubBox(Ogre::Real red, Ogre::Real green, Ogre::Real blue, 
     }
 
     // yz
-    for(int l = 1; l <= loops; l++) {
+    for(int l = 1; l <= loops*2+1; l++) {
         for(int a = -1; a < 2; a+=2) {
             for(int b = -1; b < 2; b+=2) {
-                Ogre::Vector3 pos(-MAP_SIZE + l*step, MAP_SIZE*b*a, MAP_SIZE*a);
+                Ogre::Vector3 pos(-MAP_X + l*step, MAP_Y*b*a, MAP_Z*a);
                 myManualObject->position(pos);
                 positions.push_back(pos);
             }
@@ -162,7 +162,7 @@ void PlayState::createSubBox(Ogre::Real red, Ogre::Real green, Ogre::Real blue, 
     }
 
     // connect the vertices
-    for(int l = 0; l < loops*3; l++) {
+    for(int l = 0; l < loops*4+1; l++) {
         int i = l*4;
         for(int j = 0; j < 4; j++) {
             int a = i+j;
@@ -187,23 +187,21 @@ void PlayState::createSubBox(Ogre::Real red, Ogre::Real green, Ogre::Real blue, 
 }
 
 void PlayState::enter() {
-    {
-        PaddlePtr p(new Paddle(0xFF0000, "Player 1"));
-        p->create(mDevice->sceneMgr);
-        p->setPosition(Ogre::Vector3(-MAP_BBOX, 0, 0));
-        _paddles.push_back(p);
+    Ogre::Light* pointLight = mDevice->sceneMgr->createLight("pointLight");
+    pointLight->setType(Ogre::Light::LT_POINT);
+    pointLight->setPosition(Ogre::Vector3::ZERO);
+    pointLight->setDiffuseColour(1.0, 1.0, 1.0);
+    pointLight->setSpecularColour(1.0, 1.0, 1.0);
 
-        PlayerPtr player(new KeyboardPlayer(p.get(), this));
+    {
+        PaddlePtr p = addPaddle(0xFF0000, "Player 1", -MAP_BBOX_X);
+        PlayerPtr player(new KeyboardPlayer("Player 1", p.get(), this));
         _players.push_back(player);
     }
 
-    {
-        PaddlePtr p(new Paddle(0x0000FF, "Player 2"));
-        p->create(mDevice->sceneMgr);
-        p->setPosition(Ogre::Vector3(MAP_BBOX, 0, 0));
-        _paddles.push_back(p);
-
-        PlayerPtr player(new AiPlayer(p.get(), this));
+    {        
+        PaddlePtr p = addPaddle(0x0000FF, "Player 2", MAP_BBOX_X);
+        PlayerPtr player(new AiPlayer(AiPlayer::AI_WEAK, "Player 2", p.get(), this));
         _players.push_back(player);
     }
 
@@ -221,6 +219,7 @@ void PlayState::exit() {
 
     mDevice->sceneMgr->destroyAllManualObjects();
     mDevice->sceneMgr->getRootSceneNode()->removeAndDestroyAllChildren();
+    mDevice->sceneMgr->destroyAllLights();
     /*mDevice->sceneMgr->destroySceneNode("box_node");
     mDevice->sceneMgr->destroySceneNode("box_subnode");*/
 }
@@ -245,14 +244,20 @@ BallPtr PlayState::addBall() {
     BallPtr ball(new Ball(0x00FF00));
     ball->create(mDevice->sceneMgr);
     ball->setAccel(getRandomAccel());
-    Ogre::Vector3 speed;
-    speed.x = getRandomSpeed();
-    speed.y = getRandomSpeed();
-    speed.z = getRandomSpeed();
-    ball->setSpeed(speed);
+    ball->enableAccel(false);
+    ball->setSpeed(getRandomSpeed());
     _balls.push_back(ball);
 
     return ball;
+}
+
+PaddlePtr PlayState::addPaddle(int color, const Ogre::String& name, const Ogre::Real& pos) {
+    PaddlePtr p(new Paddle(color, name));
+    p->create(mDevice->sceneMgr);
+    p->setPosition(Ogre::Vector3(pos, 0, 0));
+    _paddles.push_back(p);
+
+    return p;
 }
 
 void PlayState::resetBall(BallPtr b) {
@@ -260,17 +265,13 @@ void PlayState::resetBall(BallPtr b) {
         _balls.erase(std::find(_balls.begin(), _balls.end(), b));
     } else {
         b->setPosition(Ogre::Vector3(0, 0, 0));
-        Ogre::Vector3 speed;
-        speed.x = getRandomSpeed();
-        speed.y = getRandomSpeed();
-        speed.z = getRandomSpeed();
-        b->setSpeed(speed);
+        b->setSpeed(getRandomSpeed());
         b->setAccel(getRandomAccel());
     }
 }
 
-Ogre::Real PlayState::getRandomSpeed() const {
-    return Ogre::Math::RangeRandom(25, 75) * (Ogre::Math::UnitRandom() > 0.5 ? -1 : 1);
+Ogre::Vector3 PlayState::getRandomSpeed() const {
+    return Ogre::Vector3(Ogre::Math::RangeRandom(25, 75) * (Ogre::Math::UnitRandom() > 0.5 ? -1 : 1));
 }
 
 Ogre::Vector3 PlayState::getRandomAccel() const {
@@ -299,24 +300,40 @@ bool PlayState::frameRenderingQueued(const Ogre::FrameEvent& evt) {
 void PlayState::checkHit() {
     for(PaddlePtr p : _paddles) {
         const Ogre::AxisAlignedBox& bbox = p->getBoundingBox();
+        bool isLeft = p->getPosition().x < 0;
+        Ogre::Real collision = 0;
+        if(isLeft)
+            collision = bbox.getCorner(Ogre::AxisAlignedBox::NEAR_RIGHT_TOP).x;
+        else
+            collision = bbox.getCorner(Ogre::AxisAlignedBox::FAR_LEFT_BOTTOM).x;
 
         for(BallPtr b : _balls) {
             if(bbox.intersects(b->getBoundingBox())) {
-                b->reverse(Ball::DIR_X);
+                b->reverse(Ball::DIR_X, collision);
+                b->accelerate(b->getAccel());
             }
         }
     }
 
     for(BallPtr b : _balls) {
-        if(b->getPosition().x > MAP_BBOX) {
+        auto pos = b->getPosition();
+
+        if(pos.x > MAP_BBOX_X) {
+            for(PlayerPtr p : _players) {
+                if(p->getSide() == Player::SIDE_RIGHT)
+                    p->hit();
+            }
             resetBall(b);
-        } else if(b->getPosition().x < -MAP_BBOX) {
-            // WIN OR LOOSE
+        } else if(pos.x < -MAP_BBOX_X) {
+            for(PlayerPtr p : _players) {
+                if(p->getSide() == Player::SIDE_LEFT)
+                    p->hit();
+            }
             resetBall(b);
-        } else if(b->getPosition().y > MAP_BBOX || b->getPosition().y < -MAP_BBOX) {
-            b->reverse(Ball::DIR_Y);
-        } else if(b->getPosition().z > MAP_BBOX || b->getPosition().z < -MAP_BBOX) {
-            b->reverse(Ball::DIR_Z);
+        } else if(abs(pos.y) > MAP_BBOX_Y) {
+            b->reverse(Ball::DIR_Y, pos.y < 0 ? -MAP_BBOX_Y : MAP_BBOX_Y);
+        } else if(abs(pos.z) > MAP_BBOX_Z) {
+            b->reverse(Ball::DIR_Z, pos.z < 0 ? -MAP_BBOX_Z : MAP_BBOX_Z);
         }
     }
 }

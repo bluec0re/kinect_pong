@@ -6,9 +6,17 @@
 class AiPlayer : public Player
 {
 public:
-    using Player::Player;
+    enum Strength {
+        AI_WEAK,
+        AI_STRONG
+    };
+
+    AiPlayer(const Strength& s, const Ogre::String& name, Paddle* paddle, PlayState* state);
 
     virtual void update(double time = 0);
+
+private:
+    Strength _strength;
 };
 
 #endif // AIPLAYER_H

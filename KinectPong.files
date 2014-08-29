@@ -66,3 +66,4 @@ src/keyboardplayer.h
 src/keyboardplayer.cpp
 src/aiplayer.h
 src/aiplayer.cpp
+src/object.cpp

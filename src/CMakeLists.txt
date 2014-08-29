@@ -11,6 +11,7 @@ set( SRC
         playstate.h
         playstate.cpp
         object.h
+        object.cpp
         pong2dstate.h
         pong2dstate.cpp
         pong3dstate.h

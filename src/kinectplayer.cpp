@@ -1,6 +1,6 @@
 #include "kinectplayer.h"
 #include "kinect.h"
 
-KinectPlayer::KinectPlayer(Paddle* paddle, PlayState* playstate) : Player(paddle, playstate) {
+KinectPlayer::KinectPlayer(const Ogre::String& name, Paddle* paddle, PlayState* playstate) : Player(name, paddle, playstate) {
     _kinect = Kinect::getInstance();
 }

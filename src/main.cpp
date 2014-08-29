@@ -15,6 +15,7 @@ class Application : public ExampleApplication
 {
 protected:
     void createScene() {
+        mSceneMgr->setAmbientLight(Ogre::ColourValue(1.0, 1.0, 1.0));
     }
 
     void createFrameListener() {};

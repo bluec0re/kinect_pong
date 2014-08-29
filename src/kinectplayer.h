@@ -10,7 +10,7 @@ class PlayState;
 class KinectPlayer : public Player
 {
 public:
-    KinectPlayer(Paddle* paddle, PlayState* playstate);
+    KinectPlayer(const Ogre::String& name, Paddle* paddle, PlayState* playstate);
 
 private:
     Kinect* _kinect;

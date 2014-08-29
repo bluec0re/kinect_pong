@@ -8,7 +8,7 @@
 class Paddle : public Object
 {
 public:
-    Paddle(int color, const Ogre::String& player);
+    Paddle(int color, const Ogre::String& player, bool transparent=false);
     virtual ~Paddle ();
 
     virtual void create(Ogre::SceneManager* sceneMgr);
@@ -16,6 +16,7 @@ public:
 
 private:
     Ogre::String _player;
+    bool _transparent;
 };
 
 typedef boost::shared_ptr<Paddle> PaddlePtr;

@@ -3,25 +3,36 @@
 
 #include <boost/smart_ptr.hpp>
 
+#include "global.h"
+
 class Paddle;
 class PlayState;
 
 class Player
 {
 public:
-    Player(Paddle* paddle, PlayState* state) : _paddle(paddle), _state(state) {}
+    enum Side {
+        SIDE_LEFT,
+        SIDE_RIGHT,
+        SIDE_UNKNOWN
+    };
+
+    Player(const Ogre::String& name, Paddle* paddle, PlayState* state) : _name(name), _paddle(paddle), _state(state), _lives(3) {}
     virtual ~Player() {}
 
+    virtual const Ogre::String& getName() const { return _name; }
     virtual int getLives() const { return _lives; }
     virtual bool isAlive() const { return _lives > 0; }
-    virtual void hit() { _lives--; }
+    virtual void hit();
     virtual void setPaddle(Paddle* paddle) { _paddle = paddle; }
 
     virtual void update(double timeSinceLastFrame=0) = 0;
     virtual bool is2D() const;
     virtual bool is3D() const;
+    virtual Side getSide() const;
 
 protected:
+    const Ogre::String _name;
     int _lives;
     Paddle* _paddle;
     PlayState* _state;
