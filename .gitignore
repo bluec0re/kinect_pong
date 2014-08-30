@@ -1,0 +1,10 @@
+/build
+*.user
+*.log
+libs/*.zip
+libs/Nite2.2
+*.cfg
+*.swp
+*.swo
+*~
+*.bak
