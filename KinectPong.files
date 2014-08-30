@@ -67,3 +67,7 @@ src/keyboardplayer.cpp
 src/aiplayer.h
 src/aiplayer.cpp
 src/object.cpp
+src/cegui_utils.cpp
+src/cegui_utils.h
+src/menustate.h
+src/menustate.cpp

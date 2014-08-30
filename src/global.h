@@ -8,7 +8,8 @@
 #include <Ogre.h>
 #pragma clang diagnostic pop
 #include <OIS.h>
-//#include <CEGUI.h>
+#include <CEGUI/CEGUI.h>
+#include <CEGUI/RendererModules/Ogre/Renderer.h>
 
 class GameStateManager;
 
@@ -20,8 +21,7 @@ typedef struct
     OIS::InputManager *InputMgr;
     OIS::Keyboard *keyboard;
     OIS::Mouse *mouse;
-    //CEGUI::OgreCEGUIRenderer *GUIRenderer;
-    //CEGUI::System *GUISystem;
+    CEGUI::OgreRenderer *guiRenderer;
 } device_info;
 
 #endif /* end of include guard: GLOBAL_H_YO8PBGIO */
