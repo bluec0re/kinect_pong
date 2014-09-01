@@ -39,7 +39,7 @@ set(OPENNI2_INCLUDE_DIRS ${OPENNI2_INCLUDE_DIR})
 set(OPENNI2_LIBRARIES ${OPENNI2_LIBRARY})
 
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(OpenNI DEFAULT_MSG
+find_package_handle_standard_args(OpenNI2 DEFAULT_MSG
     OPENNI2_LIBRARY OPENNI2_INCLUDE_DIR)
     
 mark_as_advanced(OPENNI2_LIBRARY OPENNI2_INCLUDE_DIR)

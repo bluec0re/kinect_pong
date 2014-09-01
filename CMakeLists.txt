@@ -14,6 +14,10 @@ find_package( OIS REQUIRED )
 find_package( CEGUI REQUIRED )
 find_package( OpenNI2 )
 
+if(OPENNI2_FOUND)
+    add_definitions(-DHAVE_OPENNI2)
+endif(OPENNI2_FOUND)
+
 include_directories( AFTER ${OGRE_INCLUDE_DIRS} ${OGRE_Overlay_INCLUDE_DIRS} ${OIS_INCLUDE_DIR} ${CEGUI_INCLUDE_DIRS} ${OPENNI2_INCLUDE_DIRS} )
 
 set( NITE2_DIR "${CMAKE_SOURCE_DIR}/libs/Nite2.2" )
@@ -21,4 +25,7 @@ include_directories( AFTER "${NITE2_DIR}/Include" )
 link_directories( "${NITE2_DIR}/Redist/" )
 
 add_subdirectory( src )
-add_subdirectory( kinect_sandbox )
+
+if( NOT ${OPENNI2_FOUND} )
+    add_subdirectory( kinect_sandbox )
+endif()

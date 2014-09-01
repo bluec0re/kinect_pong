@@ -20,15 +20,25 @@ set( SRC
         player.cpp
         keyboardplayer.h
         keyboardplayer.cpp
-        kinect.h
-        kinect.cpp
-        kinectplayer.h
-        kinectplayer.cpp
         aiplayer.h
         aiplayer.cpp
     )
 
+if( ${OPENNI2_FOUND} )
+    set( SRC
+        ${SRC}
+        kinect.h
+        kinect.cpp
+        kinectplayer.h
+        kinectplayer.cpp
+    )
+endif()
+
 set(CMAKE_CXX_FLAGS "-std=c++11" )
 
 add_executable( ${PROJECT_NAME} ${SRC} )
-target_link_libraries( ${PROJECT_NAME} ${OGRE_LIBRARIES} ${OGRE_Overlay_LIBRARIES} ${OIS_LIBRARIES} ${Boost_LIBRARIES} ${OPENNI2_LIBRARIES} NiTE2 )
+target_link_libraries( ${PROJECT_NAME} ${OGRE_LIBRARIES} ${OGRE_Overlay_LIBRARIES} ${OIS_LIBRARIES} ${Boost_LIBRARIES})
+
+if( ${OPENNI2_FOUND} )
+    target_link_libraries( ${PROJECT_NAME} ${OPENNI2_LIBRARIES} NiTE2 )
+endif()

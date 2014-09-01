@@ -1,4 +1,6 @@
-#include <NiTE.h>
+#ifdef HAVE_OPENNI2 
+    #include <NiTE.h>
+#endif
 #include "global.h"
 #include <ExampleApplication.h>
 
@@ -64,6 +66,7 @@ public:
 };
 
 
+#ifdef HAVE_OPENNI2 
 void openni2() {
     nite::UserTracker ut;
     openni::Device device;
@@ -78,6 +81,7 @@ void openni2() {
     nite::UserTrackerFrameRef utf;
     ut.readFrame(&utf);
 }
+#endif
 
 int main(int argc, char *argv[])
 {
