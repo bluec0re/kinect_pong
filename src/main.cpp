@@ -1,6 +1,3 @@
-#ifdef HAVE_OPENNI2 
-    #include <NiTE.h>
-#endif
 #include "global.h"
 #include <ExampleApplication.h>
 
@@ -11,6 +8,10 @@
 #include "gamestatemanager.h"
 #include "pong2dstate.h"
 #include "pong3dstate.h"
+
+#ifdef HAVE_OPENNI2
+#include "kinect.h"
+#endif
 
 
 class Application : public ExampleApplication
@@ -66,26 +67,13 @@ public:
 };
 
 
-#ifdef HAVE_OPENNI2 
-void openni2() {
-    nite::UserTracker ut;
-    openni::Device device;
-
-    openni::Status rc = openni::OpenNI::initialize();
-    device.open(openni::ANY_DEVICE);
-
-    nite::NiTE::initialize();
-
-    ut.create(&device);
-
-    nite::UserTrackerFrameRef utf;
-    ut.readFrame(&utf);
-}
-#endif
-
 int main(int argc, char *argv[])
 {
     Application app;
     app.go();
+
+#ifdef HAVE_OPENNI2
+    Kinect::getInstance()->close();
+#endif
     return 0;
 }

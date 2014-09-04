@@ -1,7 +1,11 @@
 #ifndef __KINECT_H__
 #define __KINECT_H__
 
-#include "NiTE.h"
+#include "global.h"
+#include <NiTE.h>
+
+#include <vector>
+#include <map>
 
 class Player;
 //#include "NiteSampleUtilities.h"
@@ -20,21 +24,29 @@ class Kinect
             else
                 return (_kinect = new Kinect());
         }
-        ~Kinect() {
-            if(_kinect != nullptr)
-                delete _kinect;
-        };
-        void setPlayer(Player* player) {_player = player;};
-        void changeState();
+        virtual ~Kinect();
+
+        void update();
+        void init();
+        void close();
+
+        int waitForUser(bool blocking);
+        bool isConnected() const { return _connected; }
+
+        std::vector<int> getUsers() const;
+
+        nite::SkeletonState getTrackingState(int userid) const;
+        Ogre::Vector3 getJointPosition(const nite::JointType& type, int id) const;
 
         nite::SkeletonJoint getLeftHand(nite::UserTrackerFrameRef utf);
         nite::SkeletonJoint getRightHand(nite::UserTrackerFrameRef utf);
     protected:
         Kinect();
     private: 
-        Player* _player;
         static Kinect* _kinect;
         nite::UserTracker userTracker;
         nite::Status niteRc;
+        std::map<int, nite::UserData> _users;
+        bool _connected;
 };
 #endif

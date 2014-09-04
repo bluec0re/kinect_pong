@@ -10,10 +10,13 @@ class PlayState;
 class KinectPlayer : public Player
 {
 public:
-    KinectPlayer(const Ogre::String& name, Paddle* paddle, PlayState* playstate);
+    KinectPlayer(const Ogre::String& name, Paddle* paddle, PlayState* playstate, int userid=-1);
+
+    virtual void update(double timeSinceLastFrame = 0);
 
 private:
     Kinect* _kinect;
+    int _userid;
 };
 
 #endif // KINECTPLAYER_H

@@ -4,6 +4,11 @@
 #include "keyboardplayer.h"
 #include "aiplayer.h"
 
+#ifdef HAVE_OPENNI2
+#include "kinect.h"
+#include "kinectplayer.h"
+#endif
+
 #define MAP_SIZE 200
 // TODO: create map from following vars
 #define MAP_X 400
@@ -195,7 +200,13 @@ void PlayState::enter() {
 
     {
         PaddlePtr p = addPaddle(0xFF0000, "Player 1", -MAP_BBOX_X);
-        PlayerPtr player(new KeyboardPlayer("Player 1", p.get(), this));
+        PlayerPtr player;
+#ifdef HAVE_OPENNI2
+        if(Kinect::getInstance()->isConnected())
+            player.reset(new KinectPlayer("Player 1", p.get(), this));
+#endif
+        if(!player)
+            player.reset(new KeyboardPlayer("Player 1", p.get(), this));
         _players.push_back(player);
     }
 
