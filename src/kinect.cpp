@@ -44,7 +44,7 @@ void openniFrame2OgreTexture(Ogre::TexturePtr& texture, const openni::VideoFrame
 
     Ogre::HardwarePixelBufferSharedPtr pixelBuffer = texture->getBuffer();
 
-    pixelBuffer->lock(Ogre::HardwareBuffer::HBL_NORMAL); // for best performance use HBL_DISCARD!
+    pixelBuffer->lock(Ogre::HardwareBuffer::HBL_DISCARD); // for best performance use HBL_DISCARD!
     const Ogre::PixelBox& pixelBox = pixelBuffer->getCurrentLock();
 
     Ogre::uint8* pDest = static_cast<Ogre::uint8*>(pixelBox.data);
@@ -59,7 +59,15 @@ void openniFrame2OgreTexture(Ogre::TexturePtr& texture, const openni::VideoFrame
             if (*pDepth != 0)
             {
                 int nHistValue = histogram[*pDepth];
-                *pDest++ = nHistValue; // L
+                *(pDest++) = nHistValue; // R
+                *(pDest++) = nHistValue; // G
+                *(pDest++) = nHistValue; // B
+                *(pDest++) = 255; // A
+            } else {
+                *(pDest++) = 0;
+                *(pDest++) = 0;
+                *(pDest++) = 0;
+                *(pDest++) = 255;
             }
         }
 
@@ -70,6 +78,11 @@ void openniFrame2OgreTexture(Ogre::TexturePtr& texture, const openni::VideoFrame
 
     // Unlock the pixel buffer
     pixelBuffer->unlock();
+/*
+    Ogre::Image img;
+    texture->convertToImage(img);
+    img.save("/tmp/test.png");
+*/
 }
 
 Kinect::Kinect() : _connected(false) {
@@ -153,14 +166,20 @@ void Kinect::update() {
         if(_texture.isNull()) {
             int width = depthFrame.getVideoMode().getResolutionX();
             int height = depthFrame.getVideoMode().getResolutionY();
+            printf("::Creating texture %dx%d\n", width, height);
+            printf("::Depth Frame %dx%d crop %dx%d\n", depthFrame.getWidth(),
+                                                       depthFrame.getHeight(),
+                                                       depthFrame.getCropOriginX(),
+                                                       depthFrame.getCropOriginY()
+                   );
             _texture = Ogre::TextureManager::getSingleton().createManual(
                 "kinectDepthMap", // name
                 Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
                 Ogre::TEX_TYPE_2D,      // type
                 width, height,         // width & height
                 0,                // number of mipmaps
-                Ogre::PF_BYTE_L,     // pixel format
-                Ogre::TU_DYNAMIC_WRITE_ONLY_DISCARDABLE);      // usage; should be TU_DYNAMIC_WRITE_ONLY_DISCARDABLE for
+                Ogre::PF_BYTE_RGBA,     // pixel format
+                Ogre::TU_DEFAULT);      // usage; should be TU_DYNAMIC_WRITE_ONLY_DISCARDABLE for
                                   // textures updated very often (e.g. each frame)
         }
 

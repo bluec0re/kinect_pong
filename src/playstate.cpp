@@ -206,8 +206,14 @@ void PlayState::enter() {
         PlayerPtr player;
 #ifdef HAVE_OPENNI2
         if(Kinect::getInstance()->isConnected()) {
+            Kinect::getInstance()->update();
             // preview
             CEGUI::Texture& cetex = mDevice->guiRenderer->createTexture("depthMap", Kinect::getInstance()->getDepthImage());
+            /*
+            Ogre::Image img;
+            Kinect::getInstance()->getDepthImage()->convertToImage(img);
+            img.save("/tmp/test.png");
+            */
             const CEGUI::Rectf rect(CEGUI::Vector2f(0.0f, 0.0f), cetex.getOriginalDataSize());
             CEGUI::BasicImage* image = (CEGUI::BasicImage*)( &CEGUI::ImageManager::getSingleton().create("BasicImage", "RTTImage"));
                image->setTexture(&cetex);
