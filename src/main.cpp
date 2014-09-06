@@ -14,6 +14,16 @@
 #include "kinect.h"
 #endif
 
+#ifdef OIS_LINUX_PLATFORM
+    #include <argp.h>
+#endif
+
+struct arguments
+{
+    char *startState;
+};
+
+static struct arguments g_args;
 
 class Application : public ExampleApplication
 {
@@ -82,8 +92,12 @@ public:
 
         GameState* pong3d = Pong3DState::Create(&gameMgr, "Pong 3D");
 
-
-        gameMgr.start(menu);
+        if(strcasecmp(g_args.startState, "pong2d") == 0)
+            gameMgr.start(pong2d);
+        else if(strcasecmp(g_args.startState, "pong3d") == 0)
+            gameMgr.start(pong3d);
+        else
+            gameMgr.start(menu);
 
 
         device.InputMgr->destroyInputObject( device.mouse );
@@ -94,9 +108,54 @@ public:
 
 };
 
+#ifdef OIS_LINUX_PLATFORM
+    const char *argp_program_version =
+       "kinectpong 1.0";
+     const char *argp_program_bug_address =
+       "https://github.com/bluec0re/kinect_pong/issues";
+     /* Program documentation. */
+     static char doc[] =
+       "KinectPong -- a pong game using Openni";
+
+     /* A description of the arguments we accept. */
+     static char args_doc[] = "";
+
+     /* The options we understand. */
+     static struct argp_option options[] = {
+       {"state",  's', "STATE",      0,  "State to start with (menu, pong2d, pong3d)" },
+       { 0 }
+     };
+
+     /* Parse a single option. */
+     static error_t
+     parse_opt (int key, char *arg, struct argp_state *state)
+     {
+       /* Get the input argument from argp_parse, which we
+          know is a pointer to our arguments structure. */
+       struct arguments *arguments = reinterpret_cast<struct arguments*>(state->input);
+
+       switch (key)
+         {
+         case 's':
+           arguments->startState = arg;
+           break;
+
+         default:
+           return ARGP_ERR_UNKNOWN;
+         }
+       return 0;
+     }
+
+     /* Our argp parser. */
+     static struct argp argp = { options, parse_opt, args_doc, doc };
+#endif
 
 int main(int argc, char *argv[])
 {
+    g_args.startState = "menu";
+#ifdef OIS_LINUX_PLATFORM
+    argp_parse (&argp, argc, argv, 0, 0, &g_args);
+#endif
     Application app;
     app.go();
 
