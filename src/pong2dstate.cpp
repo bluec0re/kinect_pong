@@ -1,10 +1,5 @@
 #include "pong2dstate.h"
 
-Pong2DState::Pong2DState()
-{
-}
-
-
 void Pong2DState::enter() {
     PlayState::enter();
     createBox(0.5,0.5,0.1, Ogre::Plane(Ogre::Vector3(0, 0, -1), -190));

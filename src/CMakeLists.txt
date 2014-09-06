@@ -22,6 +22,12 @@ set( SRC
         keyboardplayer.cpp
         aiplayer.h
         aiplayer.cpp
+        guistate.h
+        guistate.cpp
+        menustate.h
+        menustate.cpp
+        cegui_utils.h
+        cegui_utils.cpp
     )
 
 if( ${OPENNI2_FOUND} )
@@ -34,10 +40,8 @@ if( ${OPENNI2_FOUND} )
     )
 endif()
 
-set(CMAKE_CXX_FLAGS "-std=c++11" )
-
 add_executable( ${PROJECT_NAME} ${SRC} )
-target_link_libraries( ${PROJECT_NAME} ${OGRE_LIBRARIES} ${OGRE_Overlay_LIBRARIES} ${OIS_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries( ${PROJECT_NAME} ${OGRE_LIBRARIES} ${OGRE_Overlay_LIBRARIES} ${OIS_LIBRARIES} ${CEGUI_LIBRARIES} ${CEGUI_OgreRenderer_LIBRARIES} ${Boost_LIBRARIES})
 
 if( ${OPENNI2_FOUND} )
     target_link_libraries( ${PROJECT_NAME} ${OPENNI2_LIBRARIES} NiTE2 )

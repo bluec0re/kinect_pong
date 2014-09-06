@@ -1,16 +1,17 @@
 #ifndef PLAYSTATE_H
 #define PLAYSTATE_H
 
-#include "gamestate.h"
+#include "guistate.h"
 #include "paddle.h"
 #include "ball.h"
 #include "player.h"
 
 
-class PlayState : public GameState
+class PlayState : public GuiState
 {
 public:
-    PlayState();
+    using GuiState::GuiState;
+
     /**
      * create the box around the game field
      *
@@ -39,11 +40,7 @@ public:
     virtual bool pause() { return true; }
     virtual void resume() {}
 
-    virtual bool keyPressed(const OIS::KeyEvent &arg) { return true; }
     virtual bool keyReleased(const OIS::KeyEvent &arg);
-    virtual bool mouseMoved( const OIS::MouseEvent &arg ) { return true; }
-    virtual bool mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id ) { return true; }
-    virtual bool mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id ) { return true; }
 
     virtual bool frameRenderingQueued(const Ogre::FrameEvent& evt);
     virtual void checkHit();

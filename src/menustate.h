@@ -1,26 +1,98 @@
 #ifndef MENUSTATE_H
 #define MENUSTATE_H
 
-#include "gamestate.h"
+#include "guistate.h"
 
-class MenuState : public GameState
+enum WriteFocus
+{
+    WF_TopBar,
+    WF_BotBar,
+
+    WF_Count
+};
+
+class MenuState : public GuiState
 {
 public:
-    using GameState::GameState;
+    using GuiState::GuiState;
+    DECLARE_GAMESTATE_CLASS(MenuState);
 
 
     virtual void enter();
     virtual void exit();
-    virtual bool pause() { return true; }
-    virtual void resume() {}
+    virtual bool pause();
+    virtual void resume();
 
-    virtual bool keyPressed(const OIS::KeyEvent &arg);
-    virtual bool keyReleased(const OIS::KeyEvent &arg);
-    virtual bool mouseMoved( const OIS::MouseEvent &arg );
-    virtual bool mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id );
-    virtual bool mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id );
+    virtual bool frameRenderingQueued(const Ogre::FrameEvent &evt);
 
-    virtual bool frameRenderingQueued(const Ogre::FrameEvent& evt);
+protected:
+    bool initialise(CEGUI::GUIContext* guiContext);
+    void setupAnimations();
+    void onEnteringSample();
+    bool handleInnerPartStartClickAreaClick(const CEGUI::EventArgs& args);
+    bool handleCheckIfNaviIconAnimationNeedsChange(const CEGUI::EventArgs& args);
+    bool handleNaviSelectionIconAnimStart(const CEGUI::EventArgs& args);
+    bool handleStartPopupLinesQuitDisplay(const CEGUI::EventArgs& args);
+    bool handleInnerButtonsLabelEntered(const CEGUI::EventArgs& args);
+    bool handleInnerButtonsLabelLeft(const CEGUI::EventArgs& args);
+    void stopStartPopupLinesAnimations();
+    void setupWindows();
+    void disableInteractivePlanetElements();
+    void enableInteractivePlanetElements();
+    void updateIntroText();
+    void startEntranceAnimations();
+    void resetAnimations();
+    void setupButtonClickHandlers();
+    void setupInnerButtonsSubOptionsLabels();
+    CEGUI::Window* getIconWindowFromLabel(CEGUI::Window* window);
+    void setupPopupLinesAnimations();
+
+
+protected:
+    CEGUI::Window* _root;
+    CEGUI::GUIContext* _guiContext;
+
+    static const float s_firstStartDelay;
+    static const float s_secondStartDelay;
+    static const float s_loginDisplayStartDelay;
+
+    //WriteFocus _currentWriteFocus;
+    float _timeSinceStart;
+
+    float _timeSinceLoginAccepted;
+
+    bool _interactiveElementsWereInitiallyBlendedOut;
+    bool _interactivePlanetElementsAreEnabled;
+    bool _navigationIsEnabled;
+    bool _loginWasAccepted;
+    bool _mouseIsHoveringNavi;
+    bool _startButtonClicked;
+
+    WriteFocus _currentWriteFocus;
+
+    CEGUI::String _userName;
+    CEGUI::AnimationInstance* _topBarAnimInst;
+    CEGUI::AnimationInstance* _botBarAnimInst;
+    CEGUI::AnimationInstance* _insideBlendInAnimInst;
+    CEGUI::AnimationInstance* _insideImage3RotateInInst;
+    CEGUI::AnimationInstance* _insideImage4RotateInInst;
+    CEGUI::AnimationInstance* _insideImageRingsContainerSizeInInst;
+
+    CEGUI::AnimationInstance* _buttonFadeInAnimInst1;
+    CEGUI::AnimationInstance* _buttonFadeInAnimInst5;
+
+    CEGUI::AnimationInstance* _startButtonBlendInAnimInst;
+
+    CEGUI::AnimationInstance* _centerButtonsPartialBlendOutInst;
+    CEGUI::AnimationInstance* _centerButtonsBlendInInst;
+
+    CEGUI::AnimationInstance* _botBarLabelBlendOutInst;
+
+    CEGUI::AnimationInstance* _popupLinesQuitAnimInst;
+
+    CEGUI::Window* _topBarLabel;
+    CEGUI::Window* _botBarLabel;
+    CEGUI::Window* _startButtonClickArea;
 };
 
 #endif // MENUSTATE_H

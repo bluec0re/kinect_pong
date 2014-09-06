@@ -8,3 +8,5 @@ src
 /usr/include/OGRE
 /usr/include/OIS
 /usr/include/cegui-0
+.
+cmake

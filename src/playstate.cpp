@@ -1,3 +1,4 @@
+#include "global.h"
 #include "playstate.h"
 #include "gamestatemanager.h"
 
@@ -20,9 +21,6 @@
 #define MAP_BBOX_Y 190
 #define MAP_BBOX_Z 190
 
-PlayState::PlayState()
-{
-}
 
 /**
  * create the box around the game field
@@ -192,6 +190,11 @@ void PlayState::createSubBox(Ogre::Real red, Ogre::Real green, Ogre::Real blue, 
 }
 
 void PlayState::enter() {
+    CEGUI::SchemeManager::getSingleton().createFromFile("TaharezLook.scheme");
+    CEGUI::WindowManager &wmgr = CEGUI::WindowManager::getSingleton();
+    /*CEGUI::Window *sheet = wmgr.createWindow("DefaultWindow", "CEGUIDemo/Sheet");
+    CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(sheet);*/
+
     Ogre::Light* pointLight = mDevice->sceneMgr->createLight("pointLight");
     pointLight->setType(Ogre::Light::LT_POINT);
     pointLight->setPosition(Ogre::Vector3::ZERO);
@@ -202,8 +205,26 @@ void PlayState::enter() {
         PaddlePtr p = addPaddle(0xFF0000, "Player 1", -MAP_BBOX_X);
         PlayerPtr player;
 #ifdef HAVE_OPENNI2
-        if(Kinect::getInstance()->isConnected())
+        if(Kinect::getInstance()->isConnected()) {
+            // preview
+            CEGUI::Texture& cetex = mDevice->guiRenderer->createTexture("depthMap", Kinect::getInstance()->getDepthImage());
+            const CEGUI::Rectf rect(CEGUI::Vector2f(0.0f, 0.0f), cetex.getOriginalDataSize());
+            CEGUI::BasicImage* image = (CEGUI::BasicImage*)( &CEGUI::ImageManager::getSingleton().create("BasicImage", "RTTImage"));
+               image->setTexture(&cetex);
+               image->setArea(rect);
+               image->setAutoScaled(CEGUI::ASM_Both);
+
+            CEGUI::Window *si = CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/StaticImage", "RTTWindow");
+            si->setSize(CEGUI::USize(CEGUI::UDim(0.5f, 0),
+                                     CEGUI::UDim(0.4f, 0)));
+            si->setPosition(CEGUI::UVector2(CEGUI::UDim(0.5f, 0),
+                                            CEGUI::UDim(0.0f, 0)));
+            si->setProperty("Image", "RTTImage");
+            //sheet->addChild(si);
+            CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(si);
+
             player.reset(new KinectPlayer("Player 1", p.get(), this));
+        }
 #endif
         if(!player)
             player.reset(new KeyboardPlayer("Player 1", p.get(), this));
@@ -236,6 +257,9 @@ void PlayState::exit() {
 }
 
 bool PlayState::keyReleased(const OIS::KeyEvent &arg) {
+    if(!GuiState::keyReleased(arg))
+        return false;
+
     if(arg.key == OIS::KC_ESCAPE) {
         parent->popGameState();
     } else if(arg.key == OIS::KC_TAB) {
@@ -290,6 +314,9 @@ Ogre::Vector3 PlayState::getRandomAccel() const {
 }
 
 bool PlayState::frameRenderingQueued(const Ogre::FrameEvent& evt) {
+    if(!GuiState::frameRenderingQueued(evt))
+        return false;
+
     checkHit();
 
     for(BallPtr b : _balls) {

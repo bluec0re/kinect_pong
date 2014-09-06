@@ -6,7 +6,8 @@
 class Pong3DState : public PlayState
 {
 public:
-    Pong3DState();
+    using PlayState::PlayState;
+
     DECLARE_GAMESTATE_CLASS(Pong3DState)
 
     virtual void enter();

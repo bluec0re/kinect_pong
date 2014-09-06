@@ -11,7 +11,7 @@ find_package( Boost
 )
 find_package( OGRE REQUIRED )
 find_package( OIS REQUIRED )
-find_package( CEGUI REQUIRED )
+find_package( CEGUI 0.8 REQUIRED )
 find_package( OpenNI2 )
 
 if(OPENNI2_FOUND)
@@ -23,6 +23,9 @@ include_directories( AFTER ${OGRE_INCLUDE_DIRS} ${OGRE_Overlay_INCLUDE_DIRS} ${O
 set( NITE2_DIR "${CMAKE_SOURCE_DIR}/libs/Nite2.2" )
 include_directories( AFTER "${NITE2_DIR}/Include" )
 link_directories( "${NITE2_DIR}/Redist/" )
+
+
+list( APPEND CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}" )
 
 add_subdirectory( src )
 
