@@ -3,6 +3,11 @@
  
 #include "global.h"
 #include "gamestate.h"
+
+
+#ifdef HAVE_OPENCV
+    class OgreCvRecorder;
+#endif
  
 /** \class GameStateManager
     The GameStateManager manages changes in the game states
@@ -63,6 +68,9 @@ protected:
     device_info *mDevice;
     /** If this is set to true, the game state manager prepares to exit. */
     bool mShutdown;
+#ifdef HAVE_OPENCV
+    OgreCvRecorder* videoRecorder;
+#endif
 };
  
 #endif //__gamestatemanager_h__

@@ -232,3 +232,4 @@ src/pong2dstate.cpp
 src/pong2dstate.h
 src/pong3dstate.cpp
 src/pong3dstate.h
+src/videorecorder.h

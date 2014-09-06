@@ -40,8 +40,20 @@ if( ${OPENNI2_FOUND} )
     )
 endif()
 
+if( ${OpenCV_FOUND} )
+    set( SRC
+        ${SRC}
+        videorecorder.h
+    )
+endif()
+
 add_executable( ${PROJECT_NAME} ${SRC} )
-target_link_libraries( ${PROJECT_NAME} ${OGRE_LIBRARIES} ${OGRE_Overlay_LIBRARIES} ${OIS_LIBRARIES} ${CEGUI_LIBRARIES} ${CEGUI_OgreRenderer_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries( ${PROJECT_NAME} ${OGRE_LIBRARIES}
+                                       ${OGRE_Overlay_LIBRARIES}
+                                       ${OIS_LIBRARIES} ${CEGUI_LIBRARIES}
+                                       ${CEGUI_OgreRenderer_LIBRARIES}
+                                       ${Boost_LIBRARIES}
+                                       ${OpenCV_LIBRARIES})
 
 if( ${OPENNI2_FOUND} )
     target_link_libraries( ${PROJECT_NAME} ${OPENNI2_LIBRARIES} NiTE2 )

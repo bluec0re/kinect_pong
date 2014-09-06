@@ -18,12 +18,7 @@
     #include <argp.h>
 #endif
 
-struct arguments
-{
-    char *startState;
-};
-
-static struct arguments g_args;
+struct arguments g_args;
 
 class Application : public ExampleApplication
 {
@@ -123,6 +118,9 @@ public:
      /* The options we understand. */
      static struct argp_option options[] = {
        {"state",  's', "STATE",      0,  "State to start with (menu, pong2d, pong3d)" },
+#ifdef HAVE_OPENCV
+       {"record",  'r', 0,      0,  "Record the game into video" },
+#endif
        { 0 }
      };
 
@@ -140,6 +138,10 @@ public:
            arguments->startState = arg;
            break;
 
+         case 'r':
+           arguments->record = true;
+           break;
+
          default:
            return ARGP_ERR_UNKNOWN;
          }
@@ -153,6 +155,7 @@ public:
 int main(int argc, char *argv[])
 {
     g_args.startState = "menu";
+    g_args.record = false;
 #ifdef OIS_LINUX_PLATFORM
     argp_parse (&argp, argc, argv, 0, 0, &g_args);
 #endif

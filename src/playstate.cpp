@@ -10,18 +10,6 @@
 #include "kinectplayer.h"
 #endif
 
-#define MAP_SIZE 200
-// TODO: create map from following vars
-#define MAP_X 400
-#define MAP_Y 200
-#define MAP_Z 200
-#define MAP_BBOX 190
-// TODO: create map from following vars
-#define MAP_BBOX_X 390
-#define MAP_BBOX_Y 190
-#define MAP_BBOX_Z 190
-
-
 /**
  * create the box around the game field
  *
@@ -208,6 +196,7 @@ void PlayState::enter() {
         if(Kinect::getInstance()->isConnected()) {
             Kinect::getInstance()->update();
             // preview
+
             CEGUI::Texture& cetex = mDevice->guiRenderer->createTexture("depthMap", Kinect::getInstance()->getDepthImage());
             /*
             Ogre::Image img;
@@ -221,9 +210,9 @@ void PlayState::enter() {
                image->setAutoScaled(CEGUI::ASM_Both);
 
             CEGUI::Window *si = CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/StaticImage", "RTTWindow");
-            si->setSize(CEGUI::USize(CEGUI::UDim(0.5f, 0),
-                                     CEGUI::UDim(0.4f, 0)));
-            si->setPosition(CEGUI::UVector2(CEGUI::UDim(0.5f, 0),
+            si->setSize(CEGUI::USize(CEGUI::UDim(0.25f, 0),
+                                     CEGUI::UDim(0.25f, 0)));
+            si->setPosition(CEGUI::UVector2(CEGUI::UDim(0.75f, 0),
                                             CEGUI::UDim(0.0f, 0)));
             si->setProperty("Image", "RTTImage");
             //sheet->addChild(si);
@@ -260,6 +249,10 @@ void PlayState::exit() {
     mDevice->sceneMgr->destroyAllLights();
     /*mDevice->sceneMgr->destroySceneNode("box_node");
     mDevice->sceneMgr->destroySceneNode("box_subnode");*/
+
+    CEGUI::WindowManager::getSingleton().destroyAllWindows();
+    CEGUI::ImageManager::getSingleton().destroyAll();
+    mDevice->guiRenderer->destroyAllTextures();
 }
 
 bool PlayState::keyReleased(const OIS::KeyEvent &arg) {

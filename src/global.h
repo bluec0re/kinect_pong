@@ -25,4 +25,25 @@ typedef struct
     CEGUI::OgreRenderer *guiRenderer;
 } device_info;
 
+#define MAP_SIZE 200
+// TODO: create map from following vars
+#define MAP_X 400
+#define MAP_Y 200
+#define MAP_Z 200
+#define MAP_BBOX 190
+// TODO: create map from following vars
+#define MAP_BBOX_X 390
+#define MAP_BBOX_Y 190
+#define MAP_BBOX_Z 190
+
+
+
+struct arguments
+{
+    char *startState;
+    bool record;
+};
+
+extern arguments g_args;
+
 #endif /* end of include guard: GLOBAL_H_YO8PBGIO */

@@ -87,6 +87,11 @@ void openniFrame2OgreTexture(Ogre::TexturePtr& texture, const openni::VideoFrame
 
 Kinect::Kinect() : _connected(false) {
     init();
+    _markerPositions[TOP_LEFT] = nite::Point3f(0, 0, 0);
+    _markerPositions[TOP_RIGHT] = nite::Point3f(1, 0, 0);
+    _markerPositions[BOTTOM_LEFT] = nite::Point3f(0, 1, 0);
+    _markerPositions[BOTTOM_RIGHT] = nite::Point3f(1, 1, 0);
+    _markerPositions[CENTER] = nite::Point3f(0.5, 0.5, 0);
 }
 
 Kinect::~Kinect() {
@@ -233,4 +238,14 @@ Ogre::TexturePtr& Kinect::getDepthImage() {
 
 const Ogre::TexturePtr& Kinect::getDepthImage() const {
     return _texture;
+}
+
+
+const nite::Point3f& Kinect::getRealWorldMarkerPos(const Marker &marker) const {
+    size_t idx = static_cast<size_t>(marker);
+
+    if(idx > CENTER)
+        throw std::out_of_range("Invalid marker type specified");
+
+    return _markerPositions[idx];
 }

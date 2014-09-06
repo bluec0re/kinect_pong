@@ -20,6 +20,14 @@ class Player;
 class Kinect
 {
     public: 
+        enum Marker {
+            TOP_LEFT = 0,
+            TOP_RIGHT,
+            BOTTOM_LEFT,
+            BOTTOM_RIGHT,
+            CENTER
+        };
+
         static Kinect* getInstance() {
             if(_kinect != nullptr)
                 return _kinect;
@@ -42,6 +50,8 @@ class Kinect
 
         Ogre::TexturePtr& getDepthImage();
         const Ogre::TexturePtr& getDepthImage() const;
+
+        const nite::Point3f& getRealWorldMarkerPos(const Marker& marker) const;
     protected:
         Kinect();
     private: 
@@ -53,5 +63,7 @@ class Kinect
         nite::UserTrackerFrameRef _lastFrame;
         Ogre::TexturePtr _texture;
         float	_depthHist[MAX_DEPTH];
+
+        nite::Point3f _markerPositions[5];
 };
 #endif

@@ -1,11 +1,19 @@
 #include "gamestatemanager.h"
- 
+
+
+#ifdef HAVE_OPENCV
+    #include "videorecorder.h"
+#endif
+
 /**    Constructs the GameStateManager.  Must have all
     input, output, gui functions in order to manage
     states. */
 GameStateManager::GameStateManager(device_info *devices) : mShutdown(false)
 {
     mDevice=devices;
+#ifdef HAVE_OPENCV
+    videoRecorder = new OgreCvRecorder("./record.mpg");
+#endif
 }
  
 /** Cleans up the game states before the instance dies. */
@@ -25,6 +33,11 @@ GameStateManager::~GameStateManager()
         mStates.back().state->destroy();
         mStates.pop_back();
     }
+
+#ifdef HAVE_OPENCV
+    if(videoRecorder)
+        delete videoRecorder;
+#endif
 }
  
 /** Store a game state to manage. */
@@ -66,23 +79,20 @@ void GameStateManager::start(GameState *state)
         mDevice->keyboard->capture();
         mDevice->mouse->capture();
  
-        // run the message pump
-#if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
-        {
-            MSG msg;
-            while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) 
-            {
-                 if (msg.message == WM_QUIT)
-                     Shutdown();
-                 else 
-                 {
-                     TranslateMessage(&msg);
-                     DispatchMessage(&msg);
-                 }
-            }
+        Ogre::WindowEventUtilities::messagePump();
+
+#ifdef HAVE_OPENCV
+        mDevice->ogre->renderOneFrame((float)(1.0f/30.0f));
+
+        if (videoRecorder) {
+            videoRecorder->start();
+            videoRecorder->update(mDevice->rwindow);
         }
-#endif
+
+        usleep(10);
+#else
         mDevice->ogre->renderOneFrame();
+#endif
     }
 }
  

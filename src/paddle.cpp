@@ -1,8 +1,5 @@
+#include "global.h"
 #include "paddle.h"
-
-#define MAP_BBOX_X 390
-#define MAP_BBOX_Y 190
-#define MAP_BBOX_Z 190
 
 Paddle::Paddle(int color, const Ogre::String& player, bool transparent) : Object(color),
     _player(player), _transparent(transparent)
