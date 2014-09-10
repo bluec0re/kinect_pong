@@ -117,7 +117,7 @@ public:
         device.InputMgr->destroyInputObject( device.keyboard );
 
         OIS::InputManager::destroyInputSystem(device.InputMgr);
-        
+
 
 #ifdef HAVE_OPENNI2
         Kinect::getInstance()->close();

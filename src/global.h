@@ -40,7 +40,7 @@ typedef struct
 
 struct arguments
 {
-    char *startState;
+    const char *startState;
     bool record;
     bool debug;
 };
