@@ -30,10 +30,16 @@ protected:
     void createFrameListener() {};
 
 public:
+    Application() {
+        mSceneMgr = nullptr;
+    }
+
     virtual void go(void)
     {
-        if (!setup())
+        if (!setup()) {
+            LogManager::getSingleton().logMessage(LogMessageLevel::LML_CRITICAL, "!!! Setup cancelled !!!");
             return;
+        }
 
         device_info device;
         device.ogre = mRoot;
@@ -111,6 +117,11 @@ public:
         device.InputMgr->destroyInputObject( device.keyboard );
 
         OIS::InputManager::destroyInputSystem(device.InputMgr);
+        
+
+#ifdef HAVE_OPENNI2
+        Kinect::getInstance()->close();
+#endif
     }
 
 };
@@ -179,9 +190,5 @@ int main(int argc, char *argv[])
 #endif
     Application app;
     app.go();
-
-#ifdef HAVE_OPENNI2
-    Kinect::getInstance()->close();
-#endif
     return 0;
 }

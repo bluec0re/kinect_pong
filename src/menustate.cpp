@@ -280,6 +280,7 @@ void MenuState::onEnteringSample()
     _timeSinceLoginAccepted = 0.0f;
     _loginWasAccepted = true;
     //_botNaviContainer->setEnabled(true);
+    _guiContext->getMouseCursor().hide();
 }
 
 bool MenuState::frameRenderingQueued(const Ogre::FrameEvent &evt)
@@ -289,23 +290,11 @@ bool MenuState::frameRenderingQueued(const Ogre::FrameEvent &evt)
     float timeSinceLastUpdate = evt.timeSinceLastFrame;
     _timeSinceStart += timeSinceLastUpdate;
 
-    updateIntroText();/*
-    if(_loginWasAccepted)
-    {
-        _timeSinceLoginAccepted += timeSinceLastUpdate;
+    updateIntroText();
 
-        updateLoginWelcomeText(timeSinceLastUpdate);
-        updateLoginStartButtonText(timeSinceLastUpdate);
-    }*/
-/*
-    if(_timeSinceStart >= s_loginDisplayStartDelay && !_loginContainer->isVisible())
-        _loginContainerMoveInInst->start();
-
-    if(_timeSinceStart >= s_secondStartDelay && !_interactiveElementsWereInitiallyBlendedOut)
-    {
-        disableInteractivePlanetElements();
-        disableNavigationBarElements();
-    }*/
+    if(_timeSinceStart > s_firstStartDelay) {
+        _guiContext->getMouseCursor().show();
+    }
 
     return true;
 }
