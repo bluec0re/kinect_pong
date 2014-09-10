@@ -4,7 +4,7 @@
 #include "playstate.h"
 #include <iostream>
 
-KinectPlayer::KinectPlayer(const Ogre::String& name, Paddle* paddle, PlayState* playstate, int userid) : Player(name, paddle, playstate), _userid(userid) {
+KinectPlayer::KinectPlayer(const Ogre::String& name, Paddle* paddle, PlayState* playstate, int userid) : Player(name + Ogre::String(" (Kinect)"), paddle, playstate), _userid(userid) {
     _kinect = Kinect::getInstance();
 }
 
@@ -36,4 +36,9 @@ void KinectPlayer::update(double timeSinceLastFrame) {
         _paddle->setPosition(curPos);
     } else
         _userid = -1;
+}
+
+
+bool KinectPlayer::isReady() const {
+    return _userid != -1 && _kinect->getTrackingState(_userid) == nite::SKELETON_TRACKED;
 }

@@ -45,11 +45,11 @@ void Paddle::create(Ogre::SceneManager* sceneMgr) {
 
 void Paddle::setPosition(const Ogre::Vector3& tmp) {
     Ogre::Vector3 pos(tmp);
-    if(abs(pos.x) > MAP_BBOX_X || abs(pos.x) < MAP_BBOX_X)
+    if(fabs(pos.x) > MAP_BBOX_X || fabs(pos.x) < MAP_BBOX_X)
         return;
-    if(abs(pos.y) > MAP_BBOX_Y)
-        pos.y = MAP_BBOX_Y * (static_cast<int>(pos.y)/abs(pos.y));
-    if(abs(pos.z) > MAP_BBOX_Z)
-        pos.z = MAP_BBOX_Z * (static_cast<int>(pos.z)/abs(pos.z));
+    if(fabs(pos.y) > MAP_BBOX_Y)
+        pos.y = MAP_BBOX_Y * (static_cast<int>(pos.y)/fabs(pos.y));
+    if(fabs(pos.z) > MAP_BBOX_Z)
+        pos.z = MAP_BBOX_Z * (static_cast<int>(pos.z)/fabs(pos.z));
     Object::setPosition(pos);
 }

@@ -37,7 +37,7 @@ void Ball::create(Ogre::SceneManager* sceneMgr) {
     _entity->setMaterial(_mat);
 }
 
-#define CORRECT_SIGN(attr) ((collision < 0 ? bbox.getHalfSize().attr : -bbox.getHalfSize().attr) * (abs(pos.attr) < abs(collision) ? 2 : 1))
+#define CORRECT_SIGN(attr) ((collision < 0 ? bbox.getHalfSize().attr : -bbox.getHalfSize().attr) * (fabs(pos.attr) < fabs(collision) ? 2 : 1))
 
 void Ball::reverse(const Direction& dir, const Ogre::Real& collision) {
     Ogre::Vector3 pos = getPosition();

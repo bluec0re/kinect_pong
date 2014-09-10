@@ -11,7 +11,7 @@ void Pong2DState::enter() {
 }
 
 Ogre::Vector3 Pong2DState::getRandomSpeed() const {
-    auto speed =  Ogre::Vector3(Ogre::Math::RangeRandom(25, 75) * (Ogre::Math::UnitRandom() > 0.5 ? -1 : 1));
+    auto speed =  PlayState::getRandomSpeed();
     speed.z = 0;
     return speed;
 }

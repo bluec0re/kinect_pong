@@ -6,7 +6,8 @@
 class KeyboardPlayer : public Player
 {
 public:
-    using Player::Player;
+    KeyboardPlayer(const Ogre::String& name, Paddle *paddle, PlayState *state);
+
     virtual ~KeyboardPlayer() {}
 
     virtual void update(double timeSinceLastFrame = 0);

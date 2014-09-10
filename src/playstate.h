@@ -10,7 +10,7 @@
 class PlayState : public GuiState
 {
 public:
-    using GuiState::GuiState;
+    PlayState();
 
     /**
      * create the box around the game field
@@ -49,15 +49,24 @@ public:
     virtual BallPtr addBall();
     virtual PaddlePtr addPaddle(int color, const Ogre::String& name, const Ogre::Real& pos);
     virtual const std::vector<BallPtr>& getBalls() const { return _balls; }
+    virtual void showEndScreen();
 
 protected:
     virtual Ogre::Vector3 getRandomSpeed() const;
     virtual Ogre::Vector3 getRandomAccel() const;
+    virtual void updateScore();
+    virtual void setupWindows();
 
 protected:
     std::vector<PaddlePtr> _paddles; //
     std::vector<BallPtr> _balls;
     std::vector<PlayerPtr> _players;
+    std::vector<CEGUI::Window*> _scoreLabels;
+    std::vector<CEGUI::Window*> _playerLabels;
+    bool _paused;
+    double _endScreenTimeout;
+    bool _ended;
+    PlayerPtr _looser;
 };
 
 #endif // PLAYSTATE_H

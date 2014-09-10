@@ -13,6 +13,7 @@ public:
     KinectPlayer(const Ogre::String& name, Paddle* paddle, PlayState* playstate, int userid=-1);
 
     virtual void update(double timeSinceLastFrame = 0);
+    virtual bool isReady() const;
 
 private:
     Kinect* _kinect;

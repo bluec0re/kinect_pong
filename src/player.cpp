@@ -3,6 +3,8 @@
 #include "pong2dstate.h"
 #include "pong3dstate.h"
 
+#include "aiplayer.h"
+
 bool Player::is2D() const {
     return dynamic_cast<Pong2DState*>(_state) != nullptr;
 }
@@ -27,4 +29,12 @@ void Player::hit() {
     ss << "Player " << getName() << " hit. ";
     ss << _lives << " lives remaining.";
     Ogre::LogManager::getSingleton().logMessage(ss.str());
+}
+
+bool Player::isReady() const {
+    return true;
+}
+
+bool Player::isAI() const {
+    return dynamic_cast<const AiPlayer*>(this) != nullptr;
 }

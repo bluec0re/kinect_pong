@@ -1,8 +1,13 @@
 #include "keyboardplayer.h"
+#include "player.h"
 #include "paddle.h"
 #include "playstate.h"
 
 #define PADDLE_SPEED 200
+
+KeyboardPlayer::KeyboardPlayer(const Ogre::String& name, Paddle *paddle, PlayState *state)
+        : Player(name + Ogre::String(" (Keyboard)"), paddle, state) {
+}
 
 void KeyboardPlayer::update(double timeSinceLastFrame) {
     Ogre::Real y = 0, z = 0;

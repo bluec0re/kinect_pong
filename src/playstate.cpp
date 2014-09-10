@@ -10,6 +10,10 @@
 #include "kinectplayer.h"
 #endif
 
+PlayState::PlayState() : GuiState(), _paused(false), _endScreenTimeout(0), _ended(false) {
+
+}
+
 /**
  * create the box around the game field
  *
@@ -178,10 +182,14 @@ void PlayState::createSubBox(Ogre::Real red, Ogre::Real green, Ogre::Real blue, 
 }
 
 void PlayState::enter() {
-    CEGUI::SchemeManager::getSingleton().createFromFile("TaharezLook.scheme");
-    CEGUI::WindowManager &wmgr = CEGUI::WindowManager::getSingleton();
-    /*CEGUI::Window *sheet = wmgr.createWindow("DefaultWindow", "CEGUIDemo/Sheet");
-    CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(sheet);*/
+    _paddles.clear();
+    _balls.clear();
+    _players.clear();
+    _playerLabels.clear();
+    _scoreLabels.clear();
+    _ended = false;
+    _paused = false;
+    _endScreenTimeout = 0.0;
 
     Ogre::Light* pointLight = mDevice->sceneMgr->createLight("pointLight");
     pointLight->setType(Ogre::Light::LT_POINT);
@@ -194,35 +202,14 @@ void PlayState::enter() {
         PlayerPtr player;
 #ifdef HAVE_OPENNI2
         if(Kinect::getInstance()->isConnected()) {
-            Kinect::getInstance()->update();
-            // preview
-
-            CEGUI::Texture& cetex = mDevice->guiRenderer->createTexture("depthMap", Kinect::getInstance()->getDepthImage());
-            /*
-            Ogre::Image img;
-            Kinect::getInstance()->getDepthImage()->convertToImage(img);
-            img.save("/tmp/test.png");
-            */
-            const CEGUI::Rectf rect(CEGUI::Vector2f(0.0f, 0.0f), cetex.getOriginalDataSize());
-            CEGUI::BasicImage* image = (CEGUI::BasicImage*)( &CEGUI::ImageManager::getSingleton().create("BasicImage", "RTTImage"));
-               image->setTexture(&cetex);
-               image->setArea(rect);
-               image->setAutoScaled(CEGUI::ASM_Both);
-
-            CEGUI::Window *si = CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/StaticImage", "RTTWindow");
-            si->setSize(CEGUI::USize(CEGUI::UDim(0.25f, 0),
-                                     CEGUI::UDim(0.25f, 0)));
-            si->setPosition(CEGUI::UVector2(CEGUI::UDim(0.75f, 0),
-                                            CEGUI::UDim(0.0f, 0)));
-            si->setProperty("Image", "RTTImage");
-            //sheet->addChild(si);
-            CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(si);
-
             player.reset(new KinectPlayer("Player 1", p.get(), this));
+            Ogre::LogManager::getSingleton().logMessage("Using Kinect Controller");
         }
 #endif
-        if(!player)
+        if(!player) {
             player.reset(new KeyboardPlayer("Player 1", p.get(), this));
+            Ogre::LogManager::getSingleton().logMessage("Using Keyboard Controller");
+        }
         _players.push_back(player);
     }
 
@@ -233,17 +220,120 @@ void PlayState::enter() {
     }
 
 
+    {
+        BallPtr ball = addBall();
 
-    BallPtr ball = addBall();
+        resetBall(ball);
+    }
 
-    resetBall(ball);
+    CEGUI::Logger::getSingleton().logEvent("Entering Playstate");
+
+    setupWindows();
+}
+
+void PlayState::setupWindows() {
+    using namespace CEGUI;
+
+    WindowManager& wmgr = WindowManager::getSingleton();
+    GUIContext& guiContext = System::getSingleton().getDefaultGUIContext();
+
+    SchemeManager::getSingleton().createFromFile("TaharezLook.scheme");
+
+    Window* root = wmgr.createWindow("DefaultWindow");
+    guiContext.setRootWindow(root);
+
+
+#ifdef HAVE_OPENNI2
+    if(Kinect::getInstance()->isConnected()) {
+        Kinect::getInstance()->update();
+        // preview
+
+        Texture& cetex = mDevice->guiRenderer->createTexture("depthMap", Kinect::getInstance()->getDepthImage());
+        /*
+        Ogre::Image img;
+        Kinect::getInstance()->getDepthImage()->convertToImage(img);
+        img.save("/tmp/test.png");
+        */
+        const Rectf rect(Vector2f(0.0f, 0.0f), cetex.getOriginalDataSize());
+        BasicImage* image = dynamic_cast<BasicImage*>(&ImageManager::getSingleton().create("BasicImage", "KinectImage"));
+           image->setTexture(&cetex);
+           image->setArea(rect);
+           image->setAutoScaled(ASM_Both);
+
+        Window *si = wmgr.createWindow("TaharezLook/StaticImage", "KinectWindow");
+        si->setSize(USize(UDim(0.25f, 0),
+                          UDim(0.25f, 0)));
+        si->setPosition(UVector2(UDim(0.75f, 0),
+                                 UDim(0.0f, 0)));
+        si->setProperty("Image", "KinectImage");
+        root->addChild(si);
+    }
+#endif
+
+    // FIXME: leads to crash when switched between modes
+    Window* player1Label = wmgr.createWindow("TaharezLook/Label", "Player1Label");
+    player1Label->setPosition(UVector2(UDim(0, 0),
+                                       UDim(0, 0)));
+    player1Label->setSize(USize(UDim(0.2f, 0),
+                                UDim(0.1f, 0)));
+    player1Label->setText("Player 1");
+    root->addChild(player1Label);
+    _playerLabels.push_back(player1Label);
+
+
+    Window* player2Label = wmgr.createWindow("TaharezLook/Label", "Player2Label");
+    player2Label->setPosition(UVector2(UDim(0.8f, 0),
+                                       UDim(0, 0)));
+    player2Label->setSize(USize(UDim(0.2f, 0),
+                                UDim(0.1f, 0)));
+    player2Label->setText("Player 2");
+    root->addChild(player2Label);
+    _playerLabels.push_back(player2Label);
+
+    Window* player1Score = wmgr.createWindow("TaharezLook/Label", "Player1Score");
+    player1Score->setPosition(UVector2(UDim(0.3f, 0),
+                                       UDim(0, 0)));
+    player1Score->setSize(USize(UDim(0.1f, 0),
+                                UDim(0.1f, 0)));
+    player1Score->setText("3");
+    root->addChild(player1Score);
+    _scoreLabels.push_back(player1Score);
+
+
+    Window* player2Score = wmgr.createWindow("TaharezLook/Label", "Player2Score");
+    player2Score->setPosition(UVector2(UDim(0.6f, 0),
+                                       UDim(0, 0)));
+    player2Score->setSize(USize(UDim(0.1f, 0),
+                                UDim(0.1f, 0)));
+    player2Score->setText("3");
+    root->addChild(player2Score);
+    _scoreLabels.push_back(player2Score);
+
+    Ogre::LogManager::getSingleton().logMessage("Entered Playstate");
+}
+
+void PlayState::updateScore() {
+    using namespace CEGUI;
+
+    WindowManager& wmgr = WindowManager::getSingleton();
+
+    for(size_t i = 0; i < _players.size(); i++) {
+        const PlayerPtr& player = _players[i];
+        Window* label = _scoreLabels[i];
+        Ogre::StringStream ss;
+        ss << player->getLives();
+        label->setText(ss.str());
+
+        label = _playerLabels[i];
+        if(player->isReady()) {
+            label->setText(player->getName());
+        } else {
+            label->setText("<not ready>");
+        }
+    }
 }
 
 void PlayState::exit() {
-    _paddles.clear();
-    _balls.clear();
-    _players.clear();
-
     mDevice->sceneMgr->destroyAllManualObjects();
     mDevice->sceneMgr->getRootSceneNode()->removeAndDestroyAllChildren();
     mDevice->sceneMgr->destroyAllLights();
@@ -252,7 +342,14 @@ void PlayState::exit() {
 
     CEGUI::WindowManager::getSingleton().destroyAllWindows();
     CEGUI::ImageManager::getSingleton().destroyAll();
+    CEGUI::AnimationManager::getSingleton().destroyAllAnimations();
+    CEGUI::WidgetLookManager::getSingleton().eraseAllWidgetLooks();
+    CEGUI::FontManager::getSingleton().destroyAll();
+    CEGUI::SchemeManager::getSingleton().destroyAll();
     mDevice->guiRenderer->destroyAllTextures();
+
+    CEGUI::Logger::getSingleton().logEvent("Leaving Playstate");
+    Ogre::LogManager::getSingleton().logMessage("Leaving Playstate");
 }
 
 bool PlayState::keyReleased(const OIS::KeyEvent &arg) {
@@ -270,6 +367,8 @@ bool PlayState::keyReleased(const OIS::KeyEvent &arg) {
             if(next != this)
                 parent->changeGameState(next);
         }
+    } else if(arg.key == OIS::KC_P) {
+        _paused = !_paused;
     }
     return true;
 }
@@ -305,29 +404,58 @@ void PlayState::resetBall(BallPtr b) {
 }
 
 Ogre::Vector3 PlayState::getRandomSpeed() const {
-    return Ogre::Vector3(Ogre::Math::RangeRandom(25, 75) * (Ogre::Math::UnitRandom() > 0.5 ? -1 : 1));
+    return Ogre::Vector3(Ogre::Math::RangeRandom(50, 100) * (Ogre::Math::UnitRandom() > 0.5 ? -1 : 1),
+                         Ogre::Math::RangeRandom(50, 100) * (Ogre::Math::UnitRandom() > 0.5 ? -1 : 1),
+                         Ogre::Math::RangeRandom(50, 100) * (Ogre::Math::UnitRandom() > 0.5 ? -1 : 1));
 }
 
 Ogre::Vector3 PlayState::getRandomAccel() const {
-    return Ogre::Vector3(Ogre::Math::RangeRandom(10,20));
+    return Ogre::Vector3(Ogre::Math::RangeRandom(10,20),
+                         Ogre::Math::RangeRandom(10,20),
+                         Ogre::Math::RangeRandom(10,20));
 }
 
 bool PlayState::frameRenderingQueued(const Ogre::FrameEvent& evt) {
     if(!GuiState::frameRenderingQueued(evt))
         return false;
 
-    checkHit();
+    if(!_paused && !_ended) {
+        bool ready = true;
+        for(PlayerPtr p : _players) {
+            p->update(evt.timeSinceLastFrame);
+            ready &= p->isReady();
+        }
 
-    for(BallPtr b : _balls) {
-        b->update(evt.timeSinceLastFrame);
-    }
+        if(ready) {
+            for(BallPtr b : _balls) {
+                b->update(evt.timeSinceLastFrame);
+            }
 
-    for(PaddlePtr paddle : _paddles) {
-        paddle->update(evt.timeSinceLastFrame);
-    }
+            for(PaddlePtr paddle : _paddles) {
+                paddle->update(evt.timeSinceLastFrame);
+            }
 
-    for(PlayerPtr p : _players) {
-        p->update(evt.timeSinceLastFrame);
+            checkHit();
+
+            for(PlayerPtr player : _players) {
+                if(!player->isAlive()) {
+                    _ended = true;
+                    _looser = player;
+                    showEndScreen();
+                }
+            }
+        }
+
+        updateScore();
+    } else if(_ended) {
+        _endScreenTimeout -= evt.timeSinceLastEvent;
+        if(_endScreenTimeout <= 0) {
+            GameState* next = findByName("Pong 3D");
+            if(next && next != this && _looser->isAI())
+                changeGameState(next);
+            else
+                popGameState();
+        }
     }
 
     return true;
@@ -367,10 +495,44 @@ void PlayState::checkHit() {
                     p->hit();
             }
             resetBall(b);
-        } else if(abs(pos.y) > MAP_BBOX_Y) {
+        } else if(fabs(pos.y) > MAP_BBOX_Y) {
             b->reverse(Ball::DIR_Y, pos.y < 0 ? -MAP_BBOX_Y : MAP_BBOX_Y);
-        } else if(abs(pos.z) > MAP_BBOX_Z) {
+        } else if(fabs(pos.z) > MAP_BBOX_Z) {
             b->reverse(Ball::DIR_Z, pos.z < 0 ? -MAP_BBOX_Z : MAP_BBOX_Z);
         }
     }
+}
+
+void PlayState::showEndScreen() {
+    if(!_looser)
+        return;
+
+    _endScreenTimeout = 3.0; // show endscreen for 3 seconds
+
+    using namespace CEGUI;
+
+    WindowManager& wnmgr = WindowManager::getSingleton();
+
+    Window* wnd = wnmgr.createWindow("TaharezLook/FrameWindow", "End Screen");
+    wnd->setSize(USize(UDim(0.4, 0),
+                       UDim(0.4, 0)));
+
+    wnd->setPosition(UVector2(UDim(0.3, 0),
+                              UDim(0.3, 0)));
+
+    Window* label = wnmgr.createWindow("TaharezLook/Label", "Win Label");
+    label->setSize(USize(UDim(1.0, 0.0), UDim(1.0, 0.0)));
+    label->setProperty("HorzFormatting", "CentreAligned");
+    label->setProperty("VertFormatting", "CentreAligned");
+
+    if(!_looser->isAI()) {
+        label->setProperty("NormalTextColour", "FFFF0000");
+        label->setText("Defeated");
+    } else {
+        label->setProperty("NormalTextColour", "FF00FF00");
+        label->setText("Victory");
+    }
+    wnd->addChild(label);
+
+    System::getSingleton().getDefaultGUIContext().getRootWindow()->addChild(wnd);
 }

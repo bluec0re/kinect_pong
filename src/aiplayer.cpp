@@ -4,7 +4,7 @@
 #define PADDLE_SPEED 100
 
 AiPlayer::AiPlayer(const Strength& s, const Ogre::String& name, Paddle* paddle, PlayState* state) :
-    Player(name, paddle, state), _strength(s)
+    Player(name + Ogre::String(" (AI)"), paddle, state), _strength(s)
 {
 
 }
@@ -23,7 +23,7 @@ void AiPlayer::update(double time) {
 
     case AI_STRONG: {
             for(BallPtr b : balls) {
-                if(!ball || abs(b->getPosition().x - ppos.x) < abs(ball->getPosition().x - ppos.x))
+                if(!ball || fabs(b->getPosition().x - ppos.x) < fabs(ball->getPosition().x - ppos.x))
                     ball = b;
             }
             tracking_start = 10000;

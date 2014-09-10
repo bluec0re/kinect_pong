@@ -12,7 +12,10 @@ GameStateManager::GameStateManager(device_info *devices) : mShutdown(false)
 {
     mDevice=devices;
 #ifdef HAVE_OPENCV
-    videoRecorder = new OgreCvRecorder("./record.mpg");
+    if(g_args.record)
+        videoRecorder = new OgreCvRecorder("./record.mpg");
+    else
+        videoRecorder = NULL;
 #endif
 }
  
@@ -82,17 +85,19 @@ void GameStateManager::start(GameState *state)
         Ogre::WindowEventUtilities::messagePump();
 
 #ifdef HAVE_OPENCV
-        mDevice->ogre->renderOneFrame((float)(1.0f/30.0f));
-
         if (videoRecorder) {
+            mDevice->ogre->renderOneFrame((float)(1.0f/30.0f));
+
+
             videoRecorder->start();
             videoRecorder->update(mDevice->rwindow);
-        }
 
-        usleep(10);
-#else
-        mDevice->ogre->renderOneFrame();
+
+
+            usleep(10);
+        } else
 #endif
+            mDevice->ogre->renderOneFrame();
     }
 }
  

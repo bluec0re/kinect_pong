@@ -30,6 +30,8 @@ public:
     virtual bool is2D() const;
     virtual bool is3D() const;
     virtual Side getSide() const;
+    virtual bool isReady() const;
+    virtual bool isAI() const;
 
 protected:
     const Ogre::String _name;

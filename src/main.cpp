@@ -39,6 +39,15 @@ public:
         device.ogre = mRoot;
         device.rwindow = mWindow;
         device.sceneMgr = mSceneMgr;
+
+        LogManager::getSingletonPtr()->logMessage("*** Initializing CEGUI ***");
+#if !defined(NDEBUG)
+        // set debug log level
+        new CEGUI::DefaultLogger();
+        CEGUI::Logger::getSingleton().setLogFilename("CEGUI.log");
+        CEGUI::Logger::getSingleton().setLoggingLevel(CEGUI::Informative);
+        CEGUI::Logger::getSingleton().logEvent("Debug logging enabled");
+#endif
         device.guiRenderer = &CEGUI::OgreRenderer::bootstrapSystem();
 
         CEGUI::ImageManager::setImagesetDefaultResourceGroup("ImageSets");
@@ -59,7 +68,7 @@ public:
         mWindow->getCustomAttribute("WINDOW", &windowHnd);
         windowHndStr << windowHnd;
         pl.insert(std::make_pair(std::string("WINDOW"), windowHndStr.str()));
-#ifndef NDEBUG
+#if !defined(NDEBUG)
     #if defined OIS_WIN32_PLATFORM
         pl.insert(std::make_pair(std::string("w32_mouse"), std::string("DISCL_FOREGROUND" )));
         pl.insert(std::make_pair(std::string("w32_mouse"), std::string("DISCL_NONEXCLUSIVE")));
