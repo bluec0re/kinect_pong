@@ -11,7 +11,7 @@
 #include "pong3dstate.h"
 
 #ifdef HAVE_OPENNI2
-#include "kinect.h"
+    #include "kinect.h"
 #endif
 
 #ifdef OIS_LINUX_PLATFORM
@@ -129,17 +129,17 @@ public:
 #ifdef OIS_LINUX_PLATFORM
     const char *argp_program_version =
        "kinectpong 1.0";
-     const char *argp_program_bug_address =
+    const char *argp_program_bug_address =
        "https://github.com/bluec0re/kinect_pong/issues";
      /* Program documentation. */
-     static char doc[] =
+    static const char *short_doc =
        "KinectPong -- a pong game using Openni";
 
      /* A description of the arguments we accept. */
-     static char args_doc[] = "";
+    static const char *arg_doc = "";
 
      /* The options we understand. */
-     static struct argp_option options[] = {
+    static struct argp_option poptions[] = {
        {"state",  's', "STATE",      0,  "State to start with (menu, pong2d, pong3d)" },
 #ifdef HAVE_OPENCV
        {"record",  'r', 0,      0,  "Record the game into video" },
@@ -149,8 +149,7 @@ public:
      };
 
      /* Parse a single option. */
-     static error_t
-     parse_opt (int key, char *arg, struct argp_state *state)
+     static error_t parse_opt (int key, char *arg, struct argp_state *state)
      {
        /* Get the input argument from argp_parse, which we
           know is a pointer to our arguments structure. */
@@ -177,7 +176,7 @@ public:
      }
 
      /* Our argp parser. */
-     static struct argp argp = { options, parse_opt, args_doc, doc };
+     static struct argp argp = { poptions, parse_opt, arg_doc, short_doc };
 #endif
 
 int main(int argc, char *argv[])

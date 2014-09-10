@@ -18,9 +18,10 @@ install
   - Boost
   - OIS
   - CEGUI
-  - OpenNi 2
-  - libfreenect driver
-  - NiTE 2
+  - (optional; but without fun when missing)OpenNi 2
+  - (optional; but without fun when missing)libfreenect driver
+  - (optional; but without fun when missing)NiTE 2
+  - (optional)opencv [for recording feature]
 
 - get openni2 + libfreenect from your package manager or from github
   - there are several tutorials in the WWW
@@ -41,4 +42,4 @@ build
 running
 =======
 
-- ./build/KinectPong
+- ./build/src/KinectPong
