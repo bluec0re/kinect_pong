@@ -9,7 +9,8 @@ const float MenuState::s_secondStartDelay = 11.0f;
 const float MenuState::s_loginDisplayStartDelay = 15.77f;
 
 void MenuState::enter() {
-    initialise(&CEGUI::System::getSingleton().getDefaultGUIContext());
+    _guiContext = &CEGUI::System::getSingleton().getDefaultGUIContext();
+    initialise(_guiContext);
 
     onEnteringSample();
 }
@@ -17,16 +18,24 @@ void MenuState::enter() {
 void MenuState::exit() {
     _guiContext->getMouseCursor().hide();
     _guiContext->removeAllEvents();
-    WindowManager::getSingleton().destroyAllWindows();
-    AnimationManager::getSingleton().destroyAllAnimations();
+
+    clearAll();
 }
 
 bool MenuState::pause() {
     _guiContext->getMouseCursor().hide();
+    _guiContext->removeAllEvents();
+    _guiContext->setDefaultFont(nullptr);
+
+    clearAll();
     return true;
 }
 
 void MenuState::resume() {
+    initialise(_guiContext);
+
+    onEnteringSample();
+
     _guiContext->getMouseCursor().show();
 }
 
@@ -311,7 +320,7 @@ bool MenuState::handleInnerPartStartClickAreaClick(const CEGUI::EventArgs& args)
 
     _startButtonClicked = true;*/
 
-    changeGameState(findByName("Pong 2D"));
+    pushGameState(findByName("Pong 2D"));
 
     return false;
 }

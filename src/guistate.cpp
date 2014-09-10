@@ -36,3 +36,13 @@ bool GuiState::frameRenderingQueued(const Ogre::FrameEvent& evt) {
 
     return true;
 }
+
+void GuiState::clearAll() {
+    CEGUI::WindowManager::getSingleton().destroyAllWindows();
+    CEGUI::ImageManager::getSingleton().destroyAll();
+    CEGUI::AnimationManager::getSingleton().destroyAllAnimations();
+    CEGUI::WidgetLookManager::getSingleton().eraseAllWidgetLooks();
+    CEGUI::FontManager::getSingleton().destroyAll();
+    CEGUI::SchemeManager::getSingleton().destroyAll();
+    mDevice->guiRenderer->destroyAllTextures();
+}

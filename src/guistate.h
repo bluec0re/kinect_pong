@@ -15,6 +15,9 @@ public:
     virtual bool mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id ) override;
 
     virtual bool frameRenderingQueued(const Ogre::FrameEvent& evt) override;
+
+protected:
+    virtual void clearAll();
 };
 
 #endif // GUISTATE_H

@@ -228,6 +228,13 @@ void PlayState::enter() {
 
     CEGUI::Logger::getSingleton().logEvent("Entering Playstate");
 
+    // load font and setup default if not loaded via scheme
+    CEGUI::Font& defaultFont = CEGUI::FontManager::getSingleton().createFromFile("Jura-13.font");
+    // Set default font for the gui context
+    CEGUI::System::getSingleton().getDefaultGUIContext().setDefaultFont(&defaultFont);
+
+    CEGUI::FontManager::getSingleton().createFromFile("DejaVuSans-12.font");
+
     setupWindows();
 }
 
@@ -342,13 +349,7 @@ void PlayState::exit() {
     /*mDevice->sceneMgr->destroySceneNode("box_node");
     mDevice->sceneMgr->destroySceneNode("box_subnode");*/
 
-    CEGUI::WindowManager::getSingleton().destroyAllWindows();
-    CEGUI::ImageManager::getSingleton().destroyAll();
-    CEGUI::AnimationManager::getSingleton().destroyAllAnimations();
-    CEGUI::WidgetLookManager::getSingleton().eraseAllWidgetLooks();
-    CEGUI::FontManager::getSingleton().destroyAll();
-    CEGUI::SchemeManager::getSingleton().destroyAll();
-    mDevice->guiRenderer->destroyAllTextures();
+    clearAll();
 
     CEGUI::Logger::getSingleton().logEvent("Leaving Playstate");
     Ogre::LogManager::getSingleton().logMessage("Leaving Playstate");
