@@ -33,25 +33,25 @@ public:
     ~GameStateManager();
  
     /** Store a game state to manage. */
-    void ManageGameState(Ogre::String state_name,GameState *state);
+    void ManageGameState(Ogre::String state_name,GameState *state) override;
  
     /** Find a game state by name. */
-    GameState *findByName(Ogre::String state_name);
+    GameState *findByName(Ogre::String state_name) override;
  
     /** Start game state */
     void start(GameState *state);
  
     /** Change to a new game state */
-    void changeGameState(GameState* state);
+    void changeGameState(GameState* state) override;
  
     /** Push game state onto the stack. */
-    bool pushGameState(GameState* state);
+    bool pushGameState(GameState* state) override;
  
     /** Pop a game state off the stack. */
-    void popGameState(void);
+    void popGameState(void) override;
  
     /** This is a special case function to cause a shutdown. */
-    void Shutdown(void);
+    void Shutdown(void) override;
  
 protected:
     /** This initializes a state to receive the events. */

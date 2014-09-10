@@ -35,14 +35,14 @@ public:
      */
     virtual void createSubBox(Ogre::Real red, Ogre::Real green, Ogre::Real blue, const Ogre::Plane& clipPlane, Ogre::SceneNode* parent);
 
-    virtual void enter();
-    virtual void exit();
-    virtual bool pause() { return true; }
-    virtual void resume() {}
+    virtual void enter() override;
+    virtual void exit() override;
+    virtual bool pause() override { return true; }
+    virtual void resume() override {}
 
-    virtual bool keyReleased(const OIS::KeyEvent &arg);
+    virtual bool keyReleased(const OIS::KeyEvent &arg) override;
 
-    virtual bool frameRenderingQueued(const Ogre::FrameEvent& evt);
+    virtual bool frameRenderingQueued(const Ogre::FrameEvent& evt) override;
     virtual void checkHit();
 
     virtual void resetBall(BallPtr b);

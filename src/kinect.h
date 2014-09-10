@@ -40,13 +40,13 @@ class Kinect
         void init();
         void close();
 
-        int waitForUser(bool blocking);
+        nite::UserId waitForUser(bool blocking, bool autoUpdate = true);
         bool isConnected() const { return _connected; }
 
-        std::vector<int> getUsers() const;
+        std::vector<nite::UserId> getUsers() const;
 
-        nite::SkeletonState getTrackingState(int userid) const;
-        Ogre::Vector3 getJointPosition(const nite::JointType& type, int id) const;
+        nite::SkeletonState getTrackingState(nite::UserId userid) const;
+        Ogre::Vector3 getJointPosition(const nite::JointType& type, nite::UserId id) const;
 
         Ogre::TexturePtr& getDepthImage();
         const Ogre::TexturePtr& getDepthImage() const;
@@ -54,11 +54,16 @@ class Kinect
         const nite::Point3f& getRealWorldMarkerPos(const Marker& marker) const;
     protected:
         Kinect();
+
+    private:
+        void openniFrame2OgreTexture(Ogre::TexturePtr& texture, const openni::VideoFrameRef& depthFrame, float* histogram);
+
+
     private: 
         static Kinect* _kinect;
         nite::UserTracker userTracker;
         nite::Status niteRc;
-        std::map<int, nite::UserData> _users;
+        std::map<nite::UserId, nite::UserData> _users;
         bool _connected;
         nite::UserTrackerFrameRef _lastFrame;
         Ogre::TexturePtr _texture;

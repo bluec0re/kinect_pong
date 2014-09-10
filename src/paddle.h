@@ -11,8 +11,8 @@ public:
     Paddle(int color, const Ogre::String& player, bool transparent=false);
     virtual ~Paddle ();
 
-    virtual void create(Ogre::SceneManager* sceneMgr);
-    virtual void setPosition(const Ogre::Vector3& pos);
+    virtual void create() override;
+    virtual void setPosition(const Ogre::Vector3& pos) override;
 
 private:
     Ogre::String _player;

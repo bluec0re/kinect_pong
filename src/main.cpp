@@ -40,14 +40,17 @@ public:
         device.rwindow = mWindow;
         device.sceneMgr = mSceneMgr;
 
-        LogManager::getSingletonPtr()->logMessage("*** Initializing CEGUI ***");
-#if !defined(NDEBUG)
-        // set debug log level
-        new CEGUI::DefaultLogger();
-        CEGUI::Logger::getSingleton().setLogFilename("CEGUI.log");
-        CEGUI::Logger::getSingleton().setLoggingLevel(CEGUI::Informative);
-        CEGUI::Logger::getSingleton().logEvent("Debug logging enabled");
-#endif
+        LogManager::getSingleton().logMessage("*** Initializing CEGUI ***");
+        if(g_args.debug) {
+            // set debug log level
+            new CEGUI::DefaultLogger();
+            CEGUI::Logger::getSingleton().setLogFilename("CEGUI.log");
+            CEGUI::Logger::getSingleton().setLoggingLevel(CEGUI::Informative);
+            CEGUI::Logger::getSingleton().logEvent("Debug logging enabled");
+
+            LogManager::getSingleton().setLogDetail(LoggingLevel::LL_BOREME);
+        }
+
         device.guiRenderer = &CEGUI::OgreRenderer::bootstrapSystem();
 
         CEGUI::ImageManager::setImagesetDefaultResourceGroup("ImageSets");
@@ -60,7 +63,7 @@ public:
 
         //
 
-        LogManager::getSingletonPtr()->logMessage("*** Initializing OIS ***");
+        LogManager::getSingleton().logMessage("*** Initializing OIS ***");
         OIS::ParamList pl;
         size_t windowHnd = 0;
         std::ostringstream windowHndStr;
@@ -130,6 +133,7 @@ public:
 #ifdef HAVE_OPENCV
        {"record",  'r', 0,      0,  "Record the game into video" },
 #endif
+       {"debug",  'd', 0,      0,  "Enable debug logging" },
        { 0 }
      };
 
@@ -151,6 +155,10 @@ public:
            arguments->record = true;
            break;
 
+         case 'd':
+             arguments->debug = true;
+             break;
+
          default:
            return ARGP_ERR_UNKNOWN;
          }
@@ -165,6 +173,7 @@ int main(int argc, char *argv[])
 {
     g_args.startState = "menu";
     g_args.record = false;
+    g_args.debug = false;
 #ifdef OIS_LINUX_PLATFORM
     argp_parse (&argp, argc, argv, 0, 0, &g_args);
 #endif

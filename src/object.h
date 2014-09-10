@@ -11,9 +11,9 @@ class Object
 public:
     Object() : _color(0xFFFFFF), _entity(0), _node(0), _speed(Ogre::Vector3::ZERO), _accel(Ogre::Vector3::ZERO), _enableAccel(true) {}
     Object(int color) : _color(color), _entity(0), _node(0), _speed(Ogre::Vector3::ZERO), _accel(Ogre::Vector3::ZERO), _enableAccel(true) {}
-    virtual ~Object () {}
+    virtual ~Object ();
 
-    virtual void create(Ogre::SceneManager* sceneMgr) = 0;
+    virtual void create() = 0;
 
     virtual void setPosition(const Ogre::Vector3& pos) {
         _node->setPosition(pos);
@@ -25,6 +25,8 @@ public:
 
     virtual void setAccel(const Ogre::Vector3& accel) { _accel = accel; }
     virtual const Ogre::Vector3& getAccel() const { return _accel; }
+
+    virtual void setSceneManager(Ogre::SceneManager* sceneMgr) { _sceneMgr = sceneMgr; }
 
     virtual void enableAccel(bool enable) { _enableAccel = enable; }
     virtual bool isAccelEnabled() const { return _enableAccel; }
@@ -44,6 +46,7 @@ protected:
     Ogre::MaterialPtr _mat;
     Ogre::Vector3 _speed;
     Ogre::Vector3 _accel;
+    Ogre::SceneManager *_sceneMgr;
 };
 
 

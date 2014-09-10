@@ -9,10 +9,10 @@ public:
     using PlayState::PlayState;
     DECLARE_GAMESTATE_CLASS(Pong2DState)
 
-    virtual void enter();
+    virtual void enter() override;
 protected:
-    virtual Ogre::Vector3 getRandomSpeed() const;
-    virtual Ogre::Vector3 getRandomAccel() const;
+    virtual Ogre::Vector3 getRandomSpeed() const override;
+    virtual Ogre::Vector3 getRandomAccel() const override;
 };
 
 #endif // PONG2DSTATE_H

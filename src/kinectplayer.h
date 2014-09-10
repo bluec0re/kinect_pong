@@ -12,8 +12,8 @@ class KinectPlayer : public Player
 public:
     KinectPlayer(const Ogre::String& name, Paddle* paddle, PlayState* playstate, int userid=-1);
 
-    virtual void update(double timeSinceLastFrame = 0);
-    virtual bool isReady() const;
+    virtual void update(double timeSinceLastFrame = 0) override;
+    virtual bool isReady() const override;
 
 private:
     Kinect* _kinect;

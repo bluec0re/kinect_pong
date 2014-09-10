@@ -10,7 +10,7 @@ public:
 
     virtual ~KeyboardPlayer() {}
 
-    virtual void update(double timeSinceLastFrame = 0);
+    virtual void update(double timeSinceLastFrame = 0) override;
 };
 
 #endif // KEYBOARDPLAYER_H

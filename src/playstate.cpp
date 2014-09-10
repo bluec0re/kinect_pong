@@ -245,6 +245,7 @@ void PlayState::setupWindows() {
 
 #ifdef HAVE_OPENNI2
     if(Kinect::getInstance()->isConnected()) {
+        Logger::getSingleton().logEvent("Creating Kinect Window");
         Kinect::getInstance()->update();
         // preview
 
@@ -267,6 +268,7 @@ void PlayState::setupWindows() {
                                  UDim(0.0f, 0)));
         si->setProperty("Image", "KinectImage");
         root->addChild(si);
+        Logger::getSingleton().logEvent("Kinect Window created");
     }
 #endif
 
@@ -369,13 +371,17 @@ bool PlayState::keyReleased(const OIS::KeyEvent &arg) {
         }
     } else if(arg.key == OIS::KC_P) {
         _paused = !_paused;
+    } else if(arg.key == OIS::KC_B) {
+        addBall();
     }
     return true;
 }
 
 BallPtr PlayState::addBall() {
-    BallPtr ball(new Ball(0x00FF00));
-    ball->create(mDevice->sceneMgr);
+    //BallPtr ball(new Ball(0xFF00FF00, 0xFFBF6900));
+    BallPtr ball(new Ball(0xFF0000FF, 0xFFFF0000));
+    ball->setSceneManager(mDevice->sceneMgr);
+    ball->create();
     ball->setAccel(getRandomAccel());
     ball->enableAccel(false);
     ball->setSpeed(getRandomSpeed());
@@ -386,7 +392,8 @@ BallPtr PlayState::addBall() {
 
 PaddlePtr PlayState::addPaddle(int color, const Ogre::String& name, const Ogre::Real& pos) {
     PaddlePtr p(new Paddle(color, name));
-    p->create(mDevice->sceneMgr);
+    p->setSceneManager(mDevice->sceneMgr);
+    p->create();
     p->setPosition(Ogre::Vector3(pos, 0, 0));
     _paddles.push_back(p);
 
@@ -481,6 +488,8 @@ void PlayState::checkHit() {
     }
 
     for(BallPtr b : _balls) {
+        if(!b)
+            continue;
         auto pos = b->getPosition();
 
         if(pos.x > MAP_BBOX_X) {

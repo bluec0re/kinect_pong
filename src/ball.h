@@ -15,10 +15,18 @@ public:
     };
 
     Ball(int color);
+    Ball(int colorLeft, int colorRight);
     virtual ~Ball ();
 
-    virtual void create(Ogre::SceneManager* sceneMgr);
+    virtual void create() override;
     virtual void reverse(const Direction& dir, const Ogre::Real& collision = 0);
+    virtual void setPosition(const Ogre::Vector3 &pos) override;
+
+protected:
+    virtual int calcColor();
+
+private:
+    int _color2;
 };
 
 typedef boost::shared_ptr<Ball> BallPtr;

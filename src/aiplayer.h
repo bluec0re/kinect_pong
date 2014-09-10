@@ -13,7 +13,7 @@ public:
 
     AiPlayer(const Strength& s, const Ogre::String& name, Paddle* paddle, PlayState* state);
 
-    virtual void update(double time = 0);
+    virtual void update(double time = 0) override;
 
 private:
     Strength _strength;

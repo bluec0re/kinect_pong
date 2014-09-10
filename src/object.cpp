@@ -1,5 +1,16 @@
 #include "object.h"
 
+Object::~Object() {
+    if(_sceneMgr) {
+        if(_node && _sceneMgr->hasSceneNode(_node->getName())) {
+            _sceneMgr->destroySceneNode(_node);
+        }
+
+        if(_entity && _sceneMgr->hasEntity(_entity->getName())) {
+            _sceneMgr->destroyEntity(_entity);
+        }
+    }
+}
 
 void Object::update(double timeElapsed) {
     Ogre::Vector3 pos = getPosition();

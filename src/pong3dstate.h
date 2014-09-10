@@ -10,8 +10,8 @@ public:
 
     DECLARE_GAMESTATE_CLASS(Pong3DState)
 
-    virtual void enter();
-    virtual PaddlePtr addPaddle(int color, const Ogre::String& name, const Ogre::Real& pos);
+    virtual void enter() override;
+    virtual PaddlePtr addPaddle(int color, const Ogre::String& name, const Ogre::Real& pos) override;
 };
 
 #endif // PON32DSTATE_H

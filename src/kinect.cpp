@@ -38,7 +38,18 @@ void calculateHistogram(float* pHistogram, int histogramSize, const openni::Vide
     }
 }
 
-void openniFrame2OgreTexture(Ogre::TexturePtr& texture, const openni::VideoFrameRef& depthFrame, float* histogram) {
+void Kinect::openniFrame2OgreTexture(Ogre::TexturePtr& texture, const openni::VideoFrameRef& depthFrame, float* histogram) {
+
+    float coordinates[2];
+    nite::UserId uid = waitForUser(false, false);
+    if(uid != -1) {
+        auto leftHand = getJointPosition(nite::JOINT_RIGHT_HAND, uid);
+        if(userTracker.convertJointCoordinatesToDepth(leftHand.x, leftHand.y, leftHand.z, &coordinates[0], &coordinates[1]) != nite::STATUS_OK)
+            uid = -1;
+        else
+            printf("Convert coordinates %fx%f\n", coordinates[0], coordinates[1]);
+    }
+
     int width = depthFrame.getVideoMode().getResolutionX();
     int height = depthFrame.getVideoMode().getResolutionY();
 
@@ -59,9 +70,17 @@ void openniFrame2OgreTexture(Ogre::TexturePtr& texture, const openni::VideoFrame
             if (*pDepth != 0)
             {
                 int nHistValue = histogram[*pDepth];
-                *(pDest++) = nHistValue; // R
-                *(pDest++) = nHistValue; // G
-                *(pDest++) = nHistValue; // B
+                if(uid != -1 &&
+                        y >= coordinates[1] - 30 && y <= coordinates[1] + 30 &&
+                        x >= coordinates[0] - 30 && x <= coordinates[0] + 30) {
+                    *(pDest++) = 0; // R
+                    *(pDest++) = nHistValue; // G
+                    *(pDest++) = 0; // B
+                } else {
+                    *(pDest++) = nHistValue; // R
+                    *(pDest++) = nHistValue; // G
+                    *(pDest++) = nHistValue; // B
+                }
                 *(pDest++) = 255; // A
             } else {
                 *(pDest++) = 0;
@@ -132,9 +151,9 @@ void Kinect::close() {
 }
 
 
-std::vector<int> Kinect::getUsers() const {
+std::vector<nite::UserId> Kinect::getUsers() const {
     //TODO: ueberarbeiten?
-    std::vector<int> ids;
+    std::vector<nite::UserId> ids;
     for(auto u : _users) {
         ids.push_back(u.first);
     }
@@ -192,7 +211,7 @@ void Kinect::update() {
     }
 }
 
-Ogre::Vector3 Kinect::getJointPosition(const nite::JointType& type, int id) const {
+Ogre::Vector3 Kinect::getJointPosition(const nite::JointType& type, nite::UserId id) const {
     if(getTrackingState(id) != nite::SKELETON_TRACKED)
         return Ogre::Vector3::ZERO;
 
@@ -209,7 +228,7 @@ Ogre::Vector3 Kinect::getJointPosition(const nite::JointType& type, int id) cons
         return Ogre::Vector3::ZERO;
 }
 
-nite::SkeletonState Kinect::getTrackingState(int userid) const {
+nite::SkeletonState Kinect::getTrackingState(nite::UserId userid) const {
     auto user = _lastFrame.getUserById(userid);
 
     if(user == NULL)
@@ -218,15 +237,19 @@ nite::SkeletonState Kinect::getTrackingState(int userid) const {
     return user->getSkeleton().getState();
 }
 
-int Kinect::waitForUser(bool blocking) {
+nite::UserId Kinect::waitForUser(bool blocking, bool autoUpdate /* = true*/) {
+    if(blocking) {
+        printf("::Waiting for user to appear (blocking)\n");
+    }
     do {
-        update();
+        if(autoUpdate)
+            update();
         // TODO: ueberarbeiten?
         for(auto u : _users) {
             if(getTrackingState(u.first) == nite::SKELETON_TRACKED)
                 return u.first;
         }
-    } while(blocking);
+    } while(blocking && autoUpdate); // blocking without update doesn't make sense
 
     return -1;
 }

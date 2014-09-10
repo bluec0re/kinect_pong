@@ -42,6 +42,7 @@ struct arguments
 {
     char *startState;
     bool record;
+    bool debug;
 };
 
 extern arguments g_args;

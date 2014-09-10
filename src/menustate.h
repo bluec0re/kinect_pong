@@ -18,12 +18,12 @@ public:
     DECLARE_GAMESTATE_CLASS(MenuState);
 
 
-    virtual void enter();
-    virtual void exit();
-    virtual bool pause();
-    virtual void resume();
+    virtual void enter() override;
+    virtual void exit() override;
+    virtual bool pause() override;
+    virtual void resume() override;
 
-    virtual bool frameRenderingQueued(const Ogre::FrameEvent &evt);
+    virtual bool frameRenderingQueued(const Ogre::FrameEvent &evt) override;
 
 protected:
     bool initialise(CEGUI::GUIContext* guiContext);

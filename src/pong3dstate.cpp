@@ -17,7 +17,8 @@ PaddlePtr Pong3DState::addPaddle(int color, const Ogre::String& name, const Ogre
     bool transparent = pos < 0;
 
     PaddlePtr p(new Paddle(color, name, transparent));
-    p->create(mDevice->sceneMgr);
+    p->setSceneManager(mDevice->sceneMgr);
+    p->create();
     p->setPosition(Ogre::Vector3(pos, 0, 0));
     _paddles.push_back(p);
 

@@ -1,43 +1,48 @@
 #include "ball.h"
+#include "global.h"
+
+#define BYTE(in, pos) (static_cast<unsigned char>((in >> pos*8) & 0xFF))
+#define INTERPOLATE(from, to, pos, perc) ((static_cast<unsigned char>((BYTE(to, pos) - BYTE(from, pos)) * perc) \
+                                                                + BYTE(from, pos)) << pos * 8)
+#define CORRECT_SIGN(attr) ((collision < 0 ? bbox.getHalfSize().attr : -bbox.getHalfSize().attr) * (fabs(pos.attr) < fabs(collision) ? 2 : 1))
 
 Ball::Ball(int color) :
-    Object(color)
+    Object(color), _color2(color) {}
+
+Ball::Ball(int colorLeft, int colorRight) :
+        Object(colorLeft), _color2(colorRight)
 {
     _mat = Ogre::MaterialManager::getSingleton().create(
                 "Ball", // name
                 Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
-    Ogre::Real red = ((color >> (8 << 1)) & 0xFF) / 255.0;
-    Ogre::Real green = ((color >> (8 << 0)) & 0xFF) / 255.0;
-    Ogre::Real blue = ((color >> (0)) & 0xFF) / 255.0;
 
     _mat->setReceiveShadows(false);
     _mat->setLightingEnabled(true);
-    _mat->setAmbient(red, green, blue);
-    _mat->setDiffuse(red, green, blue, 1.0);
-    //_mat->setSelfIllumination(red,green,blue);
-
-    //_mat->getTechnique(0)->getPass(0)->setEmissive(Ogre::ColourValue(red, green, blue, 1));
-
-    Ogre::StringStream ss;
-    ss << "r: " << red << " g: " << green << " b: " << blue << " t: " << _mat->getNumTechniques() << " p: " << _mat->getTechnique(0)->getNumPasses() << " a: " << _mat->getTechnique(0)->getPass(0)->getAmbient();
-    Ogre::LogManager::getSingleton().logMessage(ss.str());
 }
 
 Ball::~Ball() {
 
 }
 
+int Ball::calcColor() {
+    Ogre::Real pos = getPosition().x + MAP_X;
+    Ogre::Real percentage = pos / (MAP_X*2);
 
-void Ball::create(Ogre::SceneManager* sceneMgr) {
-    _entity = sceneMgr->createEntity(Ogre::SceneManager::PT_SPHERE);
-    _node = sceneMgr->getRootSceneNode()->createChildSceneNode();
+    return INTERPOLATE(_color, _color2, 0, percentage) |
+                    INTERPOLATE(_color, _color2, 1, percentage) |
+                    INTERPOLATE(_color, _color2, 2, percentage) |
+                    INTERPOLATE(_color, _color2, 3, percentage)
+    ;
+}
+
+void Ball::create() {
+    _entity = _sceneMgr->createEntity(Ogre::SceneManager::PT_SPHERE);
+    _node = _sceneMgr->getRootSceneNode()->createChildSceneNode();
     _node->attachObject(_entity);
     _node->setScale( 0.1, 0.1, 0.1);
     //_node->showBoundingBox(true);
     _entity->setMaterial(_mat);
 }
-
-#define CORRECT_SIGN(attr) ((collision < 0 ? bbox.getHalfSize().attr : -bbox.getHalfSize().attr) * (fabs(pos.attr) < fabs(collision) ? 2 : 1))
 
 void Ball::reverse(const Direction& dir, const Ogre::Real& collision) {
     Ogre::Vector3 pos = getPosition();
@@ -78,4 +83,20 @@ void Ball::reverse(const Direction& dir, const Ogre::Real& collision) {
     ss << "New Pos " << pos << ". ";
 
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_TRIVIAL, ss.str());
+}
+
+void Ball::setPosition(const Ogre::Vector3 &pos) {
+    int color = calcColor();
+    Ogre::Real red = BYTE(color, 2) / 255.0f;
+    Ogre::Real green = BYTE(color, 1) / 255.0f;
+    Ogre::Real blue = BYTE(color, 0) / 255.0f;
+    _mat->setAmbient(red, green, blue);
+    _mat->setDiffuse(red, green, blue, 1.0);
+
+
+    Ogre::StringStream ss;
+    ss << "r: " << red << " g: " << green << " b: " << blue << " t: " << _mat->getNumTechniques() << " p: " << _mat->getTechnique(0)->getNumPasses() << " a: " << _mat->getTechnique(0)->getPass(0)->getAmbient();
+    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_TRIVIAL, ss.str());
+
+    Object::setPosition(pos);
 }

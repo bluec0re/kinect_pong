@@ -35,9 +35,9 @@ Paddle::~Paddle() {
 }
 
 
-void Paddle::create(Ogre::SceneManager* sceneMgr) {
-    _entity = sceneMgr->createEntity(Ogre::SceneManager::PT_CUBE);
-    _node = sceneMgr->getRootSceneNode()->createChildSceneNode();
+void Paddle::create() {
+    _entity = _sceneMgr->createEntity(Ogre::SceneManager::PT_CUBE);
+    _node = _sceneMgr->getRootSceneNode()->createChildSceneNode();
     _node->attachObject(_entity);
     _node->setScale( 0.2, 0.5, 0.5);
     _entity->setMaterial(_mat);
