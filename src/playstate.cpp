@@ -379,8 +379,8 @@ bool PlayState::keyReleased(const OIS::KeyEvent &arg) {
 }
 
 BallPtr PlayState::addBall() {
-    //BallPtr ball(new Ball(0xFF00FF00, 0xFFBF6900));
-    BallPtr ball(new Ball(0xFF0000FF, 0xFFFF0000));
+    BallPtr ball(new Ball(0xFF00FF00, 0xFFBF6900));
+    //BallPtr ball(new Ball(0xFF0000FF, 0xFFFF0000));
     ball->setSceneManager(mDevice->sceneMgr);
     ball->create();
     ball->setAccel(getRandomAccel());

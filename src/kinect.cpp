@@ -106,11 +106,11 @@ void Kinect::openniFrame2OgreTexture(Ogre::TexturePtr& texture, const openni::Vi
 
 Kinect::Kinect() : _connected(false) {
     init();
-    _markerPositions[TOP_LEFT] = nite::Point3f(100, 0, 0);
-    _markerPositions[TOP_RIGHT] = nite::Point3f(500, 0, 0);
-    _markerPositions[BOTTOM_LEFT] = nite::Point3f(100, 1, 0);
-    _markerPositions[BOTTOM_RIGHT] = nite::Point3f(500, 1, 0);
-    _markerPositions[CENTER] = nite::Point3f(300, 0.5, 0);
+    _markerPositions[TOP_LEFT] = nite::Point3f(0, -MAP_BBOX_Y, 0);
+    _markerPositions[TOP_RIGHT] = nite::Point3f(300, -MAP_BBOX_Y, 0);
+    _markerPositions[BOTTOM_LEFT] = nite::Point3f(0, MAP_BBOX_Y, 0);
+    _markerPositions[BOTTOM_RIGHT] = nite::Point3f(300, MAP_BBOX_Y, 0);
+    _markerPositions[CENTER] = nite::Point3f(150, 0.5, 0);
 }
 
 Kinect::~Kinect() {
