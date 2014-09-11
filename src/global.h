@@ -43,6 +43,7 @@ struct arguments
     const char *startState;
     bool record;
     bool debug;
+    bool nograb;
 };
 
 extern arguments g_args;

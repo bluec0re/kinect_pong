@@ -31,7 +31,7 @@ void KinectPlayer::update(double timeSinceLastFrame) {
         if(is3D()) {
             tmp = static_cast<float>(posRight.x - tl.x)/static_cast<float>(br.x - tl.x);
             std::cout << "Z: " << posRight.x << " -> " << tmp << std::endl;
-            curPos.z = static_cast<Ogre::Real>(tmp);
+            curPos.x = static_cast<Ogre::Real>(tmp);
         }
         _paddle->setPosition(curPos);
     } else

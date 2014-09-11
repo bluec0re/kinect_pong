@@ -77,18 +77,20 @@ public:
         mWindow->getCustomAttribute("WINDOW", &windowHnd);
         windowHndStr << windowHnd;
         pl.insert(std::make_pair(std::string("WINDOW"), windowHndStr.str()));
-#if !defined(NDEBUG)
-    #if defined OIS_WIN32_PLATFORM
+#if defined OIS_WIN32_PLATFORM
+    #if !defined(NDEBUG)
         pl.insert(std::make_pair(std::string("w32_mouse"), std::string("DISCL_FOREGROUND" )));
         pl.insert(std::make_pair(std::string("w32_mouse"), std::string("DISCL_NONEXCLUSIVE")));
         pl.insert(std::make_pair(std::string("w32_keyboard"), std::string("DISCL_FOREGROUND")));
         pl.insert(std::make_pair(std::string("w32_keyboard"), std::string("DISCL_NONEXCLUSIVE")));
-    #elif defined OIS_LINUX_PLATFORM
-        pl.insert(std::make_pair(std::string("x11_mouse_grab"), std::string("false")));
-        pl.insert(std::make_pair(std::string("x11_mouse_hide"), std::string("false")));
-        pl.insert(std::make_pair(std::string("x11_keyboard_grab"), std::string("false")));
-        pl.insert(std::make_pair(std::string("XAutoRepeatOn"), std::string("true")));
     #endif
+#elif defined OIS_LINUX_PLATFORM
+        if(g_args.nograb) {
+            pl.insert(std::make_pair(std::string("x11_mouse_grab"), std::string("false")));
+            pl.insert(std::make_pair(std::string("x11_mouse_hide"), std::string("false")));
+            pl.insert(std::make_pair(std::string("x11_keyboard_grab"), std::string("false")));
+            pl.insert(std::make_pair(std::string("XAutoRepeatOn"), std::string("true")));
+        }
 #endif
 
         device.InputMgr = OIS::InputManager::createInputSystem( pl );
@@ -145,6 +147,7 @@ public:
        {"record",  'r', 0,      0,  "Record the game into video" },
 #endif
        {"debug",  'd', 0,      0,  "Enable debug logging" },
+       {"nograb",  'n', 0,      0,  "Disable keyboard/mouse grabbing" },
        { 0 }
      };
 
@@ -169,6 +172,10 @@ public:
              arguments->debug = true;
              break;
 
+         case 'n':
+             arguments->nograb = true;
+             break;
+
          default:
            return ARGP_ERR_UNKNOWN;
          }
@@ -184,6 +191,7 @@ int main(int argc, char *argv[])
     g_args.startState = "menu";
     g_args.record = false;
     g_args.debug = false;
+    g_args.nograb = false;
 #ifdef OIS_LINUX_PLATFORM
     argp_parse (&argp, argc, argv, 0, 0, &g_args);
 #endif
