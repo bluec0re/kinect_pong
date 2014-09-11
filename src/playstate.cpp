@@ -456,7 +456,7 @@ bool PlayState::frameRenderingQueued(const Ogre::FrameEvent& evt) {
 
         updateScore();
     } else if(_ended) {
-        _endScreenTimeout -= evt.timeSinceLastEvent;
+        _endScreenTimeout -= evt.timeSinceLastFrame;
         if(_endScreenTimeout <= 0) {
             GameState* next = findByName("Pong 3D");
             if(next && next != this && _looser->isAI())
