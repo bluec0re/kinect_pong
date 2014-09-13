@@ -153,23 +153,32 @@ bool KinectCalibrationState::frameRenderingQueued(const Ogre::FrameEvent& evt) {
 
                     if(_tPoseTimeout < 0) {
                         updateMarkers();
-                        _progress->setProgress(1.f);
                         _manual->setProperty("Image", "CalibrationManualCalibrated");
                         _calibrated = true;
                         _target->setVisible(true);
+                        _tPoseTimeout = -1.f;
                     }
                 }
             }
         } else if(_tracked && _calibrated && uid != -1) {
-            nite::JointType types[] = {nite::JOINT_LEFT_HAND, nite::JOINT_RIGHT_HAND};
-            for(nite::JointType& type : types) {
-                Ogre::Vector2 pos = kinect->getRelativePosition(kinect->getJointPosition(type, uid));
-                if(pos.x > 0.45 && pos.x < 0.55 && pos.y > 0.25 && pos.y < 0.35) {
-                    kinect->setControllingHand(type);
-                    Ogre::StringStream ss;
-                    ss << "Using hand " << type;
-                    Ogre::LogManager::getSingleton().logMessage(ss.str());
-                    updateMarkers();
+            if(!kinect->hasControllingHand()) {
+                nite::JointType types[] = {nite::JOINT_LEFT_HAND, nite::JOINT_RIGHT_HAND};
+                for(nite::JointType& type : types) {
+                    Ogre::Vector2 pos = kinect->getRelativePosition(kinect->getJointPosition(type, uid));
+                    if(pos.x > 0.45 && pos.x < 0.55 && pos.y > 0.25 && pos.y < 0.35) {
+                        _progress->setProgress(1.f);
+                        kinect->setControllingHand(type);
+                        Ogre::StringStream ss;
+                        ss << "Using hand " << type;
+                        Ogre::LogManager::getSingleton().logMessage(ss.str());
+                        updateMarkers();
+                        _tPoseTimeout = 3.f;
+                        break;
+                    }
+                }
+            } else {
+                _tPoseTimeout -= evt.timeSinceLastFrame;
+                if(_tPoseTimeout < 0) {
                     changeGameState(findByName("Pong 2D"));
                 }
             }
