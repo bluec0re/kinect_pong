@@ -62,21 +62,21 @@ void Ball::reverse(const Direction& dir, const Ogre::Real& collision) {
         ss << "X ";
         _speed.x *= -1;
         if(collision != 0)
-            pos.x = collision + CORRECT_SIGN(x);
+            pos.x = collision + CORRECT_SIGN(x)*1.5f;
         break;
 
     case Ball::DIR_Y:
         ss << "Y ";
         _speed.y *= -1;
         if(collision != 0)
-            pos.y = collision + CORRECT_SIGN(y);
+            pos.y = collision + CORRECT_SIGN(y)*1.5f;
         break;
 
     case Ball::DIR_Z:
         ss << "Z ";
         _speed.z *= -1;
         if(collision != 0)
-            pos.z = collision + CORRECT_SIGN(z);
+            pos.z = collision + CORRECT_SIGN(z)*1.5f;
         break;
     }
     setPosition(pos);

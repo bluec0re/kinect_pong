@@ -10,7 +10,6 @@
 class PlayState : public GuiState
 {
 public:
-    PlayState();
 
     /**
      * create the box around the game field
@@ -56,6 +55,9 @@ protected:
     virtual Ogre::Vector3 getRandomAccel() const;
     virtual void updateScore();
     virtual void setupWindows();
+
+protected:
+    PlayState();
 
 protected:
     std::vector<PaddlePtr> _paddles; //

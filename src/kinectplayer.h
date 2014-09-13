@@ -1,6 +1,7 @@
 #ifndef KINECTPLAYER_H
 #define KINECTPLAYER_H
 
+#include <NiTE.h>
 #include "player.h"
 
 class Kinect;
@@ -17,7 +18,7 @@ public:
 
 private:
     Kinect* _kinect;
-    int _userid;
+    nite::UserId _userid;
 };
 
 #endif // KINECTPLAYER_H

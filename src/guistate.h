@@ -6,8 +6,6 @@
 class GuiState : public GameState
 {
 public:
-    using GameState::GameState;
-
     virtual bool keyPressed(const OIS::KeyEvent &arg) override;
     virtual bool keyReleased(const OIS::KeyEvent &arg) override;
     virtual bool mouseMoved( const OIS::MouseEvent &arg ) override;
@@ -18,6 +16,9 @@ public:
 
 protected:
     virtual void clearAll();
+
+private:
+    using GameState::GameState;
 };
 
 #endif // GUISTATE_H

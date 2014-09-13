@@ -28,6 +28,7 @@ void KinectCalibrationState::setupWindows() {
     GUIContext& guiContext = System::getSingleton().getDefaultGUIContext();
 
     SchemeManager::getSingleton().createFromFile("TaharezLook.scheme");
+    ImageManager::getSingleton().loadImageset("AlfiskoSkin.imageset", "ImageSets");
     guiContext.getMouseCursor().setDefaultImage("TaharezLook/MouseArrow");
 
     Window* root = wmgr.createWindow("DefaultWindow");
@@ -83,20 +84,32 @@ void KinectCalibrationState::setupKinectWindow() {
     Logger::getSingleton().logEvent("Kinect Window created");
 
 
-    ImageManager::getSingleton().addFromImageFile("CalibrationManual", "manual_x64.png", "Images");
+    ImageManager::getSingleton().addFromImageFile("CalibrationManual", "manual_x64_base.png", "Images");
+    ImageManager::getSingleton().addFromImageFile("CalibrationManualTracked", "manual_x64_tracked.png", "Images");
+    ImageManager::getSingleton().addFromImageFile("CalibrationManualCalibrated", "manual_x64_calibrated.png", "Images");
 
-    Window* manual = wmgr.createWindow("TaharezLook/StaticImage", "CalibrationWindow");
-    manual->setSize(USize(UDim(0, 230), UDim(0, 64)));
-    manual->setPosition(UVector2(UDim(0.0, 0), UDim(0, 0)));
+    _manual = wmgr.createWindow("TaharezLook/StaticImage", "CalibrationWindow");
+    _manual->setSize(USize(UDim(0, 230), UDim(0, 64)));
+    _manual->setPosition(UVector2(UDim(0.5, -115), UDim(0, 0)));
 
-    manual->setProperty("Image", "CalibrationManual");
-    manual->setProperty("FrameColours", "tl:00000000 tr:00000000 bl:00000000 br:00000000");
-    si->addChild(manual);
+    _manual->setProperty("Image", "CalibrationManual");
+    _manual->setProperty("FrameEnabled", "false");
+    si->addChild(_manual);
 
     _progress = dynamic_cast<ProgressBar*>(wmgr.createWindow("TaharezLook/ProgressBar", "CalibrationProgress"));
     _progress->setSize(USize(UDim(0, 200), UDim(0, 20)));
-    _progress->setPosition(UVector2(UDim(0.0, 10), UDim(0, 64)));
+    _progress->setPosition(UVector2(UDim(0.5, -100), UDim(0, 64)));
     si->addChild(_progress);
+
+
+    _target = wmgr.createWindow("TaharezLook/StaticImage", "Target");
+    _target->setSize(USize(UDim(0, 20), UDim(0, 20)));
+    _target->setPosition(UVector2(UDim(0.5, -10), UDim(0.3, -10)));
+    _target->setProperty("Image", "AlfiskoSkin/CloseButtonPushed");
+    _target->setProperty("FrameEnabled", "false");
+    _target->setProperty("BackgroundEnabled", "false");
+    _target->setVisible(false);
+    si->addChild(_target);
 }
 
 bool KinectCalibrationState::handleKeyboardBtnClick(const CEGUI::EventArgs &args) {
@@ -113,19 +126,149 @@ bool KinectCalibrationState::frameRenderingQueued(const Ogre::FrameEvent& evt) {
             _tracked = true;
             _calibrated = false;
             _progress->setProgress(0.3333f);
+            _manual->setProperty("Image", "CalibrationManualTracked");
             _tPoseTimeout = 3.0f;
-        } else if(_tracked) {
+            _positions.clear();
+            kinect->hasControllingHand(false);
+        } else if(_tracked && !_calibrated) {
             if (uid == -1) {
                 _tracked = false;
                 _progress->setProgress(0.f);
-            } else if (!_calibrated) {
-                float progress = 0.3333f + 0.3333f * (1.f - _tPoseTimeout / 3.0f);
-                printf("progress: %f\n", progress);
-                _progress->setProgress(progress);
-                _tPoseTimeout -= evt.timeSinceLastFrame;
+                _manual->setProperty("Image", "CalibrationManual");
+            } else {
+                Ogre::Vector3 head = kinect->getJointPosition(nite::JOINT_HEAD, uid);
+                Ogre::Vector3 left = kinect->getJointPosition(nite::JOINT_LEFT_HAND, uid);
+                Ogre::Vector3 right = kinect->getJointPosition(nite::JOINT_RIGHT_HAND, uid);
+                Ogre::Vector3 torso = kinect->getJointPosition(nite::JOINT_TORSO, uid);
+
+                if(head.y - 20 > left.y && head.y - 20 > right.y &&
+                        torso.y + 20 < left.y && torso.y + 20 < right.y &&
+                        left.x < head.x && right.x > head.x) {
+                    float progress = 0.3333f + 0.3333f * (1.f - _tPoseTimeout / 3.0f);
+                    printf("progress: %f\n", progress);
+                    _progress->setProgress(progress);
+                    _tPoseTimeout -= evt.timeSinceLastFrame;
+
+                    _positions.push_back(std::pair<Ogre::Vector3, Ogre::Vector3>(left, right));
+
+                    if(_tPoseTimeout < 0) {
+                        updateMarkers();
+                        _progress->setProgress(1.f);
+                        _manual->setProperty("Image", "CalibrationManualCalibrated");
+                        _calibrated = true;
+                        _target->setVisible(true);
+                    }
+                }
+            }
+        } else if(_tracked && _calibrated && uid != -1) {
+            nite::JointType types[] = {nite::JOINT_LEFT_HAND, nite::JOINT_RIGHT_HAND};
+            for(nite::JointType& type : types) {
+                Ogre::Vector2 pos = kinect->getRelativePosition(kinect->getJointPosition(type, uid));
+                if(pos.x > 0.45 && pos.x < 0.55 && pos.y > 0.25 && pos.y < 0.35) {
+                    kinect->setControllingHand(type);
+                    Ogre::StringStream ss;
+                    ss << "Using hand " << type;
+                    Ogre::LogManager::getSingleton().logMessage(ss.str());
+                    updateMarkers();
+                    changeGameState(findByName("Pong 2D"));
+                }
             }
         }
     }
 
     return true;
+}
+
+void KinectCalibrationState::updateMarkers() {
+    Kinect* kinect = Kinect::getInstance();
+    Ogre::Vector3 left, right, middle;
+    for(auto entry : _positions) {
+        left += entry.first;
+        right += entry.second;
+    }
+    left /= _positions.size();
+    right /= _positions.size();
+    middle = (left + right) / 2;
+    {
+        Ogre::StringStream ss;
+        ss << "Detected Average " << left << " " << middle << " " << right;
+        Ogre::LogManager::getSingleton().logMessage(ss.str());
+    }
+    nite::Point3f tl, tr, bl, br;
+
+    if(!kinect->hasControllingHand()) {
+        auto tmp = (left + middle) / 2;
+        tl.x = tmp.x;
+        tl.y = tmp.y * 1.3f;
+        tl.z = tmp.z;
+
+        tmp = (right + middle) / 2;
+        tr.x = tmp.x;
+        tr.y = tmp.y * 1.3f;
+        tr.z = tmp.z;
+
+        tmp = (left + middle) / 2;
+        bl.x = tmp.x;
+        bl.y = tmp.y * 0.7f;
+        bl.z = tmp.z;
+
+        tmp = (right + middle) / 2;
+        br.x = tmp.x;
+        br.y = tmp.y * 0.7f;
+        br.z = tmp.z;
+    } else if(kinect->getControllingHand() == nite::JOINT_RIGHT_HAND) {
+        auto tmp = (left + middle) / 2;
+        tl.x = middle.x;
+        tl.y = tmp.y * 1.3f;
+        tl.z = tmp.z;
+
+        tmp = (right + middle) / 2;
+        tr.x = right.x;
+        tr.y = tmp.y * 1.3f;
+        tr.z = tmp.z;
+
+        tmp = (left + middle) / 2;
+        bl.x = middle.x;
+        bl.y = tmp.y * 0.7f;
+        bl.z = tmp.z;
+
+        tmp = (right + middle) / 2;
+        br.x = right.x;
+        br.y = tmp.y * 0.7f;
+        br.z = tmp.z;
+    } else if(kinect->getControllingHand() == nite::JOINT_LEFT_HAND) {
+        auto tmp = (left + middle) / 2;
+        tl.x = left.x;
+        tl.y = tmp.y * 1.3f;
+        tl.z = tmp.z;
+
+        tmp = (right + middle) / 2;
+        tr.x = middle.x;
+        tr.y = tmp.y * 1.3f;
+        tr.z = tmp.z;
+
+        tmp = (left + middle) / 2;
+        bl.x = left.x;
+        bl.y = tmp.y * 0.7f;
+        bl.z = tmp.z;
+
+        tmp = (right + middle) / 2;
+        br.x = middle.x;
+        br.y = tmp.y * 0.7f;
+        br.z = tmp.z;
+    }
+
+    {
+        Ogre::StringStream ss;
+        ss << "TL " << tl.x << "," << tl.y << ", " << tl.z << "\n";
+        ss << "TR " << tr.x << "," << tr.y << ", " << tr.z << "\n";
+        ss << "BR " << br.x << "," << br.y << ", " << br.z << "\n";
+        ss << "BL " << bl.x << "," << bl.y << ", " << bl.z;
+        Ogre::LogManager::getSingleton().logMessage(ss.str());
+    }
+
+    kinect->setRealWorldMarkerPos(Kinect::TOP_LEFT, tl);
+    kinect->setRealWorldMarkerPos(Kinect::TOP_RIGHT, tr);
+    kinect->setRealWorldMarkerPos(Kinect::BOTTOM_LEFT, bl);
+    kinect->setRealWorldMarkerPos(Kinect::BOTTOM_RIGHT, br);
 }

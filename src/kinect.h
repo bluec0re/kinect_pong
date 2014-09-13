@@ -19,56 +19,66 @@ class Player;
 
 class Kinect
 {
-    public: 
-        enum Marker {
-            TOP_LEFT = 0,
-            TOP_RIGHT,
-            BOTTOM_LEFT,
-            BOTTOM_RIGHT,
-            CENTER
-        };
+public:
+    enum Marker {
+        TOP_LEFT = 0,
+        TOP_RIGHT,
+        BOTTOM_LEFT,
+        BOTTOM_RIGHT,
+        CENTER
+    };
 
-        static Kinect* getInstance() {
-            if(_kinect != nullptr)
-                return _kinect;
-            else
-                return (_kinect = new Kinect());
-        }
-        virtual ~Kinect();
+    static Kinect* getInstance() {
+        if(_kinect != nullptr)
+            return _kinect;
+        else
+            return (_kinect = new Kinect());
+    }
+    virtual ~Kinect();
 
-        void update();
-        void init();
-        void close();
+    void update();
+    void init();
+    void close();
 
-        nite::UserId waitForUser(bool blocking, bool autoUpdate = true);
-        bool isConnected() const { return _connected; }
+    nite::UserId waitForUser(bool blocking, bool autoUpdate = true);
+    bool isConnected() const { return _connected; }
 
-        std::vector<nite::UserId> getUsers() const;
+    std::vector<nite::UserId> getUsers() const;
 
-        nite::SkeletonState getTrackingState(nite::UserId userid) const;
-        Ogre::Vector3 getJointPosition(const nite::JointType& type, nite::UserId id) const;
+    nite::SkeletonState getTrackingState(nite::UserId userid) const;
+    Ogre::Vector3 getJointPosition(const nite::JointType& type, nite::UserId id) const;
 
-        Ogre::TexturePtr& getDepthImage();
-        const Ogre::TexturePtr& getDepthImage() const;
+    Ogre::TexturePtr& getDepthImage();
+    const Ogre::TexturePtr& getDepthImage() const;
 
-        const nite::Point3f& getRealWorldMarkerPos(const Marker& marker) const;
-    protected:
-        Kinect();
+    const nite::Point3f& getRealWorldMarkerPos(const Marker& marker) const;
+    void setRealWorldMarkerPos(const Marker& marker, const nite::Point3f& pos);
 
-    private:
-        void openniFrame2OgreTexture(Ogre::TexturePtr& texture, const openni::VideoFrameRef& depthFrame, float* histogram);
+    const nite::JointType& getControllingHand() const;
+    void setControllingHand(const nite::JointType&);
+    bool hasControllingHand() const;
+    void hasControllingHand(bool yes);
+
+    Ogre::Vector2 getRelativePosition(const Ogre::Vector3& pos);
+protected:
+    Kinect();
+
+private:
+    void openniFrame2OgreTexture(Ogre::TexturePtr& texture, const openni::VideoFrameRef& depthFrame, float* histogram);
 
 
-    private: 
-        static Kinect* _kinect;
-        nite::UserTracker userTracker;
-        nite::Status niteRc;
-        std::map<nite::UserId, nite::UserData> _users;
-        bool _connected;
-        nite::UserTrackerFrameRef _lastFrame;
-        Ogre::TexturePtr _texture;
-        float	_depthHist[MAX_DEPTH];
+private:
+    static Kinect* _kinect;
+    nite::UserTracker userTracker;
+    nite::Status niteRc;
+    std::map<nite::UserId, nite::UserData> _users;
+    bool _connected;
+    nite::UserTrackerFrameRef _lastFrame;
+    Ogre::TexturePtr _texture;
+    float _depthHist[MAX_DEPTH];
 
-        nite::Point3f _markerPositions[5];
+    nite::Point3f _markerPositions[5];
+    nite::JointType _controllingHand;
+    bool _hasControllingHand;
 };
 #endif

@@ -14,7 +14,6 @@ enum WriteFocus
 class MenuState : public GuiState
 {
 public:
-    using GuiState::GuiState;
     DECLARE_GAMESTATE_CLASS(MenuState);
 
 
@@ -26,6 +25,8 @@ public:
     virtual bool frameRenderingQueued(const Ogre::FrameEvent &evt) override;
 
 protected:
+    using GuiState::GuiState;
+
     bool initialise(CEGUI::GUIContext* guiContext);
     void setupAnimations();
     void onEnteringSample();

@@ -42,12 +42,13 @@ void Kinect::openniFrame2OgreTexture(Ogre::TexturePtr& texture, const openni::Vi
 
     float coordinates[2];
     nite::UserId uid = waitForUser(false, false);
-    if(uid != -1) {
-        auto leftHand = getJointPosition(nite::JOINT_RIGHT_HAND, uid);
+    if(uid != -1 && hasControllingHand()) {
+        auto leftHand = getJointPosition(getControllingHand(), uid);
         if(userTracker.convertJointCoordinatesToDepth(leftHand.x, leftHand.y, leftHand.z, &coordinates[0], &coordinates[1]) != nite::STATUS_OK)
             uid = -1;
-        else
+/*        else
             printf("Convert coordinates %fx%f\n", coordinates[0], coordinates[1]);
+ */
     }
 
     int width = depthFrame.getVideoMode().getResolutionX();
@@ -70,12 +71,31 @@ void Kinect::openniFrame2OgreTexture(Ogre::TexturePtr& texture, const openni::Vi
             if (*pDepth != 0)
             {
                 int nHistValue = histogram[*pDepth];
-                if(uid != -1 &&
-                        y >= coordinates[1] - 30 && y <= coordinates[1] + 30 &&
-                        x >= coordinates[0] - 30 && x <= coordinates[0] + 30) {
-                    *(pDest++) = 0; // R
-                    *(pDest++) = nHistValue; // G
-                    *(pDest++) = 0; // B
+                if(uid != -1 && hasControllingHand()) {
+                    float markers[2][2];
+                    userTracker.convertJointCoordinatesToDepth(_markerPositions[TOP_LEFT].x, _markerPositions[TOP_LEFT].y, _markerPositions[TOP_LEFT].z,
+                            &markers[0][0], &markers[0][1]);
+                    userTracker.convertJointCoordinatesToDepth(_markerPositions[BOTTOM_RIGHT].x, _markerPositions[BOTTOM_RIGHT].y, _markerPositions[BOTTOM_RIGHT].z,
+                            &markers[1][0], &markers[1][1]);
+
+                    if(y >= coordinates[1] - 30 && y <= coordinates[1] + 30 &&
+                       x >= coordinates[0] - 30 && x <= coordinates[0] + 30) {
+                        *(pDest++) = 0; // R
+                        *(pDest++) = nHistValue; // G
+                        *(pDest++) = 0; // B
+                    } else if(y <= markers[0][1] && y >= markers[1][1] && (fabs(x - markers[0][0]) < 0.01f || fabs(x - markers[1][0]) < 0.01f)) {
+                        *(pDest++) = 0; // R
+                        *(pDest++) = 0; // G
+                        *(pDest++) = 255; // B
+                    } else if(x <= markers[0][0] && x >= markers[1][0] && (fabs(y - markers[0][1]) < 0.01f || fabs(y - markers[1][1]) < 0.01f)) {
+                        *(pDest++) = 0; // R
+                        *(pDest++) = 0; // G
+                        *(pDest++) = 255; // B
+                    } else {
+                        *(pDest++) = nHistValue; // R
+                        *(pDest++) = nHistValue; // G
+                        *(pDest++) = nHistValue; // B
+                    }
                 } else {
                     *(pDest++) = nHistValue; // R
                     *(pDest++) = nHistValue; // G
@@ -111,6 +131,8 @@ Kinect::Kinect() : _connected(false) {
     _markerPositions[BOTTOM_LEFT] = nite::Point3f(0, MAP_BBOX_Y, 0);
     _markerPositions[BOTTOM_RIGHT] = nite::Point3f(300, MAP_BBOX_Y, 0);
     _markerPositions[CENTER] = nite::Point3f(150, 0.5, 0);
+    _hasControllingHand = false;
+    _controllingHand = nite::JOINT_RIGHT_HAND;
 }
 
 Kinect::~Kinect() {
@@ -271,4 +293,38 @@ const nite::Point3f& Kinect::getRealWorldMarkerPos(const Marker &marker) const {
         throw std::out_of_range("Invalid marker type specified");
 
     return _markerPositions[idx];
+}
+
+void Kinect::setRealWorldMarkerPos(const Marker &marker, const nite::Point3f &pos) {
+    size_t idx = static_cast<size_t>(marker);
+    if(idx > CENTER)
+        throw std::out_of_range("Invalid marker type specified");
+
+    _markerPositions[marker] = pos;
+}
+
+const nite::JointType& Kinect::getControllingHand() const {
+    return _controllingHand;
+}
+
+void Kinect::setControllingHand(nite::JointType const & hand) {
+    _controllingHand = hand;
+    hasControllingHand(true);
+}
+
+bool Kinect::hasControllingHand() const {
+    return _hasControllingHand;
+}
+
+void Kinect::hasControllingHand(bool yes) {
+    _hasControllingHand = yes;
+}
+
+Ogre::Vector2 Kinect::getRelativePosition(const Ogre::Vector3& pos) {
+    Ogre::Vector2 out;
+    userTracker.convertJointCoordinatesToDepth(pos.x, pos.y, pos.z, &out.x, &out.y);
+    out.x /= _lastFrame.getDepthFrame().getVideoMode().getResolutionX();
+    out.y /= _lastFrame.getDepthFrame().getVideoMode().getResolutionY();
+
+    return out;
 }

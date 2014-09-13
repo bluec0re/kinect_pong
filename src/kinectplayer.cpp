@@ -16,25 +16,27 @@ void KinectPlayer::update(double timeSinceLastFrame) {
         _kinect->update();
 
     if(_kinect->getTrackingState(_userid) == nite::SKELETON_TRACKED) {
-        Ogre::Vector3 posRight = _kinect->getJointPosition(nite::JOINT_RIGHT_HAND, _userid);
+        Ogre::Vector3 posRight = _kinect->getJointPosition(_kinect->getControllingHand(), _userid);
 
         Ogre::Vector3 curPos = _paddle->getPosition();
 
         const nite::Point3f& tl = _kinect->getRealWorldMarkerPos(Kinect::TOP_LEFT);
+        const nite::Point3f& tr = _kinect->getRealWorldMarkerPos(Kinect::TOP_RIGHT);
         const nite::Point3f& br = _kinect->getRealWorldMarkerPos(Kinect::BOTTOM_RIGHT);
+        const nite::Point3f& bl = _kinect->getRealWorldMarkerPos(Kinect::BOTTOM_LEFT);
 
         float tmp;
-        tmp = static_cast<float>(posRight.y - tl.y)/static_cast<float>(br.y - tl.y);
-        std::cout << "Y: " << posRight.y << " -> " << tmp << " => ";
+        tmp = static_cast<float>(posRight.y - br.y)/static_cast<float>(tl.y - br.y);
+        //std::cout << "Y: " << posRight.y << " -> " << tmp << " => ";
         tmp = tmp*MAP_BBOX_Y*2-MAP_BBOX_Y;
-        std::cout << tmp<< std::endl;
+        //std::cout << tmp<< std::endl;
         curPos.y = static_cast<Ogre::Real>(tmp);
 
         if(is3D()) { // kinect x is z in game
             tmp = static_cast<float>(posRight.x - tl.x)/static_cast<float>(br.x - tl.x);
-            std::cout << "Z: " << posRight.x << " -> " << tmp << " => ";
+          //  std::cout << "Z: " << posRight.x << " -> " << tmp << " => ";
             tmp = tmp*MAP_BBOX_Z*2-MAP_BBOX_Z;
-            std::cout << tmp<< std::endl;
+            //std::cout << tmp<< std::endl;
             curPos.z = static_cast<Ogre::Real>(tmp);
         }
         _paddle->setPosition(curPos);

@@ -10,6 +10,9 @@ bool GuiState::keyPressed(const OIS::KeyEvent &arg) {
 bool GuiState::keyReleased(const OIS::KeyEvent &arg) {
     InjectOISKey(false, arg);
 
+    if(arg.key == OIS::KC_ESCAPE) {
+        parent->popGameState();
+    }
     return true;
 }
 
