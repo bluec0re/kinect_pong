@@ -1,3 +1,4 @@
+#include <OgreOggSound/OgreOggSound.h>
 #include "menustate.h"
 #include "cegui_utils.h"
 
@@ -26,6 +27,9 @@ bool MenuState::pause() {
     _guiContext->getMouseCursor().hide();
     _guiContext->removeAllEvents();
     _guiContext->setDefaultFont(nullptr);
+
+    OgreOggSound::OgreOggSoundManager* soundManager = OgreOggSound::OgreOggSoundManager::getSingletonPtr();
+    soundManager->getSound("menu_loop")->stop();
 
     clearAll();
     return true;
@@ -281,6 +285,9 @@ void MenuState::onEnteringSample()
     _loginWasAccepted = true;
     //_botNaviContainer->setEnabled(true);
     _guiContext->getMouseCursor().hide();
+
+    OgreOggSound::OgreOggSoundManager* soundManager = OgreOggSound::OgreOggSoundManager::getSingletonPtr();
+    soundManager->getSound("menu_loop")->play();
 }
 
 bool MenuState::frameRenderingQueued(const Ogre::FrameEvent &evt)

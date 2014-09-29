@@ -88,11 +88,8 @@ void GameStateManager::start(GameState *state)
         if (videoRecorder) {
             mDevice->ogre->renderOneFrame((float)(1.0f/30.0f));
 
-
             videoRecorder->start();
             videoRecorder->update(mDevice->rwindow);
-
-
 
             usleep(10);
         } else

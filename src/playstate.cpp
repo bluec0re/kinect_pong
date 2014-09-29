@@ -223,6 +223,9 @@ void PlayState::enter() {
 
     CEGUI::FontManager::getSingleton().createFromFile("DejaVuSans-12.font");
 
+    OgreOggSound::OgreOggSoundManager* soundManager = OgreOggSound::OgreOggSoundManager::getSingletonPtr();
+    soundManager->getSound("game_loop")->play();
+
     setupWindows();
 }
 
@@ -338,6 +341,9 @@ void PlayState::exit() {
     mDevice->sceneMgr->destroySceneNode("box_subnode");*/
 
     clearAll();
+
+    OgreOggSound::OgreOggSoundManager* soundManager = OgreOggSound::OgreOggSoundManager::getSingletonPtr();
+    soundManager->getSound("game_loop")->stop();
 
     CEGUI::Logger::getSingleton().logEvent("Leaving Playstate");
     Ogre::LogManager::getSingleton().logMessage("Leaving Playstate");

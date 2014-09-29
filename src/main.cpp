@@ -105,6 +105,8 @@ public:
         soundManager->createSound("calib", "calib.ogg", false, false, true);
         soundManager->createSound("calib_fin", "calib_fin.ogg", false, false, true);
         soundManager->createSound("calib_fail", "fail.ogg", false, false, true);
+        soundManager->createSound("game_loop", "game_loop.ogg", false, true, true);
+        soundManager->createSound("menu_loop", "menu_loop.ogg", false, true, true);
         //-------------------------
         LogManager::getSingleton().logMessage("*** Initializing OIS ***");
         OIS::ParamList pl;
@@ -172,7 +174,7 @@ public:
 
         OIS::InputManager::destroyInputSystem(device.InputMgr);
 
-
+        delete soundManager;
 #ifdef HAVE_OPENNI2
         Kinect::getInstance()->close();
 #endif

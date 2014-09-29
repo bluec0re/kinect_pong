@@ -21,10 +21,7 @@ Ball::Ball(int colorLeft, int colorRight, bool ghost) :
 }
 
 Ball::~Ball() {
-    _billboardSet->removeBillboard(_ghostBillboard_right);
-    _billboardSet->removeBillboard(_ghostBillboard_left);
-    _billboardSet->removeBillboard(_ghostBillboard_top);
-    _billboardSet->removeBillboard(_ghostBillboard_bottom);
+    _billboardSet->clear();
 }
 
 int Ball::calcColor() {
@@ -62,13 +59,9 @@ void Ball::create() {
     }
     if(_ghost == true) {
         _ghostBillboard_right = _billboardSet->createBillboard(Ogre::Vector3::ZERO);
-        //_ghostBillboard_right->setColour(Ogre::ColourValue::Blue);
         _ghostBillboard_top = _billboardSet->createBillboard(Ogre::Vector3::ZERO);
-        //_ghostBillboard_top->setColour(Ogre::ColourValue::Blue);
         _ghostBillboard_left = _billboardSet->createBillboard(Ogre::Vector3::ZERO);
-        //_ghostBillboard_left->setColour(Ogre::ColourValue::Blue);
         _ghostBillboard_bottom = _billboardSet->createBillboard(Ogre::Vector3::ZERO);
-        //_ghostBillboard_bottom->setColour(Ogre::ColourValue::Blue);
     }
     _bb_node->attachObject(_billboardSet);
 }
