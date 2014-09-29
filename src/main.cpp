@@ -9,6 +9,7 @@
 
 #include "gamestatemanager.h"
 #include "menustate.h"
+#include "settingstate.h"
 #include "pong2dstate.h"
 #include "pong3dstate.h"
 
@@ -19,6 +20,24 @@
 
 #ifdef OIS_LINUX_PLATFORM
     #include <argp.h>
+    #include <dlfcn.h>
+
+std::string getModulePathLinux(void* func) {
+    Dl_info info;
+    dladdr(func, &info);
+
+    return std::string(info.dli_fname);
+}
+#elif defined(OIS_WIN32_PLATFORM)
+#include <Windows.h>
+
+std::string getModulePathLinux(const char* module) {
+    HMODULE module = GetModuleHandle(module);
+    char buff[256] = {0};
+    GetModuleFileName(module, buf, 255);
+
+    return std::string(buf);
+}
 #endif
 
 struct arguments g_args;
@@ -70,6 +89,11 @@ public:
         CEGUI::AnimationManager::setDefaultResourceGroup("GUIAnimations");
 
         Ogre::ResourceGroupManager::getSingleton().addResourceLocation("media/sounds", "FileSystem", ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, false);
+#ifdef OIS_LINUX_PLATFORM
+        mRoot->loadPlugin("libOgreOggSound.so");
+#elif defined(OIS_WIN32_PLATFORM)
+        mRoot->loadPlugin("OgreOggSound.dll");
+#endif
         //Instantiate sound manager
         OgreOggSound::OgreOggSoundManager* soundManager = OgreOggSound::OgreOggSoundManager::getSingletonPtr();
         soundManager->init();
@@ -116,6 +140,8 @@ public:
 
         GameState* menu = MenuState::Create(&gameMgr, "Main Menu");
 
+        GameState* settings = SettingState::Create(&gameMgr, "Setting Menu");
+
 #ifdef HAVE_OPENNI2
         GameState* calib = KinectCalibrationState::Create(&gameMgr, "Kinect Calibration");
 #endif
@@ -123,6 +149,9 @@ public:
         GameState* pong2d = Pong2DState::Create(&gameMgr, "Pong 2D");
 
         GameState* pong3d = Pong3DState::Create(&gameMgr, "Pong 3D");
+
+        // load game settings
+        SettingState::loadSettings();
 
         if(strcasecmp(g_args.startState, "pong2d") == 0)
             gameMgr.start(pong2d);
@@ -132,6 +161,8 @@ public:
         else if(strcasecmp(g_args.startState, "calib") == 0)
             gameMgr.start(calib);
 #endif
+        else if(strcasecmp(g_args.startState, "settings") == 0)
+            gameMgr.start(settings);
         else
             gameMgr.start(menu);
 
@@ -163,7 +194,7 @@ public:
 
      /* The options we understand. */
     static struct argp_option poptions[] = {
-       {"state",  's', "STATE",      0,  "State to start with (menu, pong2d, pong3d)" },
+       {"state",  's', "STATE",      0,  "State to start with (menu, pong2d, pong3d, calib, settings)" },
 #ifdef HAVE_OPENCV
        {"record",  'r', 0,      0,  "Record the game into video" },
 #endif
@@ -209,6 +240,7 @@ public:
 
 int main(int argc, char *argv[])
 {
+    //printf("%s\n", getModulePathLinux(Ogre::LogManager::getSingleton).c_str());
     g_args.startState = "menu";
     g_args.record = false;
     g_args.debug = false;
@@ -218,5 +250,6 @@ int main(int argc, char *argv[])
 #endif
     Application app;
     app.go();
+
     return 0;
 }

@@ -49,6 +49,7 @@ public:
     virtual PaddlePtr addPaddle(int color, const Ogre::String& name, const Ogre::Real& pos);
     virtual const std::vector<BallPtr>& getBalls() const { return _balls; }
     virtual void showEndScreen();
+    virtual PlayerPtr addPlayer(const ControllerType& controller, const PaddlePtr& p);
 
 protected:
     virtual Ogre::Vector3 getRandomSpeed() const;

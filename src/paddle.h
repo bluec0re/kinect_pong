@@ -13,6 +13,7 @@ public:
 
     virtual void create() override;
     virtual void setPosition(const Ogre::Vector3& pos) override;
+    virtual const Ogre::String& getPlayerName() const { return _player; }
 
 private:
     Ogre::String _player;

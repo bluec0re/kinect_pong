@@ -1274,6 +1274,93 @@
 
     <!--
     ***************************************************
+        TaharezLook/HorzSliderThumb
+    ***************************************************
+    -->
+    <WidgetLook name="TaharezLook/HorzSliderThumb">
+        <Property name="HorzFree" value="true" />
+        <Property name="MouseInputPropagationEnabled" value="true" />
+        <ImagerySection name="normal">
+            <ImageryComponent>
+                <Image name="TaharezLook/VertSliderThumbNormal" />
+                <VertFormat type="Stretched" />
+                <HorzFormat type="Stretched" />
+            </ImageryComponent>
+        </ImagerySection>
+        <ImagerySection name="hover">
+            <ImageryComponent>
+                <Image name="TaharezLook/VertSliderThumbHover" />
+                <VertFormat type="Stretched" />
+                <HorzFormat type="Stretched" />
+            </ImageryComponent>
+        </ImagerySection>
+        <StateImagery name="Normal">
+            <Layer>
+                <Section section="normal" />
+            </Layer>
+        </StateImagery>
+        <StateImagery name="Hover">
+            <Layer>
+                <Section section="hover" />
+            </Layer>
+        </StateImagery>
+        <StateImagery name="Pushed">
+            <Layer>
+                <Section section="hover" />
+            </Layer>
+        </StateImagery>
+        <StateImagery name="Disabled">
+            <Layer>
+                <Section section="normal">
+                    <Colours topLeft="FF7F7F7F" topRight="FF7F7F7F" bottomLeft="FF7F7F7F" bottomRight="FF7F7F7F" />
+                </Section>
+            </Layer>
+        </StateImagery>
+    </WidgetLook>
+
+    <!--
+    ***************************************************
+        TaharezLook/HorzSlider
+    ***************************************************
+    -->
+    <WidgetLook name="TaharezLook/HorzSlider">
+        <Property name="VerticalSlider" value="false" />
+        <Property name="MouseAutoRepeatEnabled" value="true" />
+        <Property name="WantsMultiClickEvents" value="false" />
+        <Property name="Size" value="{{0, 256}, {0, 16}}" />
+        <NamedArea name="ThumbTrackArea" />
+        <Child  type="TaharezLook/HorzSliderThumb" nameSuffix="__auto_thumb__">
+            <Area>
+                <Dim type="Width" ><ImageDim name="TaharezLook/VertSliderThumbNormal" dimension="Width" /></Dim>
+            </Area>
+        </Child>
+        <ImagerySection name="main">
+            <ImageryComponent>
+                <Area>
+                    <Dim type="LeftEdge" ><AbsoluteDim value="3" /></Dim>
+                    <Dim type="Height" ><UnifiedDim scale="1.0" offset="0" type="Height" /></Dim>
+                </Area>
+                <Image name="TaharezLook/VertSliderBody" />
+                <VertFormat type="Stretched" />
+                <HorzFormat type="Stretched" />
+            </ImageryComponent>
+        </ImagerySection>
+        <StateImagery name="Enabled">
+            <Layer>
+                <Section section="main" />
+            </Layer>
+        </StateImagery>
+        <StateImagery name="Disabled">
+            <Layer>
+                <Section section="main">
+                    <Colours topLeft="FF7F7F7F" topRight="FF7F7F7F" bottomLeft="FF7F7F7F" bottomRight="FF7F7F7F" />
+                </Section>
+            </Layer>
+        </StateImagery>
+    </WidgetLook>
+
+    <!--
+    ***************************************************
         TaharezLook/HorizontalScrollbarThumb
     ***************************************************
     -->

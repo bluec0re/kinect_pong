@@ -3,7 +3,7 @@
 
 #define PADDLE_SPEED 100
 
-AiPlayer::AiPlayer(const Strength& s, const Ogre::String& name, Paddle* paddle, PlayState* state) :
+AiPlayer::AiPlayer(const AiStrength& s, const Ogre::String& name, const PaddlePtr& paddle, PlayState* state) :
     Player(name + Ogre::String(" (AI)"), paddle, state), _strength(s)
 {
 

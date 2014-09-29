@@ -123,7 +123,7 @@
             <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}" />
             <Property name="MaxSize" value="{{1,0},{1,0}}" />
             <Property name="MousePassThroughEnabled" value="True" />
-            <!--Window type="Generic/Image" name="ButtonOptions" >
+            <Window type="Generic/Image" name="ButtonOptions" >
                 <Property name="Area" value="{{0.125781,0},{-0.136806,0},{0.160937,0},{-0.0743055,0}}" />
                 <Property name="Image" value="GameMenuImages/ButtonOptionsIcon" />
                 <Property name="MaxSize" value="{{1,0},{1,0}}" />
@@ -132,7 +132,7 @@
                 <Property name="VerticalAlignment" value="Centre" />
                 <Property name="HorizontalAlignment" value="Centre" />
             </Window>
-            <Window type="Generic/Image" name="ButtonLoad" >
+            <!--Window type="Generic/Image" name="ButtonLoad" >
                 <Property name="Area" value="{{-0.0941409,0},{-0.197917,0},{-0.0681408,0},{-0.145917,0}}" />
                 <Property name="Image" value="GameMenuImages/ButtonLoadIcon" />
                 <Property name="MaxSize" value="{{1,0},{1,0}}" />
@@ -262,7 +262,7 @@
                     <Property name="DisabledTextColour" value="FF0094FF" />
                     <Property name="HorizontalAlignment" value="Right" />
                 </Window>
-            </Window>
+            </Window-->
             <Window type="Generic/Image" name="PopupLinesOptions" >
                 <Property name="Area" value="{{0.63914,0},{0.24441,0},{0.93914,0},{0.397188,0}}" />
                 <Property name="Image" value="GameMenuImages/PopupLinesOptions" />
@@ -308,7 +308,7 @@
                     <Property name="DisabledTextColour" value="FF0094FF" />
                     <Property name="HorizontalAlignment" value="Right" />
                 </Window>
-            </Window-->
+            </Window>
             <Window type="Generic/Image" name="PopupLinesQuit" >
                 <Property name="Area" value="{{0.609843,0},{0.652395,0},{0.909843,0},{0.798228,0}}" />
                 <Property name="Image" value="GameMenuImages/PopupLinesQuit" />

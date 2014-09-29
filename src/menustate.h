@@ -34,6 +34,7 @@ protected:
     bool handleCheckIfNaviIconAnimationNeedsChange(const CEGUI::EventArgs& args);
     bool handleNaviSelectionIconAnimStart(const CEGUI::EventArgs& args);
     bool handleStartPopupLinesQuitDisplay(const CEGUI::EventArgs& args);
+    bool handleStartPopupLinesOptionsDisplay(const CEGUI::EventArgs& args);
     bool handleInnerButtonsLabelEntered(const CEGUI::EventArgs& args);
     bool handleInnerButtonsLabelLeft(const CEGUI::EventArgs& args);
     void stopStartPopupLinesAnimations();
@@ -90,6 +91,7 @@ protected:
     CEGUI::AnimationInstance* _botBarLabelBlendOutInst;
 
     CEGUI::AnimationInstance* _popupLinesQuitAnimInst;
+    CEGUI::AnimationInstance* _popupLinesOptionsAnimInst;
 
     CEGUI::Window* _topBarLabel;
     CEGUI::Window* _botBarLabel;

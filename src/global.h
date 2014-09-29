@@ -48,4 +48,27 @@ struct arguments
 
 extern arguments g_args;
 
+enum ControllerType
+{
+    CONTROLLER_AI,
+    CONTROLLER_KEYBOARD,
+    CONTROLLER_KINECT
+};
+
+enum AiStrength {
+    AI_WEAK,
+    AI_STRONG
+};
+
+struct Settings
+{
+    AiStrength aiStrength;
+    bool showBallGhosts;
+    ControllerType controllerP1;
+    ControllerType controllerP2;
+    bool soundOn;
+};
+
+extern Settings g_settings;
+
 #endif /* end of include guard: GLOBAL_H_YO8PBGIO */

@@ -200,26 +200,13 @@ void PlayState::enter() {
 
     {
         PaddlePtr p = addPaddle(0xFF0000, "Player 1", -MAP_BBOX_X);
-        PlayerPtr player;
-#ifdef HAVE_OPENNI2
-        if(Kinect::getInstance()->isConnected()) {
-            player.reset(new KinectPlayer("Player 1", p.get(), this));
-            Ogre::LogManager::getSingleton().logMessage("Using Kinect Controller");
-        }
-#endif
-        if(!player) {
-            player.reset(new KeyboardPlayer("Player 1", p.get(), this));
-            Ogre::LogManager::getSingleton().logMessage("Using Keyboard Controller");
-        }
-        _players.push_back(player);
+        addPlayer(g_settings.controllerP1, p);
     }
 
     {        
         PaddlePtr p = addPaddle(0x0000FF, "Player 2", MAP_BBOX_X);
-        PlayerPtr player(new AiPlayer(AiPlayer::AI_STRONG, "Player 2", p.get(), this));
-        _players.push_back(player);
+        addPlayer(g_settings.controllerP2, p);
     }
-
 
     {
         BallPtr ball = addBall();
@@ -400,6 +387,36 @@ PaddlePtr PlayState::addPaddle(int color, const Ogre::String& name, const Ogre::
     _paddles.push_back(p);
 
     return p;
+}
+
+PlayerPtr PlayState::addPlayer(const ControllerType& controller, const PaddlePtr& p) {
+    PlayerPtr player;
+    switch(controller) {
+        case CONTROLLER_KINECT: {
+#ifdef HAVE_OPENNI2
+            if(Kinect::getInstance()->isConnected()) {
+                player.reset(new KinectPlayer(p->getPlayerName(), p, this));
+                Ogre::LogManager::getSingleton().logMessage("Using Kinect Controller");
+            }
+#endif
+            if(!player) {
+                player.reset(new KeyboardPlayer(p->getPlayerName(), p, this));
+                Ogre::LogManager::getSingleton().logMessage("Using Keyboard Controller");
+            }
+
+        } break;
+
+        case CONTROLLER_AI: {
+            player.reset(new AiPlayer(g_settings.aiStrength, p->getPlayerName(), p, this));
+        } break;
+
+        case CONTROLLER_KEYBOARD: {
+            player.reset(new KeyboardPlayer(p->getPlayerName(), p, this));
+        } break;
+    }
+    _players.push_back(player);
+
+    return player;
 }
 
 void PlayState::resetBall(BallPtr b) {

@@ -4,7 +4,7 @@
 #include "playstate.h"
 #include <iostream>
 
-KinectPlayer::KinectPlayer(const Ogre::String& name, Paddle* paddle, PlayState* playstate, int userid)
+KinectPlayer::KinectPlayer(const Ogre::String& name, const PaddlePtr& paddle, PlayState* playstate, int userid)
         : Player(name + Ogre::String(" (Kinect)"), paddle, playstate), _userid(userid), _maxSamples(10) {
     _kinect = Kinect::getInstance();
 }

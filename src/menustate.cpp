@@ -127,9 +127,9 @@ void MenuState::setupAnimations()
 
     CEGUI::Animation* buttonFadeInAnim = animMgr.getAnimation("ButtonFadeIn");
     _buttonFadeInAnimInst1 = animMgr.instantiateAnimation(buttonFadeInAnim);
-    CEGUI::Window* window;/* = _root->getChild("InnerButtonsContainer/ButtonOptions");
+    CEGUI::Window* window = _root->getChild("InnerButtonsContainer/ButtonOptions");
     _buttonFadeInAnimInst1->setTargetWindow(window);
-    _buttonFadeInAnimInst2 = animMgr.instantiateAnimation(buttonFadeInAnim);
+    /*_buttonFadeInAnimInst2 = animMgr.instantiateAnimation(buttonFadeInAnim);
     window = _root->getChild("InnerButtonsContainer/ButtonLoad");
     _buttonFadeInAnimInst2->setTargetWindow(window);
     _buttonFadeInAnimInst3 = animMgr.instantiateAnimation(buttonFadeInAnim);
@@ -259,7 +259,7 @@ void MenuState::onEnteringSample()
     _root->getChild("InnerButtonsContainer/PopupLinesLoad")->setVisible(false);
     _root->getChild("InnerButtonsContainer/PopupLinesCharacters")->setVisible(false);*/
     _root->getChild("InnerButtonsContainer/PopupLinesQuit")->setVisible(false);
-    //_root->getChild("InnerButtonsContainer/PopupLinesOptions")->setVisible(false);
+    _root->getChild("InnerButtonsContainer/PopupLinesOptions")->setVisible(false);
 
     resetAnimations();
 
@@ -309,7 +309,11 @@ bool MenuState::handleInnerPartStartClickAreaClick(const CEGUI::EventArgs& args)
 
     _startButtonClicked = true;*/
 
-    pushGameState(findByName("Pong 2D"));
+    GameState* gs = findByName("Kinect Calibration");
+    if(g_settings.controllerP1 == CONTROLLER_KINECT && gs)
+        pushGameState(gs);
+    else
+        pushGameState(findByName("Pong 2D"));
 
     return false;
 }
@@ -319,18 +323,14 @@ bool MenuState::handleStartPopupLinesQuitDisplay(const CEGUI::EventArgs& args)
 {
     popGameState();
     return false;
-
-    //makeAllSelectionIconsInvisible();
-
-    stopStartPopupLinesAnimations();
-    _popupLinesQuitAnimInst->start();
-/*
-    _root->getChild("InnerButtonsContainer/YesSelectionIcon")->setVisible(true);
-    _root->getChild("InnerButtonsContainer/NoSelectionIcon")->setVisible(true);
-*/
-    return false;
 }
 
+
+bool MenuState::handleStartPopupLinesOptionsDisplay(const CEGUI::EventArgs& args)
+{
+    pushGameState(findByName("Setting Menu"));
+    return false;
+}
 
 bool MenuState::handleInnerButtonsLabelEntered(const CEGUI::EventArgs& args)
 {
@@ -369,15 +369,15 @@ void MenuState::stopStartPopupLinesAnimations()
     _popupLinesSaveAnimInst->pause();*/
     _popupLinesQuitAnimInst->setPosition(_popupLinesQuitAnimInst->getDefinition()->getDuration());
     _popupLinesQuitAnimInst->apply();
-    _popupLinesQuitAnimInst->pause();/*
+    _popupLinesQuitAnimInst->pause();
     _popupLinesOptionsAnimInst->setPosition(_popupLinesOptionsAnimInst->getDefinition()->getDuration());
     _popupLinesOptionsAnimInst->apply();
     _popupLinesOptionsAnimInst->pause();
-
+/*
     _root->getChild("InnerButtonsContainer/PopupLinesSave")->setVisible(false);
     _root->getChild("InnerButtonsContainer/PopupLinesLoad")->setVisible(false);
-    _root->getChild("InnerButtonsContainer/PopupLinesCharacters")->setVisible(false);
-    _root->getChild("InnerButtonsContainer/PopupLinesOptions")->setVisible(false);*/
+    _root->getChild("InnerButtonsContainer/PopupLinesCharacters")->setVisible(false);*/
+    _root->getChild("InnerButtonsContainer/PopupLinesOptions")->setVisible(false);
     _root->getChild("InnerButtonsContainer/PopupLinesQuit")->setVisible(false);
 
 }
@@ -468,9 +468,9 @@ void MenuState::startEntranceAnimations()
     _insideBlendInAnimInst->start();
     _insideImage3RotateInInst->start();
     _insideImage4RotateInInst->start();
-    _insideImageRingsContainerSizeInInst->start();/*
+    _insideImageRingsContainerSizeInInst->start();
     _buttonFadeInAnimInst1->start();
-    _buttonFadeInAnimInst2->start();
+    /*_buttonFadeInAnimInst2->start();
     _buttonFadeInAnimInst3->start();
     _buttonFadeInAnimInst4->start();*/
     _buttonFadeInAnimInst5->start();/*
@@ -484,9 +484,9 @@ void MenuState::resetAnimations()
     //Set animations to end and apply their changes to the windows
     //For every animation instance that uses source properties
     //so the values will be taken correctly after starting them again
-    /*_buttonFadeInAnimInst1->setPosition(_buttonFadeInAnimInst1->getDefinition()->getDuration());
+    _buttonFadeInAnimInst1->setPosition(_buttonFadeInAnimInst1->getDefinition()->getDuration());
     _buttonFadeInAnimInst1->apply();
-    _buttonFadeInAnimInst2->setPosition(_buttonFadeInAnimInst2->getDefinition()->getDuration());
+    /*_buttonFadeInAnimInst2->setPosition(_buttonFadeInAnimInst2->getDefinition()->getDuration());
     _buttonFadeInAnimInst2->apply();
     _buttonFadeInAnimInst3->setPosition(_buttonFadeInAnimInst3->getDefinition()->getDuration());
     _buttonFadeInAnimInst3->apply();
@@ -511,9 +511,9 @@ void MenuState::setupButtonClickHandlers()
     CEGUI::Window* buttonLoad = _root->getChild("InnerButtonsContainer/ButtonLoad");
     buttonLoad->subscribeEvent(CEGUI::Window::EventMouseClick, Event::Subscriber(&MenuState::handleStartPopupLinesLoadDisplay, this));
     CEGUI::Window* buttonCharacters = _root->getChild("InnerButtonsContainer/ButtonCharacters");
-    buttonCharacters->subscribeEvent(CEGUI::Window::EventMouseClick, Event::Subscriber(&MenuState::handleStartPopupLinesCharactersDisplay, this));
+    buttonCharacters->subscribeEvent(CEGUI::Window::EventMouseClick, Event::Subscriber(&MenuState::handleStartPopupLinesCharactersDisplay, this));*/
     CEGUI::Window* buttonOptions = _root->getChild("InnerButtonsContainer/ButtonOptions");
-    buttonOptions->subscribeEvent(CEGUI::Window::EventMouseClick, Event::Subscriber(&MenuState::handleStartPopupLinesOptionsDisplay, this));*/
+    buttonOptions->subscribeEvent(CEGUI::Window::EventMouseClick, Event::Subscriber(&MenuState::handleStartPopupLinesOptionsDisplay, this));
     CEGUI::Window* buttonQuit = _root->getChild("InnerButtonsContainer/ButtonQuit");
     buttonQuit->subscribeEvent(CEGUI::Window::EventMouseClick, Event::Subscriber(&MenuState::handleStartPopupLinesQuitDisplay, this));
 }
@@ -543,10 +543,10 @@ void MenuState::setupPopupLinesAnimations()
     _popupLinesLoadAnimInst->setTarget(window);
     window = _root->getChild("InnerButtonsContainer/PopupLinesCharacters");
     _popupLinesCharactersAnimInst = animMgr.instantiateAnimation(sizeGrowth);
-    _popupLinesCharactersAnimInst->setTarget(window);
+    _popupLinesCharactersAnimInst->setTarget(window);*/
     window = _root->getChild("InnerButtonsContainer/PopupLinesOptions");
     _popupLinesOptionsAnimInst = animMgr.instantiateAnimation(sizeGrowth);
-    _popupLinesOptionsAnimInst->setTarget(window);*/
+    _popupLinesOptionsAnimInst->setTarget(window);
     window = _root->getChild("InnerButtonsContainer/PopupLinesQuit");
     _popupLinesQuitAnimInst = animMgr.instantiateAnimation(sizeGrowth);
     _popupLinesQuitAnimInst->setTarget(window);

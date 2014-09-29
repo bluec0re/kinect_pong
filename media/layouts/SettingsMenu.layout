@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<GUILayout version="4" >
+    <Window type="TaharezLook/FrameWindow" name="FrameWindow" >
+        <Property name="Area" value="{{0.1,0},{0.1,0},{0.9,0},{0.9,0}}" />
+        <Window type="TaharezLook/Button" name="Cancel" >
+            <Property name="Area" value="{{0,30},{1,-50},{0,126},{1,-18}}" />
+            <Property name="Text" value="Cancel" />
+        </Window>
+        <Window type="TaharezLook/Button" name="Save" >
+            <Property name="Area" value="{{1,-150},{1,-50},{1,-54},{1,-18}}" />
+            <Property name="Text" value="Save" />
+        </Window>
+        <Window type="TaharezLook/Checkbox" name="Sound" >
+            <Property name="Area" value="{{0,30},{0,24},{0,348},{0,56}}" />
+            <Property name="Text" value="Enable Sound" />
+        </Window>
+        <Window type="TaharezLook/Checkbox" name="Ghost" >
+            <Property name="Area" value="{{0,30},{0,68},{0,347},{0,100}}" />
+            <Property name="Text" value="Enable Ghost Balls" />
+        </Window>
+        <Window type="TaharezLook/Label" name="AILbl" >
+            <Property name="Area" value="{{0,30},{0,112},{0,207},{0,144}}" />
+            <Property name="Text" value="AI Strength" />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+            <Property name="HorzFormatting" value="LeftAligned" />
+        </Window>
+        <Window type="TaharezLook/Label" name="P1Lbl" >
+            <Property name="Area" value="{{0,30},{0,156},{-0.105571,293},{0,188}}" />
+            <Property name="Text" value="Player 1" />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+            <Property name="HorzFormatting" value="LeftAligned" />
+        </Window>
+        <Window type="TaharezLook/Label" name="P2Lbl" >
+            <Property name="Area" value="{{0,30},{0,200},{-0.107228,292},{0,232}}" />
+            <Property name="Text" value="Player 2" />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+            <Property name="HorzFormatting" value="LeftAligned" />
+        </Window>
+        <Window type="TaharezLook/HorzSlider" name="Strength" >
+            <Property name="Area" value="{{1,-300},{0,120},{1,-44},{0,136}}" />
+            <Property name="ClickStepSize" value="1" />
+        </Window>
+        <Window type="TaharezLook/Combobox" name="P1Control" >
+            <Property name="Area" value="{{1,-300},{0,160},{1,-44},{0,416}}" />
+            <Property name="ReadOnly" value="true" />
+            <AutoWindow namePath="__auto_editbox__" >
+                <Property name="ReadOnly" value="true" />
+                <Property name="ActiveSelectionColour" value="tl:FF6060FF tr:FF6060FF bl:FF6060FF br:FF6060FF" />
+            </AutoWindow>
+            <AutoWindow namePath="__auto_droplist__" >
+                <AutoWindow namePath="__auto_hscrollbar__" >
+                    <AutoWindow namePath="__auto_incbtn__" >
+                        <Property name="RestoreOldCapture" value="true" />
+                    </AutoWindow>
+                    <AutoWindow namePath="__auto_decbtn__" >
+                        <Property name="RestoreOldCapture" value="true" />
+                    </AutoWindow>
+                    <AutoWindow namePath="__auto_thumb__" >
+                        <Property name="RestoreOldCapture" value="true" />
+                    </AutoWindow>
+                </AutoWindow>
+                <AutoWindow namePath="__auto_vscrollbar__" >
+                    <AutoWindow namePath="__auto_incbtn__" >
+                        <Property name="RestoreOldCapture" value="true" />
+                    </AutoWindow>
+                    <AutoWindow namePath="__auto_decbtn__" >
+                        <Property name="RestoreOldCapture" value="true" />
+                    </AutoWindow>
+                    <AutoWindow namePath="__auto_thumb__" >
+                        <Property name="RestoreOldCapture" value="true" />
+                    </AutoWindow>
+                </AutoWindow>
+            </AutoWindow>
+        </Window>
+        <Window type="TaharezLook/Combobox" name="P2Control" >
+            <Property name="Area" value="{{1,-300},{0,204},{1,-44},{0,460}}" />
+            <Property name="ReadOnly" value="true" />
+            <AutoWindow namePath="__auto_editbox__" >
+                <Property name="ReadOnly" value="true" />
+                <Property name="ActiveSelectionColour" value="tl:FF6060FF tr:FF6060FF bl:FF6060FF br:FF6060FF" />
+            </AutoWindow>
+            <AutoWindow namePath="__auto_droplist__" >
+                <AutoWindow namePath="__auto_hscrollbar__" >
+                    <AutoWindow namePath="__auto_incbtn__" >
+                        <Property name="RestoreOldCapture" value="true" />
+                    </AutoWindow>
+                    <AutoWindow namePath="__auto_decbtn__" >
+                        <Property name="RestoreOldCapture" value="true" />
+                    </AutoWindow>
+                    <AutoWindow namePath="__auto_thumb__" >
+                        <Property name="RestoreOldCapture" value="true" />
+                    </AutoWindow>
+                </AutoWindow>
+                <AutoWindow namePath="__auto_vscrollbar__" >
+                    <AutoWindow namePath="__auto_incbtn__" >
+                        <Property name="RestoreOldCapture" value="true" />
+                    </AutoWindow>
+                    <AutoWindow namePath="__auto_decbtn__" >
+                        <Property name="RestoreOldCapture" value="true" />
+                    </AutoWindow>
+                    <AutoWindow namePath="__auto_thumb__" >
+                        <Property name="RestoreOldCapture" value="true" />
+                    </AutoWindow>
+                </AutoWindow>
+            </AutoWindow>
+        </Window>
+    </Window>
+</GUILayout>

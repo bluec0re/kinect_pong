@@ -5,13 +5,12 @@
 #include "player.h"
 
 class Kinect;
-class Paddle;
 class PlayState;
 
 class KinectPlayer : public Player
 {
 public:
-    KinectPlayer(const Ogre::String& name, Paddle* paddle, PlayState* playstate, int userid=-1);
+    KinectPlayer(const Ogre::String& name, const PaddlePtr& paddle, PlayState* playstate, int userid=-1);
 
     virtual void update(double timeSinceLastFrame = 0) override;
     virtual bool isReady() const override;

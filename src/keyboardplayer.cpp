@@ -5,7 +5,7 @@
 
 #define PADDLE_SPEED 200
 
-KeyboardPlayer::KeyboardPlayer(const Ogre::String& name, Paddle *paddle, PlayState *state)
+KeyboardPlayer::KeyboardPlayer(const Ogre::String& name, const PaddlePtr& paddle, PlayState *state)
         : Player(name + Ogre::String(" (Keyboard)"), paddle, state) {
 }
 

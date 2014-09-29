@@ -28,6 +28,8 @@ set( SRC
         menustate.cpp
         cegui_utils.h
         cegui_utils.cpp
+        settingstate.cpp
+        settingstate.h
     )
 
 if( ${OPENNI2_FOUND} )

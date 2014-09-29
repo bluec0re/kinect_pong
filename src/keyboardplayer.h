@@ -6,7 +6,7 @@
 class KeyboardPlayer : public Player
 {
 public:
-    KeyboardPlayer(const Ogre::String& name, Paddle *paddle, PlayState *state);
+    KeyboardPlayer(const Ogre::String& name, const PaddlePtr& paddle, PlayState *state);
 
     virtual ~KeyboardPlayer() {}
 
