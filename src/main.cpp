@@ -155,6 +155,10 @@ public:
         // load game settings
         SettingState::loadSettings();
 
+        if(!g_settings.soundOn) {
+            soundManager->muteAllSounds();
+        }
+
         if(strcasecmp(g_args.startState, "pong2d") == 0)
             gameMgr.start(pong2d);
         else if(strcasecmp(g_args.startState, "pong3d") == 0)

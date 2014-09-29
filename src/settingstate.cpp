@@ -4,6 +4,7 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/ini_parser.hpp>
 #include <boost/algorithm/string/predicate.hpp>
+#include <OgreOggSound/OgreOggSound.h>
 
 Settings g_settings = {};
 
@@ -98,11 +99,14 @@ namespace boost {
 } // namespace boost
 
 void SettingState::enter() {
+    OgreOggSound::OgreOggSoundManager& soundManager = OgreOggSound::OgreOggSoundManager::getSingleton();
+    soundManager.getSound("menu_loop")->play();
     setupWindows();
 }
 
 void SettingState::exit() {
-
+    OgreOggSound::OgreOggSoundManager& soundManager = OgreOggSound::OgreOggSoundManager::getSingleton();
+    soundManager.getSound("menu_loop")->stop();
 }
 
 void SettingState::loadSettings() {
@@ -227,6 +231,12 @@ bool SettingState::handleSaveClick(const CEGUI::EventArgs& args) {
     item = dynamic_cast<Combobox*>(root->getChild("P2Control"))->getSelectedItem();
     if(item)
         g_settings.controllerP2 = *static_cast<ControllerType*>(item->getUserData());
+
+    OgreOggSound::OgreOggSoundManager& soundManager = OgreOggSound::OgreOggSoundManager::getSingleton();
+    if(g_settings.soundOn)
+        soundManager.unmuteAllSounds();
+    else
+        soundManager.muteAllSounds();
 
     saveSettings();
     popGameState();

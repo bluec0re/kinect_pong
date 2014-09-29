@@ -3,6 +3,13 @@
 <GUILayout version="4" >
     <Window type="TaharezLook/FrameWindow" name="FrameWindow" >
         <Property name="Area" value="{{0.1,0},{0.1,0},{0.9,0},{0.9,0}}" />
+        <Property name="Text" value="Settings" />
+        <Property name="SizingEnabled" value="false" />
+        <Property name="DragMovingEnabled" value="false" />
+        <Property name="CloseButtonEnabled" value="false" />
+        <AutoWindow namePath="__auto_titlebar__" >
+            <Property name="DraggingEnabled" value="false" />
+        </AutoWindow>
         <Window type="TaharezLook/Button" name="Cancel" >
             <Property name="Area" value="{{0.0371134,0},{0.915388,0},{0.155876,0},{0.96954,0}}" />
             <Property name="Text" value="Cancel" />
