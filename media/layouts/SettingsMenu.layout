@@ -4,11 +4,11 @@
     <Window type="TaharezLook/FrameWindow" name="FrameWindow" >
         <Property name="Area" value="{{0.1,0},{0.1,0},{0.9,0},{0.9,0}}" />
         <Window type="TaharezLook/Button" name="Cancel" >
-            <Property name="Area" value="{{0,30},{1,-50},{0,126},{1,-18}}" />
+            <Property name="Area" value="{{0,30},{1,-50},{0.118763,30},{1.05415,-50}}" />
             <Property name="Text" value="Cancel" />
         </Window>
         <Window type="TaharezLook/Button" name="Save" >
-            <Property name="Area" value="{{1,-150},{1,-50},{1,-54},{1,-18}}" />
+            <Property name="Area" value="{{1,-150},{1,-50},{1.11876,-150},{1.05415,-50}}" />
             <Property name="Text" value="Save" />
         </Window>
         <Window type="TaharezLook/Checkbox" name="Sound" >
@@ -20,29 +20,29 @@
             <Property name="Text" value="Enable Ghost Balls" />
         </Window>
         <Window type="TaharezLook/Label" name="AILbl" >
-            <Property name="Area" value="{{0,30},{0,112},{0,207},{0,144}}" />
+            <Property name="Area" value="{{0,30},{0,112},{0.389691,30},{0.0541516,112}}" />
             <Property name="Text" value="AI Strength" />
             <Property name="MaxSize" value="{{1,0},{1,0}}" />
             <Property name="HorzFormatting" value="LeftAligned" />
         </Window>
         <Window type="TaharezLook/Label" name="P1Lbl" >
-            <Property name="Area" value="{{0,30},{0,156},{-0.105571,293},{0,188}}" />
+            <Property name="Area" value="{{0,30},{0,156},{0.387216,30},{0.0541516,156}}" />
             <Property name="Text" value="Player 1" />
             <Property name="MaxSize" value="{{1,0},{1,0}}" />
             <Property name="HorzFormatting" value="LeftAligned" />
         </Window>
         <Window type="TaharezLook/Label" name="P2Lbl" >
-            <Property name="Area" value="{{0,30},{0,200},{-0.107228,292},{0,232}}" />
+            <Property name="Area" value="{{0,30},{0,200},{0.390928,30},{0.0541516,200}}" />
             <Property name="Text" value="Player 2" />
             <Property name="MaxSize" value="{{1,0},{1,0}}" />
             <Property name="HorzFormatting" value="LeftAligned" />
         </Window>
         <Window type="TaharezLook/HorzSlider" name="Strength" >
-            <Property name="Area" value="{{1,-300},{0,120},{1,-44},{0,136}}" />
+            <Property name="Area" value="{{1,-300},{0,120},{1.3167,-300},{0.0270758,120}}" />
             <Property name="ClickStepSize" value="1" />
         </Window>
         <Window type="TaharezLook/Combobox" name="P1Control" >
-            <Property name="Area" value="{{1,-300},{0,160},{1,-44},{0,416}}" />
+            <Property name="Area" value="{{1,-300},{0,160},{1.3167,-300},{0.433213,160}}" />
             <Property name="ReadOnly" value="true" />
             <AutoWindow namePath="__auto_editbox__" >
                 <Property name="ReadOnly" value="true" />
@@ -74,7 +74,7 @@
             </AutoWindow>
         </Window>
         <Window type="TaharezLook/Combobox" name="P2Control" >
-            <Property name="Area" value="{{1,-300},{0,204},{1,-44},{0,460}}" />
+            <Property name="Area" value="{{1,-300},{0,204},{1.3167,-300},{0.433213,204}}" />
             <Property name="ReadOnly" value="true" />
             <AutoWindow namePath="__auto_editbox__" >
                 <Property name="ReadOnly" value="true" />

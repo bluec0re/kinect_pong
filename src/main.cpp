@@ -174,7 +174,6 @@ public:
 
         OIS::InputManager::destroyInputSystem(device.InputMgr);
 
-        delete soundManager;
 #ifdef HAVE_OPENNI2
         Kinect::getInstance()->close();
 #endif

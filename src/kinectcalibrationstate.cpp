@@ -30,7 +30,9 @@ void KinectCalibrationState::setupWindows() {
 
     SchemeManager::getSingleton().createFromFile("TaharezLook.scheme");
     ImageManager::getSingleton().loadImageset("AlfiskoSkin.imageset", "ImageSets");
+
     guiContext.getMouseCursor().setDefaultImage("TaharezLook/MouseArrow");
+    guiContext.getMouseCursor().setVisible(true);
 
     Window* root = wmgr.createWindow("DefaultWindow");
     guiContext.setRootWindow(root);
@@ -45,7 +47,7 @@ void KinectCalibrationState::setupWindows() {
 
     Window* btn = wmgr.createWindow("TaharezLook/Button", "KeyboardBtn");
     btn->setText("Use Keyboard");
-    btn->setSize(USize(UDim(0, 160), UDim(0, 48)));
+    btn->setSize(USize(UDim(0.23, 0), UDim(0.03, 0)));
     btn->setPosition(UVector2(UDim(0, 0), UDim(0.6, 0)));
     btn->setProperty("HorizontalAlignment", "Centre");
     btn->subscribeEvent(Window::EventMouseClick, Event::Subscriber(&KinectCalibrationState::handleKeyboardBtnClick, this));

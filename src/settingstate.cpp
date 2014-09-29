@@ -152,6 +152,7 @@ void SettingState::setupWindows() {
     SchemeManager::getSingleton().createFromFile("TaharezLook.scheme");
     ImageManager::getSingleton().loadImageset("AlfiskoSkin.imageset", "ImageSets");
     guiContext.getMouseCursor().setDefaultImage("TaharezLook/MouseArrow");
+    guiContext.getMouseCursor().setVisible(true);
     Window* root = wmgr.loadLayoutFromFile("SettingsMenu.layout");
     guiContext.setRootWindow(root);
 
