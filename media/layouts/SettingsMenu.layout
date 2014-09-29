@@ -19,11 +19,11 @@
             <Property name="Text" value="Save" />
         </Window>
         <Window type="TaharezLook/Checkbox" name="Sound" >
-            <Property name="Area" value="{{0.0371134,0},{0.0406137,0},{0.0371134,318},{0.0406137,32}}" />
+            <Property name="Area" value="{{0.0371134,0},{0.0406137,0},{0.430515,0},{0.0947653,0}}" />
             <Property name="Text" value="Enable Sound" />
         </Window>
         <Window type="TaharezLook/Checkbox" name="Ghost" >
-            <Property name="Area" value="{{0.0371134,0},{0.115072,0},{0.0371134,317},{0.115072,32}}" />
+            <Property name="Area" value="{{0.0371134,0},{0.115072,0},{0.429278,0},{0.169224,0}}" />
             <Property name="Text" value="Enable Ghost Balls" />
         </Window>
         <Window type="TaharezLook/Label" name="AILbl" >
