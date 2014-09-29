@@ -41,10 +41,10 @@ int Ball::calcGhostColor() {
     Ogre::Real pos = getPosition().x + MAP_X;
     Ogre::Real percentage = pos / (MAP_X*2);
 
-    return INTERPOLATE(0xFF0000FF, 0xFFFF0000, 0, percentage) |
-            INTERPOLATE(0xFF0000FF, 0xFFFF0000, 1, percentage) |
-            INTERPOLATE(0xFF0000FF, 0xFFFF0000, 2, percentage) |
-            INTERPOLATE(0xFF0000FF, 0xFFFF0000, 3, percentage);
+    return INTERPOLATE(0xFFFF0000, 0xFF0000FF, 0, percentage) |
+            INTERPOLATE(0xFFFF0000, 0xFF0000FF, 1, percentage) |
+            INTERPOLATE(0xFFFF0000, 0xFF0000FF, 2, percentage) |
+            INTERPOLATE(0xFFFF0000, 0xFF0000FF, 3, percentage);
 }
 
 void Ball::create() {
@@ -62,13 +62,13 @@ void Ball::create() {
     }
     if(_ghost == true) {
         _ghostBillboard_right = _billboardSet->createBillboard(Ogre::Vector3::ZERO);
-        _ghostBillboard_right->setColour(Ogre::ColourValue::Blue);
+        //_ghostBillboard_right->setColour(Ogre::ColourValue::Blue);
         _ghostBillboard_top = _billboardSet->createBillboard(Ogre::Vector3::ZERO);
-        _ghostBillboard_top->setColour(Ogre::ColourValue::Blue);
+        //_ghostBillboard_top->setColour(Ogre::ColourValue::Blue);
         _ghostBillboard_left = _billboardSet->createBillboard(Ogre::Vector3::ZERO);
-        _ghostBillboard_left->setColour(Ogre::ColourValue::Blue);
+        //_ghostBillboard_left->setColour(Ogre::ColourValue::Blue);
         _ghostBillboard_bottom = _billboardSet->createBillboard(Ogre::Vector3::ZERO);
-        _ghostBillboard_bottom->setColour(Ogre::ColourValue::Blue);
+        //_ghostBillboard_bottom->setColour(Ogre::ColourValue::Blue);
     }
     _bb_node->attachObject(_billboardSet);
 }
@@ -134,12 +134,15 @@ void Ball::setPosition(const Ogre::Vector3 &pos) {
 }
 
 void Ball::paintGhost(Ogre::Vector3 pos) {
-    Ogre::ColourValue color = Ogre::ColourValue(calcGhostColor());
-    std::cout << std::hex << calcGhostColor() << std::endl;
-    _ghostBillboard_right->setColour(color);
-    _ghostBillboard_left->setColour(color);
-    _ghostBillboard_top->setColour(color);
-    _ghostBillboard_bottom->setColour(color);
+    int color = calcGhostColor();
+    Ogre::Real red = BYTE(color, 2) / 255.0f;
+    Ogre::Real green = BYTE(color, 1) / 255.0f;
+    Ogre::Real blue = BYTE(color, 0) / 255.0f;
+    Ogre::ColourValue colour = Ogre::ColourValue(red, green, blue, 1.0f);
+    _ghostBillboard_right->setColour(colour);
+    _ghostBillboard_left->setColour(colour);
+    _ghostBillboard_top->setColour(colour);
+    _ghostBillboard_bottom->setColour(colour);
 
     Ogre::Vector3 tmp = pos;
     //pos.y = 0;
