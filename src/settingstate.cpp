@@ -185,6 +185,11 @@ void SettingState::setupWindows() {
     if(selected)
         p2Control->setItemSelectState(selected, true);
 
+    RadioButton* weakAi = dynamic_cast<RadioButton*>(root->getChild("weakAI"));
+    weakAi->setSelected(g_settings.aiStrength == AI_WEAK);
+    RadioButton* strongAi = dynamic_cast<RadioButton*>(root->getChild("strongAI"));
+    strongAi->setSelected(g_settings.aiStrength == AI_STRONG);
+
     ToggleButton* sound = dynamic_cast<ToggleButton*>(root->getChild("Sound"));
     sound->setSelected(g_settings.soundOn);
 
@@ -209,8 +214,8 @@ bool SettingState::handleSaveClick(const CEGUI::EventArgs& args) {
     g_settings.showBallGhosts = dynamic_cast<ToggleButton*>(root->getChild("Ghost"))->isSelected();
     g_settings.soundOn = dynamic_cast<ToggleButton*>(root->getChild("Sound"))->isSelected();
 
-    Slider* strength = dynamic_cast<Slider*>(root->getChild("Strength"));
-    if(strength->getCurrentValue() > 0.5f)
+    RadioButton* weakAi = dynamic_cast<RadioButton*>(root->getChild("weakAI"));
+    if(!weakAi->isSelected())
         g_settings.aiStrength = AI_STRONG;
     else
         g_settings.aiStrength = AI_WEAK;

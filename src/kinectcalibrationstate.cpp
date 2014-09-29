@@ -20,6 +20,8 @@ void KinectCalibrationState::resume() {
 }
 
 bool KinectCalibrationState::pause() {
+    GUIContext& guiContext = System::getSingleton().getDefaultGUIContext();
+    guiContext.getMouseCursor().setVisible(false);
     clearAll();
     return true;
 }
