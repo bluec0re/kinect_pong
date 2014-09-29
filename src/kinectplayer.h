@@ -16,9 +16,14 @@ public:
     virtual void update(double timeSinceLastFrame = 0) override;
     virtual bool isReady() const override;
 
+protected:
+    Ogre::Vector3 getSmoothedPosition();
+
 private:
     Kinect* _kinect;
     nite::UserId _userid;
+    std::list<Ogre::Vector3> _samples;
+    size_t _maxSamples;
 };
 
 #endif // KINECTPLAYER_H

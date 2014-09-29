@@ -4,7 +4,8 @@
 #include "playstate.h"
 #include <iostream>
 
-KinectPlayer::KinectPlayer(const Ogre::String& name, Paddle* paddle, PlayState* playstate, int userid) : Player(name + Ogre::String(" (Kinect)"), paddle, playstate), _userid(userid) {
+KinectPlayer::KinectPlayer(const Ogre::String& name, Paddle* paddle, PlayState* playstate, int userid)
+        : Player(name + Ogre::String(" (Kinect)"), paddle, playstate), _userid(userid), _maxSamples(10) {
     _kinect = Kinect::getInstance();
 }
 
@@ -16,7 +17,7 @@ void KinectPlayer::update(double timeSinceLastFrame) {
         _kinect->update();
 
     if(_kinect->getTrackingState(_userid) == nite::SKELETON_TRACKED) {
-        Ogre::Vector3 posRight = _kinect->getJointPosition(_kinect->getControllingHand(), _userid);
+        Ogre::Vector3 posRight = getSmoothedPosition();
 
         Ogre::Vector3 curPos = _paddle->getPosition();
 
@@ -44,6 +45,39 @@ void KinectPlayer::update(double timeSinceLastFrame) {
         _userid = -1;
 }
 
+Ogre::Vector3 KinectPlayer::getSmoothedPosition() {
+    Ogre::StringStream ss;
+    Ogre::Vector3 current = _kinect->getJointPosition(_kinect->getControllingHand(), _userid);
+    ss << "Current: " << current << " ";
+
+    while(_samples.size() >= _maxSamples) {
+        _samples.pop_front();
+    }
+
+    size_t cnt = _samples.size();
+    Ogre::Vector3 avg(Ogre::Vector3::ZERO);
+    if(cnt != 0) {
+        for(const Ogre::Vector3& tmp : _samples) {
+            avg += tmp / cnt;
+        }
+        Ogre::Vector3 diff = current - avg;
+        Ogre::Real x = fabs(diff.x / (avg.x / 2.0));
+        Ogre::Real y = fabs(diff.y / (avg.y / 2.0));
+        Ogre::Real z = fabs(diff.z / (avg.z / 2.0));
+
+
+        diff.x *= x;
+        diff.y *= y;
+        diff.z *= z;
+
+        current = avg + diff;
+    }
+    _samples.push_back(current);
+    ss << "Average: " << avg << " New: " << current << " Count: " << cnt;
+    Ogre::LogManager::getSingleton().logMessage(ss.str());
+
+    return current;
+}
 
 bool KinectPlayer::isReady() const {
     return _userid != -1 && _kinect->getTrackingState(_userid) == nite::SKELETON_TRACKED;
