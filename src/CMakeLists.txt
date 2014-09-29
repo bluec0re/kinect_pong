@@ -55,7 +55,8 @@ target_link_libraries( ${PROJECT_NAME} ${OGRE_LIBRARIES}
                                        ${OIS_LIBRARIES} ${CEGUI_LIBRARIES}
                                        ${CEGUI_OgreRenderer_LIBRARIES}
                                        ${Boost_LIBRARIES}
-                                       ${OpenCV_LIBRARIES})
+                                       ${OpenCV_LIBRARIES}
+                                       OgreOggSound)
 
 if( ${OPENNI2_FOUND} )
     target_link_libraries( ${PROJECT_NAME} ${OPENNI2_LIBRARIES} NiTE2 )

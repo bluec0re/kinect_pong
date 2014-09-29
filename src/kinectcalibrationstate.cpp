@@ -1,3 +1,4 @@
+#include <OgreOggSound/OgreOggSound.h>
 #include "kinectcalibrationstate.h"
 #include "global.h"
 #include "kinect.h"
@@ -121,11 +122,13 @@ bool KinectCalibrationState::frameRenderingQueued(const Ogre::FrameEvent& evt) {
     Kinect* kinect = Kinect::getInstance();
     if(kinect->isConnected()) {
         nite::UserId uid = kinect->waitForUser(false, true);
+        OgreOggSound::OgreOggSoundManager* soundManager = OgreOggSound::OgreOggSoundManager::getSingletonPtr();
 
         if(!_tracked && uid != -1) {
             _tracked = true;
             _calibrated = false;
             _progress->setProgress(0.3333f);
+            soundManager->getSound("calib")->play();
             _manual->setProperty("Image", "CalibrationManualTracked");
             _tPoseTimeout = 3.0f;
             _positions.clear();
@@ -134,6 +137,7 @@ bool KinectCalibrationState::frameRenderingQueued(const Ogre::FrameEvent& evt) {
             if (uid == -1) {
                 _tracked = false;
                 _progress->setProgress(0.f);
+                soundManager->getSound("calib_fail")->play();
                 _manual->setProperty("Image", "CalibrationManual");
             } else {
                 Ogre::Vector3 head = kinect->getJointPosition(nite::JOINT_HEAD, uid);
@@ -145,6 +149,7 @@ bool KinectCalibrationState::frameRenderingQueued(const Ogre::FrameEvent& evt) {
                         torso.y + 20 < left.y && torso.y + 20 < right.y &&
                         left.x < head.x && right.x > head.x) {
                     float progress = 0.3333f + 0.3333f * (1.f - _tPoseTimeout / 3.0f);
+                    soundManager->getSound("calib")->play();
                     printf("progress: %f\n", progress);
                     _progress->setProgress(progress);
                     _tPoseTimeout -= evt.timeSinceLastFrame;
@@ -167,6 +172,7 @@ bool KinectCalibrationState::frameRenderingQueued(const Ogre::FrameEvent& evt) {
                     Ogre::Vector2 pos = kinect->getRelativePosition(kinect->getJointPosition(type, uid));
                     if(pos.x > 0.45 && pos.x < 0.55 && pos.y > 0.25 && pos.y < 0.35) {
                         _progress->setProgress(1.f);
+                        soundManager->getSound("calib_fin")->play();
                         kinect->setControllingHand(type);
                         Ogre::StringStream ss;
                         ss << "Using hand " << type;

@@ -10,6 +10,7 @@ public:
 
     virtual void enter() override;
     virtual PaddlePtr addPaddle(int color, const Ogre::String& name, const Ogre::Real& pos) override;
+    virtual BallPtr addBall() override;
 
 protected:
     using PlayState::PlayState;

@@ -26,7 +26,7 @@ void AiPlayer::update(double time) {
                 if(!ball || fabs(b->getPosition().x - ppos.x) < fabs(ball->getPosition().x - ppos.x))
                     ball = b;
             }
-            tracking_start = 10000;
+            tracking_start = -10000;
         } break;
     }
 

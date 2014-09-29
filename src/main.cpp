@@ -3,6 +3,8 @@
 
 #include <vector>
 
+#include <OgreOggSound/OgreOggSound.h>
+
 #define OIS_DYNAMIC_LIB
 
 #include "gamestatemanager.h"
@@ -67,9 +69,19 @@ public:
         CEGUI::WindowManager::setDefaultResourceGroup("Layouts");
         CEGUI::AnimationManager::setDefaultResourceGroup("GUIAnimations");
 
-
-        //
-
+        Ogre::ResourceGroupManager::getSingleton().addResourceLocation("media/sounds", "FileSystem", ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, false);
+        //Instantiate sound manager
+        OgreOggSound::OgreOggSoundManager* soundManager = OgreOggSound::OgreOggSoundManager::getSingletonPtr();
+        soundManager->init();
+        soundManager->createSound("pong", "pong.ogg", false, false, true);
+        soundManager->createSound("plus", "plus.ogg", false, false, true);
+        soundManager->createSound("minus", "minus.ogg", false, false, true);
+        soundManager->createSound("win", "win.ogg", false, false, true);
+        soundManager->createSound("lose", "lose.ogg", false, false, true);
+        soundManager->createSound("calib", "calib.ogg", false, false, true);
+        soundManager->createSound("calib_fin", "calib_fin.ogg", false, false, true);
+        soundManager->createSound("calib_fail", "fail.ogg", false, false, true);
+        //-------------------------
         LogManager::getSingleton().logMessage("*** Initializing OIS ***");
         OIS::ParamList pl;
         size_t windowHnd = 0;

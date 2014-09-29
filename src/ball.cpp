@@ -6,11 +6,11 @@
                                                                 + BYTE(from, pos)) << pos * 8)
 #define CORRECT_SIGN(attr) ((collision < 0 ? bbox.getHalfSize().attr : -bbox.getHalfSize().attr) * (fabs(pos.attr) < fabs(collision) ? 2 : 1))
 
-Ball::Ball(int color) :
-    Object(color), _color2(color) {}
+Ball::Ball(int color, bool ghost) :
+    Object(color), _color2(color), _ghost(ghost) {}
 
-Ball::Ball(int colorLeft, int colorRight) :
-        Object(colorLeft), _color2(colorRight)
+Ball::Ball(int colorLeft, int colorRight, bool ghost) :
+        Object(colorLeft), _color2(colorRight), _ghost(ghost), _billboardSet(nullptr)
 {
     _mat = Ogre::MaterialManager::getSingleton().create(
                 "Ball", // name
@@ -21,7 +21,10 @@ Ball::Ball(int colorLeft, int colorRight) :
 }
 
 Ball::~Ball() {
-
+    _billboardSet->removeBillboard(_ghostBillboard_right);
+    _billboardSet->removeBillboard(_ghostBillboard_left);
+    _billboardSet->removeBillboard(_ghostBillboard_top);
+    _billboardSet->removeBillboard(_ghostBillboard_bottom);
 }
 
 int Ball::calcColor() {
@@ -29,10 +32,19 @@ int Ball::calcColor() {
     Ogre::Real percentage = pos / (MAP_X*2);
 
     return INTERPOLATE(_color, _color2, 0, percentage) |
-                    INTERPOLATE(_color, _color2, 1, percentage) |
-                    INTERPOLATE(_color, _color2, 2, percentage) |
-                    INTERPOLATE(_color, _color2, 3, percentage)
-    ;
+            INTERPOLATE(_color, _color2, 1, percentage) |
+            INTERPOLATE(_color, _color2, 2, percentage) |
+            INTERPOLATE(_color, _color2, 3, percentage);
+}
+
+int Ball::calcGhostColor() {
+    Ogre::Real pos = getPosition().x + MAP_X;
+    Ogre::Real percentage = pos / (MAP_X*2);
+
+    return INTERPOLATE(0xFF0000FF, 0xFFFF0000, 0, percentage) |
+            INTERPOLATE(0xFF0000FF, 0xFFFF0000, 1, percentage) |
+            INTERPOLATE(0xFF0000FF, 0xFFFF0000, 2, percentage) |
+            INTERPOLATE(0xFF0000FF, 0xFFFF0000, 3, percentage);
 }
 
 void Ball::create() {
@@ -42,6 +54,23 @@ void Ball::create() {
     _node->setScale( 0.1, 0.1, 0.1);
     //_node->showBoundingBox(true);
     _entity->setMaterial(_mat);
+
+    _bb_node = _sceneMgr->getRootSceneNode()->createChildSceneNode();
+    if(_billboardSet == nullptr) {
+        _billboardSet = _sceneMgr->createBillboardSet();
+        _billboardSet->setMaterialName("Flare");
+    }
+    if(_ghost == true) {
+        _ghostBillboard_right = _billboardSet->createBillboard(Ogre::Vector3::ZERO);
+        _ghostBillboard_right->setColour(Ogre::ColourValue::Blue);
+        _ghostBillboard_top = _billboardSet->createBillboard(Ogre::Vector3::ZERO);
+        _ghostBillboard_top->setColour(Ogre::ColourValue::Blue);
+        _ghostBillboard_left = _billboardSet->createBillboard(Ogre::Vector3::ZERO);
+        _ghostBillboard_left->setColour(Ogre::ColourValue::Blue);
+        _ghostBillboard_bottom = _billboardSet->createBillboard(Ogre::Vector3::ZERO);
+        _ghostBillboard_bottom->setColour(Ogre::ColourValue::Blue);
+    }
+    _bb_node->attachObject(_billboardSet);
 }
 
 void Ball::reverse(const Direction& dir, const Ogre::Real& collision) {
@@ -99,4 +128,28 @@ void Ball::setPosition(const Ogre::Vector3 &pos) {
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_TRIVIAL, ss.str());
 
     Object::setPosition(pos);
+    if(_ghost == true) {
+        paintGhost(pos);
+    }
+}
+
+void Ball::paintGhost(Ogre::Vector3 pos) {
+    Ogre::ColourValue color = Ogre::ColourValue(calcGhostColor());
+    std::cout << std::hex << calcGhostColor() << std::endl;
+    _ghostBillboard_right->setColour(color);
+    _ghostBillboard_left->setColour(color);
+    _ghostBillboard_top->setColour(color);
+    _ghostBillboard_bottom->setColour(color);
+
+    Ogre::Vector3 tmp = pos;
+    //pos.y = 0;
+    pos.z = MAP_Z;
+    _ghostBillboard_right->setPosition(pos);
+    pos.z -= (2 * MAP_Z);
+    _ghostBillboard_left->setPosition(pos);
+    //tmp.z = 0;
+    tmp.y = MAP_Y;
+    _ghostBillboard_top->setPosition(tmp);
+    tmp.y -= (2 * MAP_Y);
+    _ghostBillboard_bottom->setPosition(tmp);
 }

@@ -24,3 +24,17 @@ PaddlePtr Pong3DState::addPaddle(int color, const Ogre::String& name, const Ogre
 
     return p;
 }
+
+
+BallPtr Pong3DState::addBall() {
+    BallPtr ball(new Ball(0xFF00FF00, 0xFFBF6900, true));
+    ball->setSceneManager(mDevice->sceneMgr);
+    ball->create();
+    ball->setAccel(getRandomAccel());
+    ball->enableAccel(false);
+    ball->setSpeed(getRandomSpeed());
+    _balls.push_back(ball);
+
+    return ball;
+}
+

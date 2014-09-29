@@ -5,13 +5,14 @@
 #include "keyboardplayer.h"
 #include "aiplayer.h"
 
+#include <OgreOggSound/OgreOggSound.h>
+
 #ifdef HAVE_OPENNI2
 #include "kinect.h"
 #include "kinectplayer.h"
 #endif
 
 PlayState::PlayState() : GuiState(), _paused(false), _endScreenTimeout(0), _ended(false) {
-
 }
 
 /**
@@ -215,7 +216,7 @@ void PlayState::enter() {
 
     {        
         PaddlePtr p = addPaddle(0x0000FF, "Player 2", MAP_BBOX_X);
-        PlayerPtr player(new AiPlayer(AiPlayer::AI_WEAK, "Player 2", p.get(), this));
+        PlayerPtr player(new AiPlayer(AiPlayer::AI_STRONG, "Player 2", p.get(), this));
         _players.push_back(player);
     }
 
@@ -379,7 +380,7 @@ bool PlayState::keyReleased(const OIS::KeyEvent &arg) {
 }
 
 BallPtr PlayState::addBall() {
-    BallPtr ball(new Ball(0xFF00FF00, 0xFFBF6900));
+    BallPtr ball(new Ball(0xFF00FF00, 0xFFBF6900, false));
     //BallPtr ball(new Ball(0xFF0000FF, 0xFFFF0000));
     ball->setSceneManager(mDevice->sceneMgr);
     ball->create();
@@ -471,6 +472,7 @@ bool PlayState::frameRenderingQueued(const Ogre::FrameEvent& evt) {
 
 
 void PlayState::checkHit() {
+    OgreOggSound::OgreOggSoundManager* soundManager = OgreOggSound::OgreOggSoundManager::getSingletonPtr();
     for(PaddlePtr p : _paddles) {
         const Ogre::AxisAlignedBox& bbox = p->getBoundingBox();
         bool isLeft = p->getPosition().x < 0;
@@ -482,6 +484,7 @@ void PlayState::checkHit() {
 
         for(BallPtr b : _balls) {
             if(bbox.intersects(b->getBoundingBox())) {
+                soundManager->getSound("pong")->play();
                 b->reverse(Ball::DIR_X, collision);
                 b->accelerate(b->getAccel());
             }
@@ -495,14 +498,18 @@ void PlayState::checkHit() {
 
         if(pos.x > MAP_BBOX_X) {
             for(PlayerPtr p : _players) {
-                if(p->getSide() == Player::SIDE_RIGHT)
+                if(p->getSide() == Player::SIDE_RIGHT) {
                     p->hit();
+                    soundManager->getSound("plus")->play();
+                }
             }
             resetBall(b);
         } else if(pos.x < -MAP_BBOX_X) {
             for(PlayerPtr p : _players) {
-                if(p->getSide() == Player::SIDE_LEFT)
+                if(p->getSide() == Player::SIDE_LEFT) {
                     p->hit();
+                    soundManager->getSound("minus")->play();
+                }
             }
             resetBall(b);
         } else if(fabs(pos.y) > MAP_BBOX_Y) {
@@ -535,12 +542,15 @@ void PlayState::showEndScreen() {
     label->setProperty("HorzFormatting", "CentreAligned");
     label->setProperty("VertFormatting", "CentreAligned");
 
+    OgreOggSound::OgreOggSoundManager* soundManager = OgreOggSound::OgreOggSoundManager::getSingletonPtr();
     if(!_looser->isAI()) {
         label->setProperty("NormalTextColour", "FFFF0000");
         label->setText("Defeated");
+        soundManager->getSound("lose")->play();
     } else {
         label->setProperty("NormalTextColour", "FF00FF00");
         label->setText("Victory");
+        soundManager->getSound("win")->play();
     }
     wnd->addChild(label);
 
