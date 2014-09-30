@@ -38,7 +38,6 @@ private:
     CEGUI::Window* _target;
     CEGUI::Window* _markerArea;
     bool _tracked = false;
-    bool _calibrated = false;
     bool _handSelected = false;
     bool _topLeft = false;
     bool _topRight = false;

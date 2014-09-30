@@ -17,12 +17,15 @@ void KinectCalibrationState2::exit() {
 
 void KinectCalibrationState2::resume() {
     _tracked = false;
-    _calibrated = false;
+    _handSelected = false;
+    _topLeft = _topRight = _bottomLeft = _bottomRight = false;
+    _lastPos.x = nan("");
     setupWindows();
 }
 
 bool KinectCalibrationState2::pause() {
     GUIContext& guiContext = System::getSingleton().getDefaultGUIContext();
+    guiContext.getMouseCursor().setDefaultImage("TaharezLook/MouseCursor");
     guiContext.getMouseCursor().setVisible(false);
     clearAll();
     _setuped = false;
