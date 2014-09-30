@@ -102,7 +102,7 @@ void KinectCalibrationState2::setupKinectWindow() {
     uint32 w = mDevice->rwindow->getWidth();
 
     MouseCursor& mc = guiContext.getMouseCursor();
-    mc.setImage("TaharezLook/MouseTarget");
+    mc.setImage("Calibration/MouseTarget");
     /*mc.setPosition(Vector2f(
             w * 0.5, h * 0.5
     ));*/
