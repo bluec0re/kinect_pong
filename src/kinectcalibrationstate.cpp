@@ -153,7 +153,6 @@ bool KinectCalibrationState::frameRenderingQueued(const Ogre::FrameEvent& evt) {
                         torso.y + 20 < left.y && torso.y + 20 < right.y &&
                         left.x < head.x && right.x > head.x) {
                     float progress = 0.3333f + 0.3333f * (1.f - _tPoseTimeout / 3.0f);
-                    soundManager->getSound("calib")->play();
                     printf("progress: %f\n", progress);
                     _progress->setProgress(progress);
                     _tPoseTimeout -= evt.timeSinceLastFrame;
@@ -161,6 +160,7 @@ bool KinectCalibrationState::frameRenderingQueued(const Ogre::FrameEvent& evt) {
                     _positions.push_back(std::pair<Ogre::Vector3, Ogre::Vector3>(left, right));
 
                     if(_tPoseTimeout < 0) {
+                        soundManager->getSound("calib")->play();
                         updateMarkers();
                         _manual->setProperty("Image", "CalibrationManualCalibrated");
                         _calibrated = true;
