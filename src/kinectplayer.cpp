@@ -2,7 +2,36 @@
 #include "kinect.h"
 #include "paddle.h"
 #include "playstate.h"
-#include <iostream>
+#include <valarray>
+#include <cmath>
+
+static Ogre::Real ExponentialMovingAverage( const std::list<Ogre::Real>& data, Ogre::Real baseValue )
+{
+    size_t size = data.size();
+    std::valarray<Ogre::Real> va(size);
+    Ogre::Real numerator = 0;
+    Ogre::Real denominator = 0;
+    size_t i = 0;
+    for(std::list<Ogre::Real>::const_iterator it = data.begin();
+            it != data.end(); it++, i++) {
+        va[i] = *it;
+    }
+
+    Ogre::Real average = va.sum();
+    average /= size;
+
+    for ( i = 0; i < size; ++i )
+    {
+        numerator += va[i] * std::pow( baseValue, size - i - 1 );
+        denominator += std::pow( baseValue, size - i - 1 );
+    }
+
+    numerator += average * std::pow( baseValue, size);
+    denominator += std::pow( baseValue, size);
+
+    return numerator / denominator;
+}
+
 
 KinectPlayer::KinectPlayer(const Ogre::String& name, const PaddlePtr& paddle, PlayState* playstate, int userid)
         : Player(name + Ogre::String(" (Kinect)"), paddle, playstate), _userid(userid), _maxSamples(10) {
@@ -50,30 +79,19 @@ Ogre::Vector3 KinectPlayer::getSmoothedPosition() {
     Ogre::Vector3 current = _kinect->getJointPosition(_kinect->getControllingHand(), _userid);
     ss << "Current: " << current << " ";
 
-    while(_samples.size() >= _maxSamples) {
-        _samples.pop_front();
+    _samplesX.push_back(current.x);
+    _samplesY.push_back(current.y);
+    _samplesZ.push_back(current.z);
+    while(_samplesX.size() >= _maxSamples) {
+        _samplesX.pop_front();
+        _samplesY.pop_front();
+        _samplesZ.pop_front();
     }
 
-    size_t cnt = _samples.size();
-    Ogre::Vector3 avg(Ogre::Vector3::ZERO);
-    if(cnt != 0) {
-        for(const Ogre::Vector3& tmp : _samples) {
-            avg += tmp / cnt;
-        }
-        Ogre::Vector3 diff = current - avg;
-        Ogre::Real x = fabs(diff.x / (avg.x / 2.0));
-        Ogre::Real y = fabs(diff.y / (avg.y / 2.0));
-        Ogre::Real z = fabs(diff.z / (avg.z / 2.0));
-
-
-        diff.x *= x;
-        diff.y *= y;
-        diff.z *= z;
-
-        current = avg + diff;
-    }
-    _samples.push_back(current);
-    ss << "Average: " << avg << " New: " << current << " Count: " << cnt;
+    current.x = ExponentialMovingAverage(_samplesX, 0.9);
+    current.y = ExponentialMovingAverage(_samplesY, 0.9);
+    current.z = ExponentialMovingAverage(_samplesZ, 0.9);
+    ss << " New: " << current;
     Ogre::LogManager::getSingleton().logMessage(ss.str());
 
     return current;

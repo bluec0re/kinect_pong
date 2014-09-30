@@ -5,6 +5,9 @@ project( KinectPong )
 set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake" )
 set( CMAKE_BUILD_TYPE Debug )
 
+option( ENABLE_OPENCV "Enable OpenCV Support" ON )
+option( ENABLE_OPENNI "Enable OpenNI Support" ON )
+
 find_package( Boost
                     COMPONENTS filesystem system
                     REQUIRED
@@ -12,8 +15,14 @@ find_package( Boost
 find_package( OGRE REQUIRED )
 find_package( OIS REQUIRED )
 find_package( CEGUI 0.8 REQUIRED )
-find_package( OpenNI2 )
-find_package( OpenCV )
+
+if( ENABLE_OPENNI )
+    find_package( OpenNI2 )
+endif( ENABLE_OPENNI )
+
+if( ENABLE_OPENCV )
+    find_package( OpenCV )
+endif( ENABLE_OPENCV )
 
 if(OPENNI2_FOUND)
     add_definitions(-DHAVE_OPENNI2)

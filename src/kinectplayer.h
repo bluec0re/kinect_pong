@@ -21,7 +21,9 @@ protected:
 private:
     Kinect* _kinect;
     nite::UserId _userid;
-    std::list<Ogre::Vector3> _samples;
+    std::list<Ogre::Real> _samplesX;
+    std::list<Ogre::Real> _samplesY;
+    std::list<Ogre::Real> _samplesZ;
     size_t _maxSamples;
 };
 

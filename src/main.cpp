@@ -21,13 +21,13 @@
 #ifdef OIS_LINUX_PLATFORM
     #include <argp.h>
     #include <dlfcn.h>
-
+/*
 std::string getModulePathLinux(void* func) {
     Dl_info info;
     dladdr(func, &info);
 
     return std::string(info.dli_fname);
-}
+}*/
 #elif defined(OIS_WIN32_PLATFORM)
 #include <Windows.h>
 
