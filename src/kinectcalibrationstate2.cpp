@@ -132,6 +132,7 @@ bool KinectCalibrationState2::frameRenderingQueued(const Ogre::FrameEvent& evt) 
                 _status->setText("Get detected");
                 soundManager.getSound("calib_fail")->play();
                 _topLeft = _topRight = _bottomLeft = _bottomRight = false;
+                _lastPos = nan("");
             }
         } else if(!_handSelected && !debug) {
             if(!_tracked) {
