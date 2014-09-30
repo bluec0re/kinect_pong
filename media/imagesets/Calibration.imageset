@@ -1,0 +1,7 @@
+<Imageset autoScaled="" imagefile="calibration.png" name="Calibration" nativeHorzRes="800" nativeVertRes="600" version="2">
+    <Image height="64" name="CalibrationManual" width="231" xPos="0" yPos="0" />
+    <Image height="64" name="CalibrationManualTracked" width="231" xPos="234" yPos="0" />
+    <Image height="64" name="CalibrationManualCalibrated" width="231" xPos="472" yPos="0" />
+    <Image height="522" name="PoseT" width="716" xPos="0" yPos="69" />
+    <Image height="518" name="PoseY" width="478" xPos="721" yPos="73" />
+</Imageset>

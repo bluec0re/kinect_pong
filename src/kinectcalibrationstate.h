@@ -31,6 +31,8 @@ private:
     CEGUI::ProgressBar* _progress;
     CEGUI::Window* _manual;
     CEGUI::Window* _target;
+    CEGUI::Window* _tpose;
+    CEGUI::Window* _ypose;
     bool _tracked = false;
     bool _calibrated = false;
     float _tPoseTimeout;

@@ -32,42 +32,30 @@ void KinectCalibrationState::setupWindows() {
 
     SchemeManager::getSingleton().createFromFile("TaharezLook.scheme");
     ImageManager::getSingleton().loadImageset("AlfiskoSkin.imageset", "ImageSets");
+    ImageManager::getSingleton().loadImageset("Calibration.imageset", "ImageSets");
 
-    guiContext.getMouseCursor().setDefaultImage("TaharezLook/MouseArrow");
-    guiContext.getMouseCursor().setVisible(true);
-
-    Window* root = wmgr.createWindow("DefaultWindow");
-    guiContext.setRootWindow(root);
-
-    Window* text = wmgr.createWindow("TaharezLook/Label", "KinectStatusLabel");
-    text->setText("Kinect not connected!");
-    text->setSize(USize(UDim(1.0, 0), UDim(1.0, 0)));
-    text->setPosition(UVector2(UDim(0, 0), UDim(0, 0)));
-    text->setProperty("HorizontalAlignment", "Centre");
-    root->addChild(text);
-
-
-    Window* btn = wmgr.createWindow("TaharezLook/Button", "KeyboardBtn");
-    btn->setText("Use Keyboard");
-    btn->setSize(USize(UDim(0.23, 0), UDim(0.03, 0)));
-    btn->setPosition(UVector2(UDim(0, 0), UDim(0.6, 0)));
-    btn->setProperty("HorizontalAlignment", "Centre");
-    btn->subscribeEvent(Window::EventMouseClick, Event::Subscriber(&KinectCalibrationState::handleKeyboardBtnClick, this));
-    root->addChild(btn);
 
     if(Kinect::getInstance()->isConnected()) {
+        guiContext.getMouseCursor().hide();
+        Window* root = wmgr.loadLayoutFromFile("CalibrationStateKinect.layout");
+        guiContext.setRootWindow(root);
         setupKinectWindow();
+    } else {
+        guiContext.getMouseCursor().setDefaultImage("TaharezLook/MouseArrow");
+        guiContext.getMouseCursor().setVisible(true);
+
+        Window* root = wmgr.loadLayoutFromFile("CalibrationStateKeyboard.layout");
+        guiContext.setRootWindow(root);
+        Window* btn = root->getChild("KeyboardBtn");
+        btn->subscribeEvent(Window::EventMouseClick, Event::Subscriber(&KinectCalibrationState::handleKeyboardBtnClick, this));
     }
 }
 
 void KinectCalibrationState::setupKinectWindow() {
     GUIContext& guiContext = System::getSingleton().getDefaultGUIContext();
-    guiContext.getMouseCursor().hide();
+
     WindowManager& wmgr = WindowManager::getSingleton();
     Window* root = guiContext.getRootWindow();
-
-    root->destroyChild("KinectStatusLabel");
-    root->destroyChild("KeyboardBtn");
 
     Logger::getSingleton().logEvent("Creating Kinect Window");
     Kinect::getInstance()->update();
@@ -81,40 +69,24 @@ void KinectCalibrationState::setupKinectWindow() {
     image->setArea(rect);
     image->setAutoScaled(ASM_Both);
 
-    Window* si = wmgr.createWindow("TaharezLook/StaticImage", "KinectWindow");
-    si->setSize(USize(UDim(1.0, 0), UDim(1.0, 0)));
-
+    Window* si = root->getChild("KinectWindow");
     si->setProperty("Image", "KinectImage");
-    root->addChild(si);
     Logger::getSingleton().logEvent("Kinect Window created");
 
 
-    ImageManager::getSingleton().addFromImageFile("CalibrationManual", "manual_x64_base.png", "Images");
-    ImageManager::getSingleton().addFromImageFile("CalibrationManualTracked", "manual_x64_tracked.png", "Images");
-    ImageManager::getSingleton().addFromImageFile("CalibrationManualCalibrated", "manual_x64_calibrated.png", "Images");
-
-    _manual = wmgr.createWindow("TaharezLook/StaticImage", "CalibrationWindow");
-    _manual->setSize(USize(UDim(0, 230), UDim(0, 64)));
-    _manual->setPosition(UVector2(UDim(0.5, -115), UDim(0, 0)));
-
-    _manual->setProperty("Image", "CalibrationManual");
-    _manual->setProperty("FrameEnabled", "false");
-    si->addChild(_manual);
-
-    _progress = dynamic_cast<ProgressBar*>(wmgr.createWindow("TaharezLook/ProgressBar", "CalibrationProgress"));
-    _progress->setSize(USize(UDim(0, 200), UDim(0, 20)));
-    _progress->setPosition(UVector2(UDim(0.5, -100), UDim(0, 64)));
-    si->addChild(_progress);
 
 
-    _target = wmgr.createWindow("TaharezLook/StaticImage", "Target");
-    _target->setSize(USize(UDim(0, 20), UDim(0, 20)));
-    _target->setPosition(UVector2(UDim(0.5, -10), UDim(0.3, -10)));
-    _target->setProperty("Image", "AlfiskoSkin/CloseButtonPushed");
-    _target->setProperty("FrameEnabled", "false");
-    _target->setProperty("BackgroundEnabled", "false");
+    _manual = si->getChild("CalibrationWindow");
+
+    _progress = dynamic_cast<ProgressBar*>(si->getChild("CalibrationProgress"));
+
+    _target = si->getChild("Target");
     _target->setVisible(false);
-    si->addChild(_target);
+
+    _tpose = si->getChild("PoseT");
+    _tpose->setVisible(false);
+    _ypose = si->getChild("PoseY");
+    _ypose->setVisible(true);
 }
 
 bool KinectCalibrationState::handleKeyboardBtnClick(const CEGUI::EventArgs &args) {
@@ -130,6 +102,8 @@ bool KinectCalibrationState::frameRenderingQueued(const Ogre::FrameEvent& evt) {
 
         if(!_tracked && uid != -1) {
             _tracked = true;
+            _ypose->setVisible(false);
+            _tpose->setVisible(true);
             _calibrated = false;
             _progress->setProgress(0.3333f);
             soundManager->getSound("calib")->play();
@@ -141,6 +115,8 @@ bool KinectCalibrationState::frameRenderingQueued(const Ogre::FrameEvent& evt) {
             if (uid == -1) {
                 _tracked = false;
                 _progress->setProgress(0.f);
+                _ypose->setVisible(true);
+                _ypose->setVisible(false);
                 soundManager->getSound("calib_fail")->play();
                 _manual->setProperty("Image", "CalibrationManual");
             } else {
@@ -166,6 +142,7 @@ bool KinectCalibrationState::frameRenderingQueued(const Ogre::FrameEvent& evt) {
                         _calibrated = true;
                         _target->setVisible(true);
                         _tPoseTimeout = -1.f;
+                        _ypose->setVisible(false);
                     }
                 }
             }
