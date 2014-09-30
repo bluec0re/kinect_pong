@@ -242,7 +242,7 @@ void PlayState::setupWindows() {
 
 
 #ifdef HAVE_OPENNI2
-    if(Kinect::getInstance()->isConnected()) {
+    if(Kinect::getInstance()->isConnected() && g_settings.previewOn) {
         Logger::getSingleton().logEvent("Creating Kinect Window");
         Kinect::getInstance()->update();
         // preview

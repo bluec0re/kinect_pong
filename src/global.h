@@ -67,6 +67,7 @@ struct Settings
     ControllerType controllerP1;
     ControllerType controllerP2;
     bool soundOn;
+    bool previewOn;
 };
 
 extern Settings g_settings;
