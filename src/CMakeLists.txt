@@ -41,6 +41,8 @@ if( ${OPENNI2_FOUND} )
         kinectplayer.cpp
         kinectcalibrationstate.h
         kinectcalibrationstate.cpp
+        kinectcalibrationstate2.h
+        kinectcalibrationstate2.cpp
     )
 endif()
 

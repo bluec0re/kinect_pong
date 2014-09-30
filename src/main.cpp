@@ -16,6 +16,7 @@
 #ifdef HAVE_OPENNI2
     #include "kinect.h"
     #include "kinectcalibrationstate.h"
+    #include "kinectcalibrationstate2.h"
 #endif
 
 #ifdef OIS_LINUX_PLATFORM
@@ -146,6 +147,7 @@ public:
 
 #ifdef HAVE_OPENNI2
         GameState* calib = KinectCalibrationState::Create(&gameMgr, "Kinect Calibration");
+        GameState* calib2 = KinectCalibrationState2::Create(&gameMgr, "Kinect Calibration2");
 #endif
 
         GameState* pong2d = Pong2DState::Create(&gameMgr, "Pong 2D");
@@ -166,6 +168,8 @@ public:
 #ifdef HAVE_OPENNI2
         else if(strcasecmp(g_args.startState, "calib") == 0)
             gameMgr.start(calib);
+        else if(strcasecmp(g_args.startState, "calib2") == 0)
+            gameMgr.start(calib2);
 #endif
         else if(strcasecmp(g_args.startState, "settings") == 0)
             gameMgr.start(settings);

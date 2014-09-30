@@ -120,5 +120,9 @@
             <Property name="Area" value="{{0.0371134,0},{0.411214,0},{0.429278,0},{0.465365,0}}" />
             <Property name="Text" value="Show Kinect Preview" />
         </Window>
+        <Window type="TaharezLook/Checkbox" name="OldCalibration" >
+            <Property name="Area" value="{{0.0371134,0},{0.48398,0},{0.429278,0},{0.538131,0}}" />
+            <Property name="Text" value="Use Old Calibration Method" />
+        </Window>
     </Window>
 </GUILayout>

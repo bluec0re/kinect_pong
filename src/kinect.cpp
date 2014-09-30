@@ -184,6 +184,9 @@ std::vector<nite::UserId> Kinect::getUsers() const {
 }
 
 void Kinect::update() {
+    if(!isConnected())
+        return;
+
     nite::UserTrackerFrameRef userTrackerFrame;
     niteRc = userTracker.readFrame(&userTrackerFrame);
     if(niteRc != nite::STATUS_OK) {
@@ -295,10 +298,25 @@ const nite::Point3f& Kinect::getRealWorldMarkerPos(const Marker &marker) const {
     return _markerPositions[idx];
 }
 
+void Kinect::setRealWorldMarkerPos(const Marker &marker, const Ogre::Vector3 &pos) {
+    setRealWorldMarkerPos(marker, nite::Point3f(pos.x, pos.y, pos.z));
+}
+
 void Kinect::setRealWorldMarkerPos(const Marker &marker, const nite::Point3f &pos) {
     size_t idx = static_cast<size_t>(marker);
     if(idx > CENTER)
         throw std::out_of_range("Invalid marker type specified");
+
+    Ogre::StringStream ss;
+    ss << "Set Marker ";
+    switch (marker) {
+        case TOP_LEFT:     ss << "TL to ("; break;
+        case TOP_RIGHT:    ss << "TR to ("; break;
+        case BOTTOM_LEFT:  ss << "BL to ("; break;
+        case BOTTOM_RIGHT: ss << "BR to ("; break;
+    }
+    ss << pos.x << ", " << pos.y << ", " << pos.z << ")";
+    Ogre::LogManager::getSingleton().logMessage(ss.str());
 
     _markerPositions[marker] = pos;
 }

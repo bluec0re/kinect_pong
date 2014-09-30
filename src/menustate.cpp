@@ -316,7 +316,12 @@ bool MenuState::handleInnerPartStartClickAreaClick(const CEGUI::EventArgs& args)
 
     _startButtonClicked = true;*/
 
-    GameState* gs = findByName("Kinect Calibration");
+    GameState* gs;
+    if(g_settings.useOldCalibration)
+        gs = findByName("Kinect Calibration");
+    else
+        gs = findByName("Kinect Calibration2");
+
     if(g_settings.controllerP1 == CONTROLLER_KINECT && gs)
         pushGameState(gs);
     else

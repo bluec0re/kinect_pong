@@ -63,7 +63,7 @@ void KinectPlayer::update(double timeSinceLastFrame) {
         curPos.y = static_cast<Ogre::Real>(tmp);
 
         if(is3D()) { // kinect x is z in game
-            tmp = static_cast<float>(posRight.x - tl.x)/static_cast<float>(br.x - tl.x);
+            tmp = static_cast<float>(posRight.x - tl.x)/static_cast<float>(tl.x - br.x);
           //  std::cout << "Z: " << posRight.x << " -> " << tmp << " => ";
             tmp = tmp*MAP_BBOX_Z*2-MAP_BBOX_Z;
             //std::cout << tmp<< std::endl;
@@ -92,7 +92,7 @@ Ogre::Vector3 KinectPlayer::getSmoothedPosition() {
     current.y = ExponentialMovingAverage(_samplesY, 0.9);
     current.z = ExponentialMovingAverage(_samplesZ, 0.9);
     ss << " New: " << current;
-    Ogre::LogManager::getSingleton().logMessage(ss.str());
+    Ogre::LogManager::getSingleton().logMessage(ss.str(), Ogre::LML_TRIVIAL);
 
     return current;
 }

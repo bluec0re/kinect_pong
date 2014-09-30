@@ -68,6 +68,7 @@ struct Settings
     ControllerType controllerP2;
     bool soundOn;
     bool previewOn;
+    bool useOldCalibration;
 };
 
 extern Settings g_settings;

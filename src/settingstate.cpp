@@ -122,6 +122,7 @@ void SettingState::loadSettings() {
         g_settings.aiStrength = AI_WEAK;
         g_settings.soundOn = true;
         g_settings.previewOn = true;
+        g_settings.useOldCalibration = false;
         g_settings.showBallGhosts = true;
         g_settings.controllerP1 = CONTROLLER_KINECT;
         g_settings.controllerP2 = CONTROLLER_AI;
@@ -131,6 +132,7 @@ void SettingState::loadSettings() {
     g_settings.showBallGhosts = pt.get<bool>("kinect_pong.showBallGhosts", true);
     g_settings.soundOn = pt.get<bool>("kinect_pong.sound", true);
     g_settings.previewOn = pt.get<bool>("kinect_pong.preview", true);
+    g_settings.useOldCalibration = pt.get<bool>("kinect_pong.oldCalibration", false);
     g_settings.aiStrength = pt.get<AiStrength>("kinect_pong.aiStrength");
 
     g_settings.controllerP1 = pt.get<ControllerType>("kinect_pong.P1");
@@ -145,6 +147,7 @@ void SettingState::saveSettings() {
     pt.put("kinect_pong.showBallGhosts", g_settings.showBallGhosts);
     pt.put("kinect_pong.sound", g_settings.soundOn);
     pt.put("kinect_pong.preview", g_settings.previewOn);
+    pt.put("kinect_pong.oldCalibration", g_settings.useOldCalibration);
     pt.put("kinect_pong.P1", g_settings.controllerP1);
     pt.put("kinect_pong.P2", g_settings.controllerP2);
 
@@ -200,12 +203,14 @@ void SettingState::setupWindows() {
     ToggleButton* sound = dynamic_cast<ToggleButton*>(root->getChild("Sound"));
     sound->setSelected(g_settings.soundOn);
 
-
     ToggleButton* ghosts = dynamic_cast<ToggleButton*>(root->getChild("Ghost"));
     ghosts->setSelected(g_settings.showBallGhosts);
 
     ToggleButton* preview = dynamic_cast<ToggleButton*>(root->getChild("Preview"));
     preview->setSelected(g_settings.previewOn);
+
+    ToggleButton* oldcalib = dynamic_cast<ToggleButton*>(root->getChild("OldCalibration"));
+    oldcalib->setSelected(g_settings.useOldCalibration);
 
     Window* saveBtn = root->getChild("Save");
     Window* cancelBtn = root->getChild("Cancel");
@@ -224,6 +229,7 @@ bool SettingState::handleSaveClick(const CEGUI::EventArgs& args) {
     g_settings.showBallGhosts = dynamic_cast<ToggleButton*>(root->getChild("Ghost"))->isSelected();
     g_settings.soundOn = dynamic_cast<ToggleButton*>(root->getChild("Sound"))->isSelected();
     g_settings.previewOn = dynamic_cast<ToggleButton*>(root->getChild("Preview"))->isSelected();
+    g_settings.useOldCalibration = dynamic_cast<ToggleButton*>(root->getChild("OldCalibration"))->isSelected();
 
     RadioButton* weakAi = dynamic_cast<RadioButton*>(root->getChild("weakAI"));
     if(!weakAi->isSelected())

@@ -53,6 +53,7 @@ public:
 
     const nite::Point3f& getRealWorldMarkerPos(const Marker& marker) const;
     void setRealWorldMarkerPos(const Marker& marker, const nite::Point3f& pos);
+    void setRealWorldMarkerPos(const Marker& marker, const Ogre::Vector3& pos);
 
     const nite::JointType& getControllingHand() const;
     void setControllingHand(const nite::JointType&);

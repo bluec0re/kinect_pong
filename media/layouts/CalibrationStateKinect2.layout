@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<GUILayout version="4" >
+    <Window type="DefaultWindow" name="root" >
+        <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}" />
+        <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        <Window type="TaharezLook/StaticImage" name="KinectWindow" >
+            <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}" />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+            <Property name="BackgroundColours" value="tl:FF000000 tr:FF000000 bl:FFFFFFFF br:FFFFFFFF" />
+            <Window type="TaharezLook/ProgressBar" name="CalibrationProgress" >
+                <Property name="Area" value="{{0.3,0},{0.1,0},{0.7,0},{0.1,20}}" />
+                <Property name="StepSize" value="0.01" />
+            </Window>
+            <Window type="TaharezLook/StaticImage" name="Target" >
+                <Property name="Area" value="{{0.5,-9},{0.3,-9},{0.5,39},{0.3,39}}" />
+                <Property name="Image" value="TaharezLook/MouseTarget" />
+                <Property name="MaxSize" value="{{1,0},{1,0}}" />
+                <Property name="Visible" value="false" />
+                <Property name="FrameEnabled" value="false" />
+                <Property name="BackgroundEnabled" value="false" />
+            </Window>
+            <Window type="TaharezLook/FrameWindow" name="Area" >
+                <Property name="Area" value="{{0.4,0},{0.4,0},{0.2,0},{0.2,0}}" />
+                <Property name="FrameEnabled" value="false" />
+                <Property name="SizingEnabled" value="false" />
+                <Property name="TitlebarEnabled" value="false" />
+                <Property name="ClientAreaColour" value="tl:7F141B38 tr:7F141B38 bl:7F141B38 br:7F141B38" />
+                <Property name="DragMovingEnabled" value="false" />
+                <Property name="CloseButtonEnabled" value="false" />
+                <AutoWindow namePath="__auto_titlebar__" >
+                    <Property name="DraggingEnabled" value="false" />
+                </AutoWindow>
+            </Window>
+            <Window type="TaharezLook/FrameWindow" name="infoFrame" >
+                <Property name="Area" value="{{0.3,0},{0,0},{0.7,0},{0.1,0}}" />
+                <Property name="Text" value="Instructions" />
+                <Property name="SizingEnabled" value="false" />
+                <Property name="DragMovingEnabled" value="false" />
+                <Property name="CloseButtonEnabled" value="false" />
+                <AutoWindow namePath="__auto_titlebar__" >
+                    <Property name="DraggingEnabled" value="false" />
+                </AutoWindow>
+                <Window type="TaharezLook/Label" name="StatusLbl" >
+                    <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}" />
+                    <Property name="Text" value="Get detected" />
+                    <Property name="MaxSize" value="{{1,0},{1,0}}" />
+                </Window>
+            </Window>
+        </Window>
+    </Window>
+</GUILayout>
