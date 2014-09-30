@@ -107,7 +107,7 @@ bool KinectCalibrationState::frameRenderingQueued(const Ogre::FrameEvent& evt) {
             _calibrated = false;
             _progress->setProgress(0.3333f);
             soundManager->getSound("calib")->play();
-            _manual->setProperty("Image", "CalibrationManualTracked");
+            _manual->setProperty("Image", "Calibration/CalibrationManualTracked");
             _tPoseTimeout = 3.0f;
             _positions.clear();
             kinect->hasControllingHand(false);
@@ -118,7 +118,7 @@ bool KinectCalibrationState::frameRenderingQueued(const Ogre::FrameEvent& evt) {
                 _ypose->setVisible(true);
                 _ypose->setVisible(false);
                 soundManager->getSound("calib_fail")->play();
-                _manual->setProperty("Image", "CalibrationManual");
+                _manual->setProperty("Image", "Calibration/CalibrationManual");
             } else {
                 Ogre::Vector3 head = kinect->getJointPosition(nite::JOINT_HEAD, uid);
                 Ogre::Vector3 left = kinect->getJointPosition(nite::JOINT_LEFT_HAND, uid);
@@ -138,7 +138,7 @@ bool KinectCalibrationState::frameRenderingQueued(const Ogre::FrameEvent& evt) {
                     if(_tPoseTimeout < 0) {
                         soundManager->getSound("calib")->play();
                         updateMarkers();
-                        _manual->setProperty("Image", "CalibrationManualCalibrated");
+                        _manual->setProperty("Image", "Calibration/CalibrationManualCalibrated");
                         _calibrated = true;
                         _target->setVisible(true);
                         _tPoseTimeout = -1.f;

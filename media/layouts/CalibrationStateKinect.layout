@@ -26,14 +26,14 @@
                 <Property name="BackgroundEnabled" value="false" />
             </Window>
             <Window type="TaharezLook/StaticImage" name="PoseY" >
-                <Property name="Area" value="{{0.5,-257},{1,-622},{0.5,317},{1,0}}" />
+                <Property name="Area" value="{{0.5,-344.5},{1,-646},{0.5,344.5},{1,100}}" />
                 <Property name="Image" value="Calibration/PoseY" />
                 <Property name="MaxSize" value="{{1,0},{1,0}}" />
                 <Property name="FrameEnabled" value="false" />
                 <Property name="BackgroundEnabled" value="false" />
             </Window>
             <Window type="TaharezLook/StaticImage" name="PoseT" >
-                <Property name="Area" value="{{0.5,-257},{1,-622},{0.5,317},{1,0}}" />
+                <Property name="Area" value="{{0.5,-344.5},{1,-646},{0.5,344.5},{1,100}}" />
                 <Property name="Image" value="Calibration/PoseT" />
                 <Property name="MaxSize" value="{{1,0},{1,0}}" />
                 <Property name="FrameEnabled" value="false" />
