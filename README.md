@@ -14,13 +14,14 @@ install
 
 - requirements
   - cmake
-  - Ogre3D
-  - Boost
-  - OIS
-  - CEGUI
-  - (optional; but without fun when missing)OpenNi 2
-  - (optional; but without fun when missing)libfreenect driver
-  - (optional; but without fun when missing)NiTE 2
+  - Ogre3D 1.9
+  - Boost (tested with 1.56)
+  - OIS (tested with 1.3)
+  - CEGUI 0.8.x
+  - OgreOggSound (tested with r420)
+  - (optional; but without fun when missing) OpenNi2 (tested with 2.2beta2)
+  - (optional; but without fun when missing) libfreenect driver (tested with 0.4.2)
+  - (optional; but without fun when missing) NiTE2 (tested with 2.2)
   - (optional)opencv [for recording feature]
 
 - get openni2 + libfreenect from your package manager or from github
@@ -30,7 +31,7 @@ install
 
 Arch Linux specific:
 - pacman -S ogre ois cegui cmake boost
-- from AUR: openni2 openni2-libfreenect
+- from AUR: openni2-libfreenect ogreoggsound-svn
   
 build
 =====
