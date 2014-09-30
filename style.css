@@ -149,6 +149,7 @@ h2 {
 
 .arrow-down svg circle:hover, .arrow-down svg circle:focus {
     animation: 2s ease-in-out 0s alternate forwards 1 circle-full;
+    -webkit-animation: 2s ease-in-out 0s alternate forwards 1 circle-full;
 }
 
 a[ id= "team" ]:target ~ #content div.page {
@@ -166,6 +167,24 @@ a[ id= "team" ]:target ~ #content div.page {
 }
 
 @keyframes circle-none {
+    0% {
+        stroke-dashoffset: 0;
+    }
+    100% {
+        stroke-dashoffset: 500;
+    }
+}
+
+@-webkit-keyframes circle-full {
+    0% {
+        stroke-dashoffset: 500;
+    }
+    100% {
+        stroke-dashoffset: 0;
+    }
+}
+
+@-webkit-keyframes circle-none {
     0% {
         stroke-dashoffset: 0;
     }
