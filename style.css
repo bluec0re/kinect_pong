@@ -1,0 +1,175 @@
+* {
+    margin: 0px;
+    padding: 0px;
+    font-family: sans-serif, arial, helvetica;
+}
+
+body {
+    background-color: #2e9afe;
+    overflow-y: hidden;
+}
+
+div#container {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+}
+
+div#header {
+    background: none repeat scroll 0 0 rgba(50, 58, 69, 0.95);
+    width: 100%;
+    height: 80px;
+}
+
+div#logo {
+    width: 40%;
+    float: left;
+    color: #fff;
+    margin-top: 20px;
+    padding: 0px 0px 0px 30px;
+}
+
+div#menu {
+    float: right;
+    height: 80px;
+    width: 56%;
+    font-weight: bold;
+}
+
+div#content {
+    overflow-y: scroll;
+    height: 100%;
+    width: 100%;
+}
+
+ul#navi {
+    float: right;
+    list-style-type: none;
+}
+
+ul#navi li {
+    display: inline-block;
+    line-height: 80px;
+}
+
+ul#navi li a {
+    display: block;
+    padding: 0px 20px;
+    height: 80px;
+    text-decoration: none;
+    cursor: pointer;
+    color: #fff;
+    text-transform: uppercase;
+    outline: none;
+}
+
+ul#navi li a:hover, ul#navi li a:focus {
+    color: #2e9afe;
+}
+
+div.page {
+    min-height: 730px;
+    width: 1024px;
+    margin: auto;
+    text-align: center;
+    position: relative;
+}
+
+div.page.last{
+    margin-bottom: 150px;
+}
+
+div.page ul {
+    font-size: 20px;
+    line-height: 40px;
+    text-align: left;
+    padding-left: 30px;
+    list-style-type: none;
+}
+
+div.page ul li:before
+{
+    content: '✔';   
+    margin-left: -1em; 
+    margin-right: .100em;
+}
+
+img {
+    padding: 30px 0px 10px 0px;
+}
+
+p {
+    text-align: left;
+    padding: 20px 0px 50px 0px;
+    margin: 50px;
+    font-size: 20px;
+    line-height: 40px;
+}
+
+p.process {
+    padding-bottom: 10px!important;
+    margin-bottom: 10px!important;
+}
+
+i {
+    font-size: 20px;
+}
+
+h2 {
+    padding-top: 50px;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 32px;
+}
+
+.arrow-down {
+    display: block;
+    height: 40px;
+    margin: 3em auto 0;
+    width: 40px;
+    position: absolute;
+    left: 49%;
+    bottom: 0px;
+    outline: none;
+}
+
+.arrow-down svg line {
+    stroke: #323a45;
+    stroke-width: 2px;
+}
+
+.arrow-down svg circle {
+    fill: #fff;
+    stroke: #323a45;
+    stroke-width: 2px;
+
+    stroke-dasharray: 500;
+    stroke-dashoffset: 500;
+}
+
+.arrow-down svg circle:hover, .arrow-down svg circle:focus {
+    animation: 2s ease-in-out 0s alternate forwards 1 circle-full;
+}
+
+a[ id= "team" ]:target ~ #content div.page {
+    -webkit-transform: translateY( -700px);
+    transform: translateY( -700px );
+}
+
+@keyframes circle-full {
+    0% {
+        stroke-dashoffset: 500;
+    }
+    100% {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes circle-none {
+    0% {
+        stroke-dashoffset: 0;
+    }
+    100% {
+        stroke-dashoffset: 500;
+    }
+}

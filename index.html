@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Kinect 3D Pong Implementation</title>
+    <link rel="stylesheet" type="text/css" href="style.css"> 
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+</head>
+<body>
+    <div id="container">
+        <div id="header">
+            <div id="logo">
+                <h1>Kinect 3D Pong Implementation</h1>
+            </div>
+            <div id="menu">
+                <ul id="navi">
+                    <li><a href="#exercise">Aufgabenstellung</a></li>
+                    <li><a href="#team">Team</a></li>
+                    <li><a href="#process">Durchführung</a></li>
+                    <li><a href="#result">Ergebnis</a></li>
+                    <li><a href="#future">Ausblick</a></li>
+                </ul>
+            </div>
+        </div>
+        <div id="content">
+            <div class="page">
+                <h2 id="exercise">Aufgabenstellung</a></h2>
+                <p>Die Aufgabe bestand darin ein Spiel zu implementieren, welches nach Vorbild des Klassikers Pong von Atari ein simples Tischtennisspiel darstellt. Das Spielprinzip sollte wie folgt funktionieren: Ein Punkt (Ball) bewegt sich auf dem Bildschirm hin und her. Jeder der beiden Spieler steuert einen senkrechten Strich (Schläger), den er nach oben und unten verschieben kann. Lässt man den Ball am Schläger vorbei, erhält der Gegner einen Punkt. Der Unterschied zum Klassiker sollte einerseits darin bestehen, dass sich der Ball im dreidimensionalen Raum bewegt und somit der Schläger entsprechend auf einer Fläche anstatt auf einer Linie bewegt werden muss und andererseits, dass der Spieler seinen Schläger mit Gesten die durch die Microsoft Kinect Kamera erfasst werden steuert, anstelle eines Paddles, einer Maus oder einer Tastatur.</p>
+                <a class="arrow-down as-circle-none" href="#team">
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 40 40" height="40" width="40">
+                        <circle r="18" cy="20" cx="20" class=""/>
+                        <line y2="25" x2="20" y1="15" x1="10"/>
+                        <line y2="15" x2="30" y1="25" x1="20"/>
+                    </svg>
+                </a>
+            </div>
+            <div class="page">
+                <h2 id="team">Team</h2>
+                <img src="team.png" /><br />
+                <i>Kevin Schaller und Timo Schmid</i>
+                <br /><br /><br />
+                <h3>Betreuer</h3>
+                <br /><br />
+                <i>Felix Aller</i>
+                <a class="arrow-down as-circle-none" href="#process">
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 40 40" height="40" width="40">
+                        <circle r="18" cy="20" cx="20" class=""/>
+                        <line y2="25" x2="20" y1="15" x1="10"/>
+                        <line y2="15" x2="30" y1="25" x1="20"/>
+                    </svg>
+                </a>
+            </div>
+            <div class="page">
+                <h2 id="process">Durchführung</h2>
+                <p class="process">
+                    In einer der Implementierung vorausgehenden Planungsphase haben wir das Projekt in verschiedene Arbeitspakete unterteilt, welche im Folgenden kurz umrissen werden:
+                </p>
+                <ul>
+                    <li>Evaluation und Einarbeitung in die Frameworks Libfreenect, OpenNI2, NiTE2, OGRE3D</li>
+                    <li>Implementierung der Steuerungskomponenten</li>
+                    <li>Implementierung der Spiellogik</li>
+                    <li>Zusammenführung der Steuerungskomponenten und der Spiellogik zu einem Prototyp</li>
+                    <li>Implementierung von Spielsounds zur Verbesserung des Feedbacks mit Hilfe von OgreOggSound</li>
+                    <li>Testing und Feinjustierung des Prototyps</li>
+                </ul>
+                <a class="arrow-down as-circle-none" href="#result">
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 40 40" height="40" width="40">
+                        <circle r="18" cy="20" cx="20" class=""/>
+                        <line y2="25" x2="20" y1="15" x1="10"/>
+                        <line y2="15" x2="30" y1="25" x1="20"/>
+                    </svg>
+                </a>
+            </div>
+            <div class="page">
+                <h2 id="result">Ergebnis</h2>
+                <p>Das Ergebnis unseres Projekts ist ein Pong Spiel, welches in 2D und in 3D gespielt werden kann. Es kann sowohl per Tastatur als auch per Kinect gesteuert werden und ist auf <a href="https://github.com/bluec0re/kinect_pong.git" target="_blank">Github</a> herunterladbar.<br />Folgendes Video zeigt das Spiel:</p>
+                <a class="arrow-down as-circle-none" href="#future">
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 40 40" height="40" width="40">
+                        <circle r="18" cy="20" cx="20" class=""/>
+                        <line y2="25" x2="20" y1="15" x1="10"/>
+                        <line y2="15" x2="30" y1="25" x1="20"/>
+                    </svg>
+                </a>
+            </div>
+            <div class="last page">
+                <h2 id="future">Ausblick</h2>
+                <p>
+                    Da der Fokus des Projekts primär auf der Gestensteuerung lag ist das Gameplay bis auf die 3D Komponente bisher sehr simpel gehalten worden. Um den Spielspaß zu erhöhen und den Spieler an diesem Spiel zu binden könnten demnach noch ein Levelsystem, ein Mehrspieler-Modus (ggf. mit Spielern im Netzwerk), eine stärkere künstliche Intelligenz und ein Erfolgssystem implementiert werden, da dies Faktoren sind, die auch anderen Spielen bereits großen Erfolg gebracht haben.<br /><br /> 
+Das Pong an sich schon sehr simpel ist, könnte diese Implementierung auch als Minispiel innerhalb eines anderen großen Spieles verwendet werden.<br /><br />
+Weiterhin könnte die Schwierigkeit erhöht werden, indem der Multiball-Modus, der bereits in einer frühen Variante implementiert ist, ausgebaut werden.
+                </p>
+                <a class="arrow-down as-circle-none" href="#exercise">
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 40 40" height="40" width="40">
+                        <circle r="18" cy="20" cx="20"/>
+                        <line x1="20" y1="15" x2="10" y2="25"/>
+                        <line x1="30" y1="25" x2="20" y2="15"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
