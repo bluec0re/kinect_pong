@@ -25,7 +25,7 @@ void KinectCalibrationState2::resume() {
 
 bool KinectCalibrationState2::pause() {
     GUIContext& guiContext = System::getSingleton().getDefaultGUIContext();
-    guiContext.getMouseCursor().setDefaultImage("TaharezLook/MouseCursor");
+    guiContext.getMouseCursor().setDefaultImage("TaharezLook/MouseArrow");
     guiContext.getMouseCursor().setVisible(false);
     clearAll();
     _setuped = false;

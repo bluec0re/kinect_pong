@@ -71,6 +71,7 @@ protected:
 #ifdef HAVE_OPENCV
     OgreCvRecorder* videoRecorder;
 #endif
+    bool mSysRqPressed;
 };
  
 #endif //__gamestatemanager_h__

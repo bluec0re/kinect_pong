@@ -81,6 +81,15 @@ void GameStateManager::start(GameState *state)
  
         mDevice->keyboard->capture();
         mDevice->mouse->capture();
+
+        if(mDevice->keyboard->isKeyDown(OIS::KC_SYSRQ) && !mSysRqPressed) {
+            mSysRqPressed = true;
+            std::cout << "Screenshot saved as "
+                      << mDevice->rwindow->writeContentsToTimestampedFile("kinect_pong-", ".jpg")
+                      << std::endl;
+        } else if(!mDevice->keyboard->isKeyDown(OIS::KC_SYSRQ)) {
+            mSysRqPressed = false;
+        }
  
         Ogre::WindowEventUtilities::messagePump();
 
