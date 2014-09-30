@@ -122,6 +122,12 @@ h2 {
     font-size: 32px;
 }
 
+iframe {
+    height: 360px;
+    width: 640px;
+    margin: 20px 16% 0px;
+}
+
 .arrow-down {
     display: block;
     height: 40px;
