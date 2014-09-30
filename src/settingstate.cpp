@@ -124,6 +124,7 @@ void SettingState::loadSettings() {
         g_settings.previewOn = true;
         g_settings.useOldCalibration = false;
         g_settings.showBallGhosts = true;
+        g_settings.skip2D = false;
         g_settings.controllerP1 = CONTROLLER_KINECT;
         g_settings.controllerP2 = CONTROLLER_AI;
         return;
@@ -133,6 +134,7 @@ void SettingState::loadSettings() {
     g_settings.soundOn = pt.get<bool>("kinect_pong.sound", true);
     g_settings.previewOn = pt.get<bool>("kinect_pong.preview", true);
     g_settings.useOldCalibration = pt.get<bool>("kinect_pong.oldCalibration", false);
+    g_settings.skip2D = pt.get<bool>("kinect_pong.skip2d", false);
     g_settings.aiStrength = pt.get<AiStrength>("kinect_pong.aiStrength");
 
     g_settings.controllerP1 = pt.get<ControllerType>("kinect_pong.P1");
@@ -148,6 +150,7 @@ void SettingState::saveSettings() {
     pt.put("kinect_pong.sound", g_settings.soundOn);
     pt.put("kinect_pong.preview", g_settings.previewOn);
     pt.put("kinect_pong.oldCalibration", g_settings.useOldCalibration);
+    pt.put("kinect_pong.skip2d", g_settings.skip2D);
     pt.put("kinect_pong.P1", g_settings.controllerP1);
     pt.put("kinect_pong.P2", g_settings.controllerP2);
 
@@ -212,6 +215,9 @@ void SettingState::setupWindows() {
     ToggleButton* oldcalib = dynamic_cast<ToggleButton*>(root->getChild("OldCalibration"));
     oldcalib->setSelected(g_settings.useOldCalibration);
 
+    ToggleButton* skip2d = dynamic_cast<ToggleButton*>(root->getChild("Skip2D"));
+    skip2d->setSelected(g_settings.skip2D);
+
     Window* saveBtn = root->getChild("Save");
     Window* cancelBtn = root->getChild("Cancel");
 
@@ -230,6 +236,7 @@ bool SettingState::handleSaveClick(const CEGUI::EventArgs& args) {
     g_settings.soundOn = dynamic_cast<ToggleButton*>(root->getChild("Sound"))->isSelected();
     g_settings.previewOn = dynamic_cast<ToggleButton*>(root->getChild("Preview"))->isSelected();
     g_settings.useOldCalibration = dynamic_cast<ToggleButton*>(root->getChild("OldCalibration"))->isSelected();
+    g_settings.skip2D = dynamic_cast<ToggleButton*>(root->getChild("Skip2D"))->isSelected();
 
     RadioButton* weakAi = dynamic_cast<RadioButton*>(root->getChild("weakAI"));
     if(!weakAi->isSelected())

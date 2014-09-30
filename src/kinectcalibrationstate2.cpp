@@ -113,7 +113,10 @@ void KinectCalibrationState2::setupKinectWindow() {
 
 
 bool KinectCalibrationState2::handleKeyboardBtnClick(const CEGUI::EventArgs &args) {
-    changeGameState(findByName("Pong 2D"));
+    if(g_settings.skip2D)
+        changeGameState(findByName("Pong 3D"));
+    else
+        changeGameState(findByName("Pong 2D"));
     return true;
 }
 
@@ -144,7 +147,10 @@ bool KinectCalibrationState2::frameRenderingQueued(const Ogre::FrameEvent& evt) 
             ss2 << "Game starts in " << _poseTimeout << "s";
             _status->setText(ss2.str());
             if(_poseTimeout <= 0) {
-                changeGameState(findByName("Pong 2D"));
+                if(g_settings.skip2D)
+                    changeGameState(findByName("Pong 3D"));
+                else
+                    changeGameState(findByName("Pong 2D"));
             }
         }
     }

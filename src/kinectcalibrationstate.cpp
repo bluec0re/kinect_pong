@@ -90,7 +90,10 @@ void KinectCalibrationState::setupKinectWindow() {
 }
 
 bool KinectCalibrationState::handleKeyboardBtnClick(const CEGUI::EventArgs &args) {
-    changeGameState(findByName("Pong 2D"));
+    if(g_settings.skip2D)
+        changeGameState(findByName("Pong 3D"));
+    else
+        changeGameState(findByName("Pong 2D"));
     return true;
 }
 
@@ -166,7 +169,10 @@ bool KinectCalibrationState::frameRenderingQueued(const Ogre::FrameEvent& evt) {
             } else {
                 _tPoseTimeout -= evt.timeSinceLastFrame;
                 if(_tPoseTimeout < 0) {
-                    changeGameState(findByName("Pong 2D"));
+                    if(g_settings.skip2D)
+                        changeGameState(findByName("Pong 3D"));
+                    else
+                        changeGameState(findByName("Pong 2D"));
                 }
             }
         }

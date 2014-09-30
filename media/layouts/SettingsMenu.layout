@@ -124,5 +124,9 @@
             <Property name="Area" value="{{0.0371134,0},{0.48398,0},{0.429278,0},{0.538131,0}}" />
             <Property name="Text" value="Use Old Calibration Method" />
         </Window>
+        <Window type="TaharezLook/Checkbox" name="Skip2D" >
+            <Property name="Area" value="{{0.0371134,0},{0.555054,0},{0.429278,0},{0.609205,0}}" />
+            <Property name="Text" value="Skip Directly to 3D Level" />
+        </Window>
     </Window>
 </GUILayout>

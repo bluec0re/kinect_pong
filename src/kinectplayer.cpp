@@ -63,7 +63,7 @@ void KinectPlayer::update(double timeSinceLastFrame) {
         curPos.y = static_cast<Ogre::Real>(tmp);
 
         if(is3D()) { // kinect x is z in game
-            tmp = static_cast<float>(posRight.x - tl.x)/static_cast<float>(tl.x - br.x);
+            tmp = static_cast<float>(posRight.x - br.x)/static_cast<float>(tl.x - br.x);
           //  std::cout << "Z: " << posRight.x << " -> " << tmp << " => ";
             tmp = tmp*MAP_BBOX_Z*2-MAP_BBOX_Z;
             //std::cout << tmp<< std::endl;

@@ -69,6 +69,7 @@ struct Settings
     bool soundOn;
     bool previewOn;
     bool useOldCalibration;
+    bool skip2D;
 };
 
 extern Settings g_settings;
