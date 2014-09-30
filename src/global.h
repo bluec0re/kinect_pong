@@ -70,6 +70,7 @@ struct Settings
     bool previewOn;
     bool useOldCalibration;
     bool skip2D;
+    size_t smoothingCount;
 };
 
 extern Settings g_settings;

@@ -24,7 +24,6 @@ private:
     std::list<Ogre::Real> _samplesX;
     std::list<Ogre::Real> _samplesY;
     std::list<Ogre::Real> _samplesZ;
-    size_t _maxSamples;
 };
 
 #endif // KINECTPLAYER_H

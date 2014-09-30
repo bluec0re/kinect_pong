@@ -34,7 +34,7 @@ static Ogre::Real ExponentialMovingAverage( const std::list<Ogre::Real>& data, O
 
 
 KinectPlayer::KinectPlayer(const Ogre::String& name, const PaddlePtr& paddle, PlayState* playstate, int userid)
-        : Player(name + Ogre::String(" (Kinect)"), paddle, playstate), _userid(userid), _maxSamples(10) {
+        : Player(name + Ogre::String(" (Kinect)"), paddle, playstate), _userid(userid) {
     _kinect = Kinect::getInstance();
 }
 
@@ -82,7 +82,7 @@ Ogre::Vector3 KinectPlayer::getSmoothedPosition() {
     _samplesX.push_back(current.x);
     _samplesY.push_back(current.y);
     _samplesZ.push_back(current.z);
-    while(_samplesX.size() >= _maxSamples) {
+    while(_samplesX.size() >= g_settings.smoothingCount) {
         _samplesX.pop_front();
         _samplesY.pop_front();
         _samplesZ.pop_front();

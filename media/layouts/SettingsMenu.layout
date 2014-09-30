@@ -128,5 +128,28 @@
             <Property name="Area" value="{{0.0371134,0},{0.555054,0},{0.429278,0},{0.609205,0}}" />
             <Property name="Text" value="Skip Directly to 3D Level" />
         </Window>
+        <Window type="TaharezLook/Label" name="SmoothinLbl" >
+            <Property name="Area" value="{{0.0371134,0},{0.626128,0},{0.0371134,318},{0.626128,32}}" />
+            <Property name="Text" value="Smoothing Factor" />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+            <Property name="HorzFormatting" value="LeftAligned" />
+        </Window>
+        <Window type="TaharezLook/Spinner" name="SmoothingCount" >
+            <Property name="Area" value="{{0.627216,0},{0.626128,0},{0.943917,0},{0.68028,0}}" />
+            <Property name="Text" value="0" />
+            <Property name="MinimumValue" value="0" />
+            <AutoWindow namePath="__auto_editbox__" >
+                <Property name="Text" value="0" />
+                <Property name="ValidationString" value="-?\d*" />
+            </AutoWindow>
+            <AutoWindow namePath="__auto_incbtn__" >
+                <Property name="WantsMultiClickEvents" value="false" />
+                <Property name="MouseAutoRepeatEnabled" value="true" />
+            </AutoWindow>
+            <AutoWindow namePath="__auto_decbtn__" >
+                <Property name="WantsMultiClickEvents" value="false" />
+                <Property name="MouseAutoRepeatEnabled" value="true" />
+            </AutoWindow>
+        </Window>
     </Window>
 </GUILayout>
