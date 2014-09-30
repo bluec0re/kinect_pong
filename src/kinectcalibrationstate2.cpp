@@ -194,7 +194,7 @@ void KinectCalibrationState2::selectHand() {
     nite::JointType types[] = {nite::JOINT_LEFT_HAND, nite::JOINT_RIGHT_HAND};
     for (nite::JointType &type : types) {
         Ogre::Vector2 pos = kinect->getRelativePosition(kinect->getJointPosition(type, uid));
-        if (pos.x > 0.45 && pos.x < 0.55 && pos.y > 0.25 && pos.y < 0.35) {
+        if (pos.x > 0.45 && pos.x < 0.55 && pos.y > 0.45 && pos.y < 0.55) {
             _progress->setProgress(.2f);
             soundManager.getSound("calib")->play();
             kinect->setControllingHand(type);
