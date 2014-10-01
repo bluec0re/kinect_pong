@@ -5,11 +5,11 @@ project( KinectPong )
 set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake" )
 set( CMAKE_BUILD_TYPE Debug )
 
-option( ENABLE_OPENCV "Enable OpenCV Support" ON )
+option( ENABLE_OPENCV "Enable OpenCV Support" OFF )
 option( ENABLE_OPENNI "Enable OpenNI Support" ON )
 
 find_package( Boost
-                    COMPONENTS filesystem system
+                    COMPONENTS system
                     REQUIRED
 )
 find_package( OGRE REQUIRED )
