@@ -33,7 +33,7 @@ Arch Linux specific:
 - pacman -S ogre ois cegui cmake boost
 - from AUR: openni2-libfreenect ogreoggsound-svn
 
-Ubuntu 14.4:
+Ubuntu 14.4 specific:
 - sudo apt-get install libogre-1.9-dev libois-dev cmake libusb-1.0-0-dev libudev-dev
 - wget https://github.com/OpenKinect/libfreenect/archive/v0.4.2.tar.gz -O libfreenect-0.4.2.tar.gz
     - sudo apt-get install libusb-1.0-0-dev libudev-dev
@@ -66,6 +66,7 @@ Ubuntu 14.4:
     - cd ogreoggsound-code-442-trunk
     - cmake .
     - make && sudo make install
+- set PluginFolder in plugins.cfg to /usr/lib/x86_64-linux-gnu/OGRE-1.9.0/
   
 build
 =====
