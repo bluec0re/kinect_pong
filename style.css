@@ -125,6 +125,8 @@ div.invis p {
 
 div.invis:target {
     display: block!important;
+    -webkit-animation: fade-in 1s;
+    animation: fade-in 1s;
 }
 
 a.close {
@@ -239,5 +241,25 @@ a[ id= "team" ]:target ~ #content div.page {
     }
     100% {
         stroke-dashoffset: 500;
+    }
+}
+
+@keyframes fade-in {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@-webkit-keyframes fade-in {
+    0% {
+        opacity: 0;
+        height: 0px;
+    }
+    100% {
+        opacity: 1;
+        height: 60%;
     }
 }
