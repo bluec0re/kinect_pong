@@ -76,6 +76,12 @@ div.page {
     position: relative;
 }
 
+@media (max-width: 1024px) {
+    div.page {
+        width: inherit;
+    }
+}
+
 div.page.last{
     margin-bottom: 150px;
 }
