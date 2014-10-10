@@ -58,12 +58,12 @@
                     In einer der Implementierung vorausgehenden Planungsphase haben wir das Projekt in verschiedene Arbeitspakete unterteilt, welche im Folgenden kurz umrissen werden:
                 </p>
                 <ul>
-                    <li>Evaluation und Einarbeitung in die Frameworks Libfreenect, OpenNI2, NiTE2, OGRE3D</li>
-                    <li>Implementierung der Steuerungskomponenten</li>
-                    <li>Implementierung der Spiellogik</li>
-                    <li>Zusammenführung der Steuerungskomponenten und der Spiellogik zu einem Prototyp</li>
-                    <li>Implementierung von Spielsounds zur Verbesserung des Feedbacks mit Hilfe von OgreOggSound</li>
-                    <li>Testing und Feinjustierung des Prototyps</li>
+                    <li><a href="#evaluation">Evaluation und Einarbeitung in die Frameworks Libfreenect, OpenNI2, NiTE2, OGRE3D</a></li>
+                    <li><a href="#gameplay">Implementierung der Steuerungskomponenten</a></li>
+                    <li><a href="#logic">Implementierung der Spiellogik</a></li>
+                    <li><a href="#prototyp">Zusammenführung der Steuerungskomponenten und der Spiellogik zu einem Prototyp</a></li>
+                    <li><a href="#sound">Implementierung von Spielsounds zur Verbesserung des Feedbacks mit Hilfe von OgreOggSound</a></li>
+                    <li><a href="#testing">Testing und Feinjustierung des Prototyps</a></li>
                 </ul>
                 <a class="arrow-down as-circle-none" href="#result">
                     <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 40 40" height="40" width="40">
@@ -90,7 +90,7 @@
                 <h2 id="future">Ausblick</h2>
                 <p>
                     Da der Fokus des Projekts primär auf der Gestensteuerung lag ist das Gameplay bis auf die 3D Komponente bisher sehr simpel gehalten worden. Um den Spielspaß zu erhöhen und den Spieler an diesem Spiel zu binden könnten demnach noch ein Levelsystem, ein Mehrspieler-Modus (ggf. mit Spielern im Netzwerk), eine stärkere künstliche Intelligenz und ein Erfolgssystem implementiert werden, da dies Faktoren sind, die auch anderen Spielen bereits großen Erfolg gebracht haben.<br /><br /> 
-Das Pong an sich schon sehr simpel ist, könnte diese Implementierung auch als Minispiel innerhalb eines anderen großen Spieles verwendet werden.<br /><br />
+Da Pong an sich schon sehr simpel ist, könnte diese Implementierung auch als Minispiel innerhalb eines anderen großen Spieles verwendet werden.<br /><br />
 Weiterhin könnte die Schwierigkeit erhöht werden, indem der Multiball-Modus, der bereits in einer frühen Variante implementiert ist, ausgebaut werden.
                 </p>
                 <a class="arrow-down as-circle-none" href="#exercise">
@@ -100,6 +100,84 @@ Weiterhin könnte die Schwierigkeit erhöht werden, indem der Multiball-Modus, d
                         <line x1="30" y1="25" x2="20" y2="15"/>
                     </svg>
                 </a>
+            </div>
+            <div class="invis" id="evaluation">
+                <a class="close arrow-down as-circle-none" href="#process">
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 40 40" height="40" width="40">
+                        <circle r="18" cy="20" cx="20"/>
+                        <line x1="30" y1="10" x2="10" y2="30"/>
+                        <line x1="30" y1="30" x2="10" y2="10"/>
+                    </svg>
+                </a>
+                <h3>Evaluation und Einarbeitung in die Frameworks Libfreenect, OpenNI2, NiTE2, OGRE3D</h3>
+                <p>
+                    Eine der Vorgaben war die Verwendung der OpenNI2 Bibliothek. Da das Unternehmen hinter der Bibliothek kurz vor Projektbeginn aufgekauft wurde, war jedoch der Quellcode nicht mehr verfügbar. Nach einiger Recherche war es uns möglich in einem Repository die Binaries der Bibliothek herunterzuladen, welche dann auch verwendet wurde. <br />Weiterhin wurde in OpenNI2 im Gegensatz zum Vorgänger der Handtracker und der Bodytracker ausgelagert, sodass wir auf die Implementierungen der NiTE2 Bibliothek zurückgegriffen haben. Da der Handtracker jedoch nicht funktionierend implementiert ist, haben wir uns im Rahmen des Projekts auf den Bodytracker konzentriert, weshalb im Spielverlauf ständig der gesamte Körper von der Kinect erfasst werden muss.
+                </p>
+            </div>
+            <div class="invis" id="gameplay">
+                <a class="close arrow-down as-circle-none" href="#process">
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 40 40" height="40" width="40">
+                        <circle r="18" cy="20" cx="20"/>
+                        <line x1="30" y1="10" x2="10" y2="30"/>
+                        <line x1="30" y1="30" x2="10" y2="10"/>
+                    </svg>
+                </a>
+                <h3>Implementierung der Steuerungskomponenten</h3>
+                <p>
+                    Ein erster Prototyp der Steuerungskomponenten sollte zeigen wie gleichmäßig die Kinect die Positionsdaten liefert. Dabei wurde schnell deutlich, dass einerseits eine Kalibrierung notwendig ist um den Spieler vor Spielbeginn eine Spielhand auswählen zu lassen und den Bereich festzulegen, in welchem der Spieler seine Hand bewegen muss um die Plattform zu steuern. Andererseits wurde ersichtlich, dass die Kinect unregelmäßig springt und damit ungleichmäßige Daten liefert, weshalb wir eine exponentielle Glättungsfunktion implementiert haben, die dieses Problem adressiert.
+                </p>
+            </div>
+            <div class="invis" id="logic">
+                <a class="close arrow-down as-circle-none" href="#process">
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 40 40" height="40" width="40">
+                        <circle r="18" cy="20" cx="20"/>
+                        <line x1="30" y1="10" x2="10" y2="30"/>
+                        <line x1="30" y1="30" x2="10" y2="10"/>
+                    </svg>
+                </a>
+                <h3>Implementierung der Spiellogik</h3>
+                <p>
+                    Im ersten Schritt wurde die klassische 2D Variante implementiert, die per Tastatur gesteuert werden konnte. Daraufhin haben wir die 3D Version implementiert, wobei bereits nach kurzer Spielzeit deutlich wurde, dass es für den Spieler schwierig ist einzuschätzen wann der Ball den Schläger des Spielers berührt oder daran vorbei geht. Aus diesem Grund haben wir die so genannte Ghostball Funktion implementiert, die einen künstlichen Schatten des Balls auf jeder der vier Flächen des Raums projeziert und seine Farbe verändert, je nach dem wie nah oder fern sich der Ball vom Spieler aus befindet.
+                </p>
+            </div>
+            <div class="invis" id="prototyp">
+                <a class="close arrow-down as-circle-none" href="#process">
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 40 40" height="40" width="40">
+                        <circle r="18" cy="20" cx="20"/>
+                        <line x1="30" y1="10" x2="10" y2="30"/>
+                        <line x1="30" y1="30" x2="10" y2="10"/>
+                    </svg>
+                </a>
+                <h3>Zusammenführung der Steuerungskomponenten und der Spiellogik zu einem Prototyp</h3>
+                <p>
+                    
+                </p>
+            </div>
+            <div class="invis" id="sound">
+                <a class="close arrow-down as-circle-none" href="#process">
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 40 40" height="40" width="40">
+                        <circle r="18" cy="20" cx="20"/>
+                        <line x1="30" y1="10" x2="10" y2="30"/>
+                        <line x1="30" y1="30" x2="10" y2="10"/>
+                    </svg>
+                </a>
+                <h3>Implementierung von Spielsounds zur Verbesserung des Feedbacks mit Hilfe von OgreOggSound</h3>
+                <p>
+                    Um das allgemeine Gameplay des Spiels und das Feedback zu verbessern wurde der Prototyp in seiner Ursprungsform noch um diverse Sounds erweitert. Da OGRE3D selbst keine Audio API bietet, haben wir uns für das Plugin OgreOggSound entschieden und verschiedene Spielsounds von einer CreativeCommons Platform (freesounds.org) heruntergeladen und eingebaut.  
+                </p>
+            </div>
+            <div class="invis" id="testing">
+                <a class="close arrow-down as-circle-none" href="#process">
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 40 40" height="40" width="40">
+                        <circle r="18" cy="20" cx="20"/>
+                        <line x1="30" y1="10" x2="10" y2="30"/>
+                        <line x1="30" y1="30" x2="10" y2="10"/>
+                    </svg>
+                </a>
+                <h3>Testing und Feinjustierung des Prototyps</h3>
+                <p>
+                    Beim Testen des Prototyps fielen uns verschiedene Probleme auf, die im Nachgang noch behoben wurden. Einerseits war unsere erste Kalibrierungsfunktion zu simpel und wurde noch dahingehend ausgebaut, dass der Spieler selbst seinen Spielbereich festlegen kann. Dadurch konnten Unterschiede zwischen kleinen und großen Spielern ausgeglichen werden. Andererseits haben wir uns dazu entschieden die künstliche Intelligenz in zwei Schwierigkeitsstufen anzubieten und sämtliche Optionen in einem Menü anzubieten (d.h. Sound an/aus, KI Schweirigkeit Leicht/Schwer, Ghostballs an/aus, Preview-Fenster an/aus, alte/neue Kalibierung und Art der Steuerung Keyboard/Kinect).
+                </p>
             </div>
         </div>
     </div>
