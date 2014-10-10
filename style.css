@@ -69,10 +69,10 @@ ul#navi li a:hover, ul#navi li a:focus {
     color: #2e9afe;
 }
 
-@media (max-width: 700px) {
+@media (max-device-width: 700px), (max-width: 700px) {
     div#menu {
         height: initial;
-        width: 56%;
+        width: 50%;
         font-size: initial;
     }
 
@@ -83,6 +83,7 @@ ul#navi li a:hover, ul#navi li a:focus {
     ul#navi::before {
         padding: 0px 15px;
         content: 'Menü';
+        line-height: 80px;
     }
 
     ul#navi li {
