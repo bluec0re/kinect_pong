@@ -141,12 +141,12 @@ div.page ul li:hover
 
 div.invis {
     position: fixed;
-    width: 50%;
+    width: 60%;
     height: 60%;
     background: #fff;
     border-radius: 20px;
     top: 150px;
-    left: 23%;
+    left: 18%;
     padding: 3%;
     display: none;
 }
@@ -165,7 +165,7 @@ div.invis:target {
 
 a.close {
     position: fixed;
-    right: -3%;
+    right: -13%;
     top: 120px;
 }
 
